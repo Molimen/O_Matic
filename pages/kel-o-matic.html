@@ -1,0 +1,223 @@
+<div id="main-container">
+    <div id="group-input-container">
+        <div id="class-container" class="class-container-grid-1">
+            <div id="class-container-name">
+                select Class:
+            </div>
+            <div id="class-selector">
+                <span id="class-name"></span>
+                <svg class="arrow" width="22" height="22" viewBox="0 0 24 24">
+                    <path d="M6 9l6 6 6-6" stroke="white" stroke-width="3" fill="none"/>
+                </svg>
+            </div>
+            <div id="class-options-container">
+                <div data-value="0" class="class-option">X-1</div>
+                <div data-value="1" class="class-option">X-2</div>
+                <div data-value="2" class="class-option">X-3</div>
+                <div data-value="3" class="class-option">X-4</div>
+                <div data-value="4" class="class-option">X-5</div>
+                <div data-value="5" class="class-option">X-6</div>
+            </div>
+        </div>
+
+        <div id="group-type-container">
+            <div id="group-type-name">
+                Type search:
+            </div>
+            <div id="group-type-select">
+                <label>
+                    <input type="radio" name="group-type" value="0">Group
+                </label>
+                <label>
+                    <input type="radio" name="group-type" value="1">Member
+                </label>
+            </div>
+        </div>
+
+        <div id="group-number-container">
+            <div id="group-number-name">
+                How Much:
+            </div>
+            <input type="number" id="group-number" class="font-family-inherit" min="3" max="10" value="3">
+        </div>
+
+        <div id="smart-finder-container">
+            <div id="smart-finder-name">
+                Smart Finder:
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="toggle">
+                <span id="slider"></span>
+            </label>
+        </div>
+
+        <button onclick="writeGroup(true)" id="group-result-button" class="font-family-inherit">Generate</button>
+    </div>
+
+    <div id="group-result-container">
+        <div id="group-result-wraper-1">
+            <span class="group-result-title">KEL 1</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+            <span class="group-item group-result-item-1"></span>
+        </div>
+        <div id="group-result-wraper-2">
+            <span class="group-result-title">KEL 2</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+            <span class="group-item group-result-item-2"></span>
+        </div>
+        <div id="group-result-wraper-3">
+            <span class="group-result-title">KEL 3</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+            <span class="group-item group-result-item-3"></span>
+        </div>
+        <div id="group-result-wraper-4">
+            <span class="group-result-title">KEL 4</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+            <span class="group-item group-result-item-4"></span>
+        </div>
+        <div id="group-result-wraper-5">
+            <span class="group-result-title">KEL 5</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+            <span class="group-item group-result-item-5"></span>
+        </div>
+        <div id="group-result-wraper-6">
+            <span class="group-result-title">KEL 6</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+            <span class="group-item group-result-item-6"></span>
+        </div>
+        <div id="group-result-wraper-7">
+            <span class="group-result-title">KEL 7</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+            <span class="group-item group-result-item-7"></span>
+        </div>
+        <div id="group-result-wraper-8">
+            <span class="group-result-title">KEL 8</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+            <span class="group-item group-result-item-8"></span>
+        </div>
+        <div id="group-result-wraper-9">
+            <span class="group-result-title">KEL 9</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+            <span class="group-item group-result-item-9"></span>
+        </div>
+        <div id="group-result-wraper-10">
+            <span class="group-result-title">KEL 10</span>
+            <div class="group-result-line"></div>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+            <span class="group-item group-result-item-10"></span>
+        </div>
+    </div>
+
+    <div id="group-error-container">
+        <span id="group-error-text"></span>
+    </div>
+</div>

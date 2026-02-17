@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="assets/Untitled1.svg">
+    <link rel="stylesheet" href="style.css">
+    <title>O-Matic</title>
+</head>
+<body id="body-content">
+    <header>
+        <div class="mobile-only">
+            <div id="menu-container-mobile">
+                <button onclick="menuChange('home')" id="menu-icon-container">
+                    <img src="assets/icon.svg" style="position: relative; width: 69px; bottom: 3px; pointer-events: none;">
+                </button>
+            </div>
+        </div>
+
+        <div id="menu-container">
+            <div id="menu-item-select-container"></div>
+            <div class="desktop-only" style="z-index: 1;">
+                <button onclick="menuChange('home')" id="menu-icon-container">
+                    <img src="assets/icon.svg" style="position: relative; width: 69px; bottom: 3px; pointer-events: none;">
+                </button>
+            </div>
+            <button onclick="menuChange('kel-o-matic')" class="menu-item-container font-family-inherit" id="menu-item-container-1">
+                <div class="desktop-only">Kel-O-Matic</div>
+                <div class="mobile-only">
+                    <img src="assets/kel.svg" class="menu-item-icon-container">
+                </div>
+            </button>
+            <button onclick="menuChange('seat-o-matic')" class="menu-item-container font-family-inherit" id="menu-item-container-2">
+                <div class="desktop-only">Seat-O-Matic</div>
+                <div class="mobile-only">
+                    <img src="assets/seat.svg" class="menu-item-icon-container">
+                </div>
+            </button>
+            <button onclick="menuChange('settings')" class="menu-item-container font-family-inherit" id="menu-item-container-3">
+                <div class="desktop-only">settings</div>
+                <div class="mobile-only">
+                    <img src="assets/settings.svg" class="menu-item-icon-container">
+                </div>
+            </button>
+            <button onclick="menuChange('about')" class="menu-item-container font-family-inherit" id="menu-item-container-4">
+                <div class="desktop-only">About</div>
+                <div class="mobile-only">
+                    <img src="assets/about.svg" class="menu-item-icon-container">
+                </div>
+            </button>
+        </div>
+
+        <div id="bg-image"></div>
+    </header>
+
+    <main id="content">
+    </main>
+
+    <footer>
+        <p>O-Matic • 1.0.A</p>
+    </footer>
+
+    <script src="index.js" defer></script>
+</body>
+</html>
