@@ -975,13 +975,17 @@ async function pageChange(page, skip, moveType) {
     .catch(() => {
         fetch(`pages/404.html`)
         .then(res => {
-            if (!res.ok) throw new Error("Page not found");
+            if (!res.ok) throw new Error("404 Page not found. womp womp.");
             return res.text();
         })
         .then(html => {
             content.innerHTML = html;
             history.pushState({ page: "404" }, "", `#${"404"}`);
         })
+        .catch(() => {
+            content.innerHTML = '<div id="main-container">500 Internal Error</div>';
+            history.pushState({ page }, "", `#${page}`);
+        });
     });
 
     if (!skip) {
