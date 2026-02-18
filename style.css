@@ -790,3 +790,123 @@ input:checked + #slider:before {
         grid-area: 1 / 2 / 2 / 3;
     }
 }
+
+.home-judul {
+    border: 3px solid var(--primary-color);
+    height: 100px;
+    background:
+    linear-gradient(to right, rgb(0, 0, 0) clamp(30%,40%,65%), rgba(0, 0, 0, 0.199)),
+    url("assets/bg106.jpg");
+    background-size: cover;
+    background-position: right;
+    background-repeat: no-repeat;
+    text-align: left;
+    border-radius: 1.25rem;
+    font-size: clamp(2rem,5vw,3rem);
+    letter-spacing: .1rem;
+    display: flex;
+    justify-content: start;
+    width: auto;
+    align-items: center;
+    font-weight: bolder;
+    font-style: oblique;
+    padding: 15px;
+    transition: background-color .1s ease;
+}
+
+.home-tools-container {
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-color);
+    height: auto;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    row-gap: 1.75rem;
+    column-gap: 1.2rem;
+    flex-wrap: wrap;
+    padding: 25px;
+    z-index: 0;
+    border-radius: 1.25rem;
+    width: 80%;
+    margin: 1rem auto;
+}
+.card {
+    display: grid;
+    grid-template-rows: 60px 1fr 50px;
+    width: clamp(125px,100%,225px);
+    background-color: var(--bg-second-color);
+    margin: .4rem;
+    height: 280px;
+    justify-content: space-between;
+    padding: .75rem;
+    gap: .5rem;
+    border-radius: 10px;
+    position: relative;
+}
+
+.tool-title {
+    font-weight: bold;
+    font-size: 1.65rem;
+    background-color: var(--bg-third-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    mask-image: linear-gradient(90deg,transparent, red,red,red, transparent);
+}
+.tool-btn {
+    height: 50px;
+    background-color: var(--primary-color);
+    border-radius: 0.5rem;
+    border-color: transparent;
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: .15rem;
+    cursor: pointer;
+    transition: background-color .1s ease;
+}
+.tool-btn:hover {
+    background-color: #be2390;
+    transition: background-color .1s ease;
+}
+.card::after, .card::before {
+    content: '';
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    padding: 3px;
+    z-index: -1;
+    inset: -3px;
+    border-radius: 13px;
+}
+#card1::after, #card2::after {
+    filter: blur(10px);
+    opacity: .9;
+}
+
+@property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+} /* gw nonton tutorial buat ngisi ni @property */
+
+#card1::after, #card1::before {
+    animation: spin 7s linear infinite;
+    background-image: conic-gradient(from calc(var(--angle) + 180deg), transparent 20%,#1b53ec, #f0f346 , #f04747); 
+}
+#card2::after, #card2::before {
+    animation: spin 7s linear infinite;
+    background-image: conic-gradient(from var(--angle), transparent 20%, #c2ff1c , #fa2c71,#6c22ce, #0eefff);
+}
+
+.tool-text {
+    text-align: center;
+}
+
+@keyframes spin {
+    from {
+        --angle : 0deg;
+    } 
+    to {
+        --angle : 360deg;
+    }
+}
