@@ -5,13 +5,18 @@
   --bg-third-color: #414149;
   --border-color: #242426;
   --text-color: white;
-  --text-inverted-color: rgb(0, 0, 0);
+  --text-inverted-color: black;
   --error-color: #fc3e3e;
 }
 
 @font-face {
   font-family: "ProFontWindows";
   src: url("assets/profontwindows.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "DSEGFontFamily";
+  src: url("assets/DSEG14Classic-Regular.woff2") format("woff2");
 }
 
 html, body {
@@ -62,6 +67,7 @@ footer {
     height: 48px;
     border-top: 1px solid var(--border-color);
     z-index: 10000;
+    font-size: 18px;
 }
 
 a img {
@@ -668,12 +674,14 @@ input:checked + #slider:before {
 .about-info-image {
     display: flex;
     overflow: hidden;
+    align-items: center;
 }
 
 .about-info-image img {
     width: 100%;
     aspect-ratio: 1/1;
     object-fit: cover;
+    border-radius: 21px;
 }
 
 .about-info {

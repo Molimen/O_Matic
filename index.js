@@ -710,29 +710,15 @@ async function writeGroup(isWrite) {
 }
 
 function resetSeat() {
-    document.querySelectorAll('.seat-item-1-L').forEach(el => {
-        el.textContent = 'a';
+    document.querySelectorAll('.seat-item-L').forEach(el => {
+        el.textContent = '??';
+        el.style.color = "var(--text-inverted-color)";
+        el.style.backgroundColor = "#9FFFA5";
     });
-    document.querySelectorAll('.seat-item-1-P').forEach(el => {
-        el.textContent = 'b';
-    });
-    document.querySelectorAll('.seat-item-2-L').forEach(el => {
-        el.textContent = 'a';
-    });
-    document.querySelectorAll('.seat-item-2-P').forEach(el => {
-        el.textContent = 'b';
-    });
-    document.querySelectorAll('.seat-item-3-L').forEach(el => {
-        el.textContent = 'a';
-    });
-    document.querySelectorAll('.seat-item-3-P').forEach(el => {
-        el.textContent = 'b';
-    });
-    document.querySelectorAll('.seat-item-4-L').forEach(el => {
-        el.textContent = 'a';
-    });
-    document.querySelectorAll('.seat-item-4-P').forEach(el => {
-        el.textContent = 'b';
+    document.querySelectorAll('.seat-item-P').forEach(el => {
+        el.textContent = '??';
+        el.style.color = "var(--text-inverted-color)";
+        el.style.backgroundColor = "#FFFA9F";
     });
 }
 
@@ -753,100 +739,77 @@ function writeSeat() {
 
     let manRandom = shuffle(man);
     let womanRandom = shuffle(woman);
+    let checkBalanced;
+    if (manRandom.length === womanRandom.length) {
+        checkBalanced = 0;
+    } else if (manRandom.length > womanRandom.length) {
+        checkBalanced = 1;
+    } else if (manRandom.length < womanRandom.length) {
+        checkBalanced = 2;
+    }
 
-    document.querySelectorAll('.seat-item-1-L').forEach(el => {
-        if (manRandom.length !== 0) {
-            el.textContent = manRandom.pop()[0];
-            el.style.color = "#2200ff";
-        } else if (manRandom.length === 0 && womanRandom.length !== 0) {
-            el.textContent = womanRandom.pop()[0];
-            el.style.color = "#ff00ea";
+    let seatOrder = [];
+    while (true) {
+        if (manRandom.length === 0 || womanRandom.length === 0) {
+            if (checkBalanced > 0) {
+                if (checkBalanced === 1) {
+                    seatOrder.push([manRandom.pop()[0]+100,manRandom.pop()[0]+100]);
+                } else if (checkBalanced === 2) {
+                    seatOrder.push([womanRandom.pop()[0]+200,womanRandom.pop()[0]+200]);
+                }
+                checkBalanced = 0;
+            }
+            break
+        }
+
+        if (Math.floor(Math.random()*101) > 85 && checkBalanced > 0) {
+            if (checkBalanced === 1) {
+                seatOrder.push([manRandom.pop()[0]+100,manRandom.pop()[0]+100]);
+            } else if (checkBalanced === 2) {
+                seatOrder.push([womanRandom.pop()[0]+200,womanRandom.pop()[0]+200]);
+            }
+            if (manRandom.length === womanRandom.length) {
+                checkBalanced = 0;
+            }
         } else {
-            el.textContent == "XX";
+            seatOrder.push([manRandom.pop()[0],womanRandom.pop()[0]]);
+        }
+    }
+    console.log(seatOrder);
+
+    let counter = 0;
+    document.querySelectorAll('.seat-item-L').forEach(el => {
+        if (counter < 16) {
+            if (seatOrder[counter][0] > 100 && seatOrder[counter][0] < 200) {
+                el.textContent = seatOrder[counter][0]-100;
+                el.style.backgroundColor = "#9FFFA5";
+            } else if (seatOrder[counter][0] > 200) {
+                el.textContent = seatOrder[counter][1]-200;
+                el.style.backgroundColor = "#FFFA9F";
+            } else {
+                el.textContent = seatOrder[counter][0];
+            }
+            counter++;
+        } else {
+            el.textContent = "XX";
         }
     });
 
-    document.querySelectorAll('.seat-item-2-L').forEach(el => {
-        if (manRandom.length !== 0) {
-            el.textContent = manRandom.pop()[0];
-            el.style.color = "#2200ff";
-        } else if (manRandom.length === 0 && womanRandom.length !== 0) {
-            el.textContent = womanRandom.pop()[0];
-            el.style.color = "#ff00ea";
+    counter = 0;
+    document.querySelectorAll('.seat-item-P').forEach(el => {
+        if (counter < 16) {
+            if (seatOrder[counter][1] > 100 && seatOrder[counter][1] < 200) {
+                el.textContent = seatOrder[counter][1]-100;
+                el.style.backgroundColor = "#9FFFA5";
+            } else if (seatOrder[counter][0] > 200) {
+                el.textContent = seatOrder[counter][0]-200;
+                el.style.backgroundColor = "#FFFA9F";
+            } else {
+                el.textContent = seatOrder[counter][1];
+            }
+            counter++;
         } else {
-            el.textContent == "XX";
-        }
-    });
-
-    document.querySelectorAll('.seat-item-3-L').forEach(el => {
-        if (manRandom.length !== 0) {
-            el.textContent = manRandom.pop()[0];
-            el.style.color = "#2200ff";
-        } else if (manRandom.length === 0 && womanRandom.length !== 0) {
-            el.textContent = womanRandom.pop()[0];
-            el.style.color = "#ff00ea";
-        } else {
-            el.textContent == "XX";
-        }
-    });
-
-    document.querySelectorAll('.seat-item-4-L').forEach(el => {
-        if (manRandom.length !== 0) {
-            el.textContent = manRandom.pop()[0];
-            el.style.color = "#2200ff";
-        } else if (manRandom.length === 0 && womanRandom.length !== 0) {
-            el.textContent = womanRandom.pop()[0];
-            el.style.color = "#ff00ea";
-        } else {
-            el.textContent == "XX";
-        }
-    });
-
-    document.querySelectorAll('.seat-item-1-P').forEach(el => {
-        if (womanRandom.length !== 0) {
-            el.textContent = womanRandom.pop()[0];
-            el.style.color = "#ff00ea";
-        } else if (womanRandom.length === 0 && manRandom.length !== 0) {
-            el.textContent = manRandom.pop()[0];
-            el.style.color = "#2200ff";
-        } else {
-            el.textContent == "XX";
-        }
-    });
-
-    document.querySelectorAll('.seat-item-2-P').forEach(el => {
-        if (womanRandom.length !== 0) {
-            el.textContent = womanRandom.pop()[0];
-            el.style.color = "#ff00ea";
-        } else if (womanRandom.length === 0 && manRandom.length !== 0) {
-            el.textContent = manRandom.pop()[0];
-            el.style.color = "#2200ff";
-        } else {
-            el.textContent == "XX";
-        }
-    });
-
-    document.querySelectorAll('.seat-item-3-P').forEach(el => {
-        if (womanRandom.length !== 0) {
-            el.textContent = womanRandom.pop()[0];
-            el.style.color = "#ff00ea";
-        } else if (womanRandom.length === 0 && manRandom.length !== 0) {
-            el.textContent = manRandom.pop()[0];
-            el.style.color = "#2200ff";
-        } else {
-            el.textContent == "XX";
-        }
-    });
-
-    document.querySelectorAll('.seat-item-4-P').forEach(el => {
-        if (womanRandom.length !== 0) {
-            el.textContent = womanRandom.pop()[0];
-            el.style.color = "#ff00ea";
-        } else if (womanRandom.length === 0 && manRandom.length !== 0) {
-            el.textContent = manRandom.pop()[0];
-            el.style.color = "#2200ff";
-        } else {
-            el.textContent == "XX";
+            el.textContent = "XX";
         }
     });
 }
@@ -886,6 +849,8 @@ function doSomethingAfterMenuChange(type,skip) {
 
             if (localStorage.getItem("GroupType") !== null) {
                 document.querySelector(`input[name="group-type"][value="${Number(localStorage.getItem("GroupType"))}"]`).checked = true;
+            } else {
+                document.querySelector('input[name="group-type"][value="0"]').checked = true;
             }
 
             if (localStorage.getItem("GroupNumber") !== null) {
@@ -998,7 +963,7 @@ async function pageChange(page, skip, moveType) {
 
     }
 
-    fetch(`pages/${page}.html`)
+    await fetch(`pages/${page}.html`)
     .then(res => {
         if (!res.ok) throw new Error("Page not found");
         return res.text();
@@ -1074,13 +1039,10 @@ async function menuChange(page, skip=false) {
     let moveType = 0;
     if (typeBuff > type) {
         moveType = 0;
-        console.log("move left");
     } else if (typeBuff < type) {
         moveType = 1;
-        console.log("move right");
     } else if (typeBuff === type) {
         moveType = 2;
-        console.log("move up");
     }
 
 
