@@ -2,11 +2,11 @@
     <div id="seat-input-container">
         <div id="class-container" class="class-container-grid-2">
             <div id="class-container-name">
-                select Class:
+                select<br>Class:
             </div>
             <div id="class-selector">
                 <span id="class-name">X-1</span>
-                <svg class="arrow" width="22" height="22" viewBox="0 0 24 24">
+                <svg id="svg-arrow" class="arrow" width="22" height="22" viewBox="0 0 24 24">
                     <path d="M6 9l6 6 6-6" stroke="white" stroke-width="3" fill="none"/>
                 </svg>
             </div>
@@ -20,7 +20,9 @@
             </div>
         </div>
 
-        <button onclick="writeSeat()" id="seat-result-button" class="font-family-inherit">Generate</button>
+        <button onclick="writeSeat(true)" id="seat-result-button" class="font-family-inherit">
+            <span id="seat-result-button-name">Generate</span>
+        </button>
     </div>
 
     <div id="seat-result-container">
@@ -30,9 +32,9 @@
 
         <div class="seat-color-type" style="background-color: #FFFA9F; top: 8%;"></div>
         <div class="seat-color-type" style="background-color: #9FFFA5; top: 14.9%;"></div>
-        <div class="seat-color-name" style="top: 7%;"><b>perempuan</b></div>
-        <div class="seat-color-name" style="top: 15%;"><b>laki-laki</b></div>
-        <div id="seat-info"><b>📍hari senin-kamis sesuai ini 👇, jumat bebas!</b></div>
+        <span id="seat-color-name-1" class="seat-color-name" style="top: 7%;"><b>perempuan</b></span>
+        <span id="seat-color-name-2" class="seat-color-name" style="top: 15%;"><b>laki-laki</b></span>
+        <span id="seat-info"><b>📍hari senin-kamis sesuai ini 👇, jumat bebas!</b></span>
 
         <div id="seat-placement-container">
             <div class="seat-bangku-wraper" style="left: 0%;">
@@ -40,14 +42,14 @@
                 <div class="seat-divider-left-right" style="top: 24.7%;"></div>
                 <div class="seat-divider-left-right" style="top: 49.7%;"></div>
                 <div class="seat-divider-left-right" style="top: 74.8%;"></div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 0;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 0;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 25.1%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 25.1%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 50%;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 50%;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 75.2%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 75.2%;">??</div>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 0;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 0;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 25.1%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 25.1%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 50%;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 50%;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 75.2%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 75.2%;">??</span>
             </div>
 
             <div class="seat-bangku-wraper" style="left: 26.8%;">
@@ -55,14 +57,14 @@
                 <div class="seat-divider-left-right" style="top: 24.7%;"></div>
                 <div class="seat-divider-left-right" style="top: 49.7%;"></div>
                 <div class="seat-divider-left-right" style="top: 74.8%;"></div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 0;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 0;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 25.1%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 25.1%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 50%;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 50%;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 75.2%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 75.2%;">??</div>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 0;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 0;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 25.1%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 25.1%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 50%;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 50%;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 75.2%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 75.2%;">??</span>
             </div>
 
             <div class="seat-bangku-wraper" style="left: 53.7%;">
@@ -70,14 +72,14 @@
                 <div class="seat-divider-left-right" style="top: 24.7%;"></div>
                 <div class="seat-divider-left-right" style="top: 49.7%;"></div>
                 <div class="seat-divider-left-right" style="top: 74.8%;"></div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 0;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 0;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 25.1%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 25.1%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 50%;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 50%;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 75.2%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 75.2%;">??</div>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 0;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 0;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 25.1%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 25.1%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 50%;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 50%;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 75.2%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 75.2%;">??</span>
             </div>
 
             <div class="seat-bangku-wraper" style="left: 81.3%;">
@@ -85,14 +87,14 @@
                 <div class="seat-divider-left-right" style="top: 24.7%;"></div>
                 <div class="seat-divider-left-right" style="top: 49.7%;"></div>
                 <div class="seat-divider-left-right" style="top: 74.8%;"></div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 0;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 0;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 25.1%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 25.1%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 50%;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 50%;">??</div>
-                <div class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 75.2%;">??</div>
-                <div class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 75.2%;">??</div>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 0;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 0;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 25.1%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 25.1%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 0; top: 50%;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 50.7%; top: 50%;">??</span>
+                <span class="seat-actual-seat seat-item-P" style="background-color: #FFFA9F; left: 0; top: 75.2%;">??</span>
+                <span class="seat-actual-seat seat-item-L" style="background-color: #9FFFA5; left: 50.7%; top: 75.2%;">??</span>
             </div>
         </div>
     </div>

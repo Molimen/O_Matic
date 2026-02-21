@@ -1,12 +1,12 @@
 <div id="main-container">
     <div id="group-input-container">
         <div id="class-container" class="class-container-grid-1">
-            <div id="class-container-name">
-                select Class:
-            </div>
+            <span id="class-container-name">
+                Select<br>Class:
+            </span>
             <div id="class-selector">
                 <span id="class-name">X-1</span>
-                <svg class="arrow" width="22" height="22" viewBox="0 0 24 24">
+                <svg id="svg-arrow" class="arrow" width="22" height="22" viewBox="0 0 24 24">
                     <path d="M6 9l6 6 6-6" stroke="white" stroke-width="3" fill="none"/>
                 </svg>
             </div>
@@ -21,37 +21,41 @@
         </div>
 
         <div id="group-type-container">
-            <div id="group-type-name">
-                Type search:
-            </div>
+            <span id="group-type-name">
+                Type<br>search:
+            </span>
             <div id="group-type-select">
                 <label>
-                    <input type="radio" name="group-type" value="0">Group
+                    <input type="radio" name="group-type" value="0">
+                    <span id="group-type-select-name-1">Group</span>
                 </label>
                 <label>
-                    <input type="radio" name="group-type" value="1">Member
+                    <input type="radio" name="group-type" value="1">
+                    <span id="group-type-select-name-2">Member</span>
                 </label>
             </div>
         </div>
 
         <div id="group-number-container">
-            <div id="group-number-name">
-                How Much:
-            </div>
+            <span id="group-number-name">
+                How<br>Much:
+            </span>
             <input type="number" id="group-number" class="font-family-inherit" min="3" max="10" value="3">
         </div>
 
         <div id="smart-finder-container">
-            <div id="smart-finder-name">
-                Smart Finder:
-            </div>
+            <span id="smart-finder-name">
+                Smart<br>Finder:
+            </span>
             <label class="switch">
                 <input type="checkbox" id="toggle">
                 <span id="slider"></span>
             </label>
         </div>
 
-        <button onclick="writeGroup(true)" id="group-result-button" class="font-family-inherit">Generate</button>
+        <button onclick="writeGroup(true)" id="group-result-button" class="font-family-inherit">
+            <span id="group-result-button-name">Generate</span>
+        </button>
     </div>
 
     <div id="group-result-container">
