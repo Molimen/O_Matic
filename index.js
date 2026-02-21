@@ -889,15 +889,6 @@ function writeSeat(isWrite) {
 
 function theme(type) {
     themeType = type;
-    if (document.getElementById("svg-arrow")) {
-        document.getElementById("svg-arrow").querySelectorAll('[stroke]').forEach(el => {
-            el.setAttribute('stroke', themeType === 'dark' ? 'white' : '#0e0e0e');
-        });
-    }
-
-    document.getElementById("bg-image").style.filter = `invert(${themeType === 'dark' ? '0' : '1'})`;
-    document.body.style.setProperty("--bg-image-opacity", `.${themeType === 'dark' ? '02' : '05'}`);
-    document.body.style.setProperty("--body-background", `rgba(0, 0, 0, 0.${themeType === 'dark' ? '6' : '0'})`);
 
     if (type === "light") {
         document.querySelector('footer').style.backgroundColor = "#f5f5f5A8";
@@ -920,7 +911,18 @@ function theme(type) {
         document.documentElement.style.setProperty('--text-inverted-color', 'black');
         document.documentElement.style.setProperty('--text-gray-color', '#BBBBBC');
     }
-    
+
+    if (document.getElementById("svg-arrow")) {
+        document.getElementById("svg-arrow").querySelectorAll('[stroke]').forEach(el => {
+            el.setAttribute('stroke', themeType === 'dark' ? 'white' : '#0e0e0e');
+        });
+    }
+
+    document.getElementById("menu-item-select-container").style.backgroundColor = `${themeType === 'dark' ? 'var(--bg-second-color)' : '#2E2E34'}`;
+    document.getElementById("bg-image").style.filter = `invert(${themeType === 'dark' ? '0' : '1'})`;
+    document.body.style.setProperty("--bg-image-opacity", `.${themeType === 'dark' ? '02' : '05'}`);
+    document.body.style.setProperty("--body-background", `rgba(0, 0, 0, 0.${themeType === 'dark' ? '6' : '0'})`);
+
 }
 
 function effectChange(type) {
@@ -1095,6 +1097,12 @@ function doSomethingAfterMenuChange(type,skip) {
         } catch (error) {
         }
 
+        if (languageType === "id") {
+            document.getElementById("seat-info").style.fontSize = "4cqw";
+        } else {
+            document.getElementById("seat-info").style.fontSize = "3.8cqw";
+        }
+
         document.getElementById("class-container-name").innerHTML = lang.selectClass;
         document.getElementById("seat-result-button-name").textContent = lang.seatGenerate;
         document.getElementById("seat-color-name-1").innerHTML = lang.seatFeMale;
@@ -1199,6 +1207,45 @@ function doSomethingAfterMenuChange(type,skip) {
     }
 }
 
+function waitForElement(id, timeout = 5000) {
+  return new Promise((resolve, reject) => {
+    if (!navigator.onLine) {
+      return reject(new Error("No internet connection"));
+    }
+
+    if (document.getElementById(id)) {
+      return resolve(document.getElementById(id));
+    }
+
+    const observer = new MutationObserver(() => {
+      const el = document.getElementById(id);
+      if (el) {
+        cleanup();
+        resolve(el);
+      }
+    });
+
+    const offlineHandler = () => {
+      cleanup();
+      reject(new Error("Connection lost while waiting"));
+    };
+
+    const timer = setTimeout(() => {
+      cleanup();
+      reject(new Error(`"#${id}" not found within ${timeout}ms`));
+    }, timeout);
+
+    function cleanup() {
+      observer.disconnect();
+      window.removeEventListener('offline', offlineHandler);
+      clearTimeout(timer);
+    }
+
+    observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('offline', offlineHandler);
+  });
+}
+
 async function pageChange(page, skip, moveType) {
     const content = document.getElementById("content");
     const mainPage = document.getElementById("main-container");
@@ -1210,18 +1257,16 @@ async function pageChange(page, skip, moveType) {
         await new Promise(resolve => setTimeout(resolve, 500));
         content.style.transition = "none";
         content.style.transform = "translateX(200%)";
-        await new Promise(resolve => setTimeout(resolve, 20));
         } else if (moveType === 1) {
         content.style.transition = "transform 500ms ease";
         content.style.transform = "translateX(200%)";
         await new Promise(resolve => setTimeout(resolve, 500));
         content.style.transition = "none";
         content.style.transform = "translateX(-200%)";
-        await new Promise(resolve => setTimeout(resolve, 20));
         } else if (moveType === 2) {
         content.style.transition = "transform 500ms ease";
         content.style.transform = "translateY(-200%)";
-        await new Promise(resolve => setTimeout(resolve, 520));
+        await new Promise(resolve => setTimeout(resolve, 500));
         }
 
     }
@@ -1346,9 +1391,7 @@ async function menuChange(page, skip=false) {
         }, 10);
 
         pageChange(page,skip,moveType);
-
-        await new Promise(resolve => setTimeout(resolve,  skip === false ? 800 : 200));
-        doSomethingAfterMenuChange(type,skip);
+    
     } else if (type <= -1) {
         let cor;
         if (window.innerWidth > 768) {
@@ -1365,8 +1408,24 @@ async function menuChange(page, skip=false) {
             document.getElementById("menu-item-select-container").style.transition = "all 1s cubic-bezier(0.2, 1.3, 0.3, 1)";
         }, 10);
 
-        pageChange(page !== "" ? page : "home",skip,moveType);
-        await new Promise(resolve => setTimeout(resolve,  skip === false ? 800 : 200));
+        pageChange(page !== "" ? page : "home",skip,moveType);    
+    }
+
+
+    try {
+        await waitForElement('DOM-check');
+        document.getElementById('DOM-check').remove();
+    } catch (error) {
+        console.error(error);
+        if (error.message === "Connection lost while waiting" || error.message === "No internet connection") {
+            menuChangeSpamCheck = false;
+            return
+        }
+    }
+
+    if (type >= 0) {
+        doSomethingAfterMenuChange(type,skip);
+    } else if (type <= -1) {
         doSomethingAfterMenuChangeButDiffrence(page !== "" ? page : "home",skip);
     }
 

@@ -88,6 +88,10 @@ main {
     top: -4px;
 }
 
+#DOM-check {
+    visibility: hidden;
+}
+
 #bg-image {
     position: absolute;
     width: 100%;
@@ -161,7 +165,7 @@ main {
 
 #menu-icon-container {
     border-radius: 14px;
-    height: 100%;
+    height: 56px;
     width: 128px;
     padding: 6px;
     border-width: 0;
@@ -183,11 +187,12 @@ main {
 
 .menu-item-icon-container {
     position: relative; 
-    width: 48px; 
-    height: 48px; 
+    width: 34px; 
+    height: 34px; 
     right: 3px; 
     top: 3px; 
     pointer-events: none;
+    filter: invert(1);
 }
 
 .menu-item-container {
@@ -284,7 +289,7 @@ main {
     flex-direction: column;
     justify-content: center;
     padding: 0 4px;
-    width: 96px;
+    padding-right: 10px;
     height: 56px;
     border-radius: 21px;
     background-color: var(--bg-second-color);
@@ -294,6 +299,17 @@ main {
 
 #group-type-select:hover {
     background-color: var(--bg-third-color);
+}
+
+.group-type-select-label {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+}
+
+.group-type-select-name {
+    position: relative;
+    top: 2px;
 }
 
 #group-number-container {
@@ -793,12 +809,12 @@ input:checked + #slider:before {
 } /* gw nonton tutorial buat ngisi ni @property */
 
 #card1::after, #card1::before {
-    animation: spin 7s linear infinite;
-    background-image: conic-gradient(from calc(var(--angle) + 180deg), transparent 20%,#1b53ec, #f0f346 , #f04747); 
+    animation: spin 10s linear infinite !important;
+    background-image: conic-gradient(from calc(var(--angle) + 180deg),#1b53ec, #f0f346 , #f04747); 
 }
 #card2::after, #card2::before {
-    animation: spin 7s linear infinite;
-    background-image: conic-gradient(from var(--angle), transparent 20%, #c2ff1c , #fa2c71,#6c22ce, #0eefff);
+    animation: spin 10s linear infinite !important;
+    background-image: conic-gradient(from var(--angle), #c2ff1c , #fa2c71,#6c22ce, #0eefff);
 }
 
 .tool-text {
@@ -824,20 +840,26 @@ input:checked + #slider:before {
     display: flex;
     flex-direction: column;
     width: 100%;
+    gap: 1rem;
 }
 
 .settings-items-container {
     display: flex;
     flex-direction: column;
     padding: 12px 16px;
+    gap: 1rem;
     border: 1px solid var(--border-color);
     border-radius: 21px;
     background-color: var(--bg-color);
 }
 
+.settings-items-warper {
+    display: flex;
+    flex-direction: column;
+}
+
 .settings-item-title {
     font-size: 26px;
-    padding-bottom: 14px;
 }
 
 .settings-item-subtitle {
