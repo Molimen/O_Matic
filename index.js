@@ -40,7 +40,7 @@ const language = [{
     homekelDesc: "Setiap kerja kelompok pernah dapat kelompok jelek?? Mau tau solusinya? Solusinya ada dibawah bisa dipencet!",
     homeKelButton: "Bikin Kelompok baru!",
     selectClass: "Pilih<br>Kelas:",
-    kelTypeSearch: "Cari<br>Berdasarkan:",
+    kelTypeSearch: "Cari<br>dgn:",
     kelTSGroup: "Kelompok",
     kelTSMember: "Anggota",
     kelNumber: "Jumlah:",
@@ -1146,8 +1146,12 @@ function doSomethingAfterMenuChange(type,skip) {
             }
         } else {
             localStorage.setItem("effect", "enable");
-            document.getElementById("settings-button-effect-light").style.backgroundColor = "var(--bg-second-color)";
-            document.getElementById("settings-button-effect-dark").style.backgroundColor = "var(--primary-color)";
+            if (document.getElementById("settings-button-effect-light") !== null) {
+                document.getElementById("settings-button-effect-light").style.backgroundColor = "var(--bg-second-color)";
+                document.getElementById("settings-button-effect-dark").style.backgroundColor = "var(--primary-color)";
+            } else {
+                location.reload();
+            }
         }
 
 

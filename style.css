@@ -810,11 +810,11 @@ input:checked + #slider:before {
 
 #card1::after, #card1::before {
     animation: spin 10s linear infinite !important;
-    background-image: conic-gradient(from calc(var(--angle) + 180deg),#1b53ec, #f0f346 , #f04747); 
+    background-image: conic-gradient(from calc(var(--angle) + 180deg), transparent 20%,#1b53ec, #f0f346 , #f04747); 
 }
 #card2::after, #card2::before {
     animation: spin 10s linear infinite !important;
-    background-image: conic-gradient(from var(--angle), #c2ff1c , #fa2c71,#6c22ce, #0eefff);
+    background-image: conic-gradient(from var(--angle), transparent 20%, #c2ff1c , #fa2c71,#6c22ce, #0eefff);
 }
 
 .tool-text {
