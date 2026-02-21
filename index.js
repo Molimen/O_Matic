@@ -1417,10 +1417,8 @@ async function menuChange(page, skip=false) {
         document.getElementById('DOM-check').remove();
     } catch (error) {
         console.error(error);
-        if (error.message === "Connection lost while waiting" || error.message === "No internet connection") {
-            menuChangeSpamCheck = false;
-            return
-        }
+        menuChangeSpamCheck = false;
+        return
     }
 
     if (type >= 0) {
