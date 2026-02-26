@@ -3,64 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="assets/Untitled1.svg">
+    <link rel="icon" type="image/png" href="assets/icon/iconBlackFull.svg">
     <link rel="stylesheet" href="style.css">
     <title>O-Matic</title>
 </head>
-<body id="body-content">
+<body>
+    <div id="widthNotSupport">
+        sorry! Not Supported...
+    </div>
+
     <header>
         <div class="mobile-only">
-            <div id="menu-container-mobile">
-                <button onclick="menuChange('home')" id="menu-icon-container">
-                    <img src="assets/icon.svg" style="position: relative; width: 69px; bottom: 3px; pointer-events: none;">
+            <div class="menu-mobile-container">
+                <button data-id="home" class="menu-icon-button">
+                    <img src="assets/menuBar/icon.svg" class="menu-icon-image">
                 </button>
             </div>
         </div>
 
-        <div id="menu-container">
-            <div id="menu-item-select-container"></div>
+        <div class="menu-container">
+            <span id="menu-item-select" class="menu-item-select"></span>
+
             <div class="desktop-only" style="z-index: 1;">
-                <button onclick="menuChange('home')" id="menu-icon-container">
-                    <img src="assets/icon.svg" style="position: relative; width: 69px; bottom: 3px; pointer-events: none;">
+                <button data-id="home" class="menu-icon-button">
+                    <img src="assets/menuBar/icon.svg" class="menu-icon-image">
                 </button>
             </div>
-            <button onclick="menuChange('kel-o-matic')" class="menu-item-container font-family-inherit" id="menu-item-container-1">
+
+            <button data-id="kel-o-matic" class="menu-item-button font-family-inherit">
                 <div class="desktop-only">Kel-O-Matic</div>
                 <div class="mobile-only">
-                    <img src="assets/kel.svg" class="menu-item-icon-container">
+                    <img src="assets/menuBar/kel.svg" class="menu-item-image">
                 </div>
             </button>
-            <button onclick="menuChange('seat-o-matic')" class="menu-item-container font-family-inherit" id="menu-item-container-2">
+
+            <button data-id="seat-o-matic" class="menu-item-button font-family-inherit">
                 <div class="desktop-only">Seat-O-Matic</div>
                 <div class="mobile-only">
-                    <img src="assets/seat.svg" class="menu-item-icon-container">
+                    <img src="assets/menuBar/seat.svg" class="menu-item-image">
                 </div>
             </button>
-            <button onclick="menuChange('settings')" class="menu-item-container font-family-inherit" id="menu-item-container-3">
+
+            <button data-id="settings" class="menu-item-button font-family-inherit">
                 <div class="desktop-only">settings</div>
                 <div class="mobile-only">
-                    <img src="assets/settings.svg" class="menu-item-icon-container">
+                    <img src="assets/menuBar/settings.svg" class="menu-item-image">
                 </div>
             </button>
-            <button onclick="menuChange('about')" class="menu-item-container font-family-inherit" id="menu-item-container-4">
+
+            <button data-id="about" class="menu-item-button font-family-inherit">
                 <div class="desktop-only">About</div>
                 <div class="mobile-only">
-                    <img src="assets/about.svg" class="menu-item-icon-container">
+                    <img src="assets/menuBar/about.svg" class="menu-item-image">
                 </div>
             </button>
         </div>
 
-        <div id="bg-image"></div>
+        <div class="bg-image"></div>
     </header>
 
-    <main id="content">
+    <main>
+
     </main>
 
     <footer>
-        <p>
-            O-Matic • <a href="https://github.com/Molimen/O_Matic" rel="noopener" style="color: var(--text-color);">Source Code</a> • 1.1.A</p>
+
     </footer>
 
-    <script defer src="index.js"></script>
+    <script type="module" src="index.js"></script>
 </body>
-</html>
+</html> 
