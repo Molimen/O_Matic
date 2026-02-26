@@ -166,7 +166,7 @@ window.addEventListener('popstate', (event) => {
 });
 
 window.matchMedia("(max-width: 768px)").addEventListener("change", () => {
-    updateMenuItemSelect(location.hash.replace("#", ""));
+    updateMenuItemSelect(location.hash.replace("#", ""),true);
 });
 
 //Start the UI
