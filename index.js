@@ -1,3 +1,8 @@
+/*
+TO-DO:
+1. anti spam the menu selector
+*/
+
 async function updateMenuItemSelect(page,skip=false) {
     const selector = document.getElementById('menu-item-select');
     if (skip) {

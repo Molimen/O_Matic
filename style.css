@@ -1,15 +1,14 @@
 /*HOW TO NAME THING ON HERE:
 
-> TopParent-nameFunc (Used when it's inside a parent not apply to main-container)
-> TopParent-nameFunc-nameFuncOther (Used when func has other thing)
-
-e.g:
-
 > group-container
 > group-button
 > group-button-top
 > group-image
 > group-image-spin-to-death
+> seat-result
+> seat-result-button
+> seat-result-placement
+> seat-placement
 */
 
 /*ORDER OF CSS:
@@ -160,7 +159,7 @@ footer {
     color: var(--text-color);
 }
 
-.font-family-inherit {
+button {
     font-family: inherit;
 }
 
@@ -262,6 +261,80 @@ footer {
     gap: 1rem;
 }
 
+.multiselect-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 6px;
+}
+
+.multiselect-warper {
+    position: relative;
+    align-self: stretch;
+}
+
+.multiselect-selector {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 54px;
+    padding-left: 10px;
+    padding-right: 4px;
+    padding-top: 3px;
+    box-sizing: border-box;
+    font-size: 21px;
+    background-color: var(--bg-second-color);
+    border-radius: 21px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.multiselect-selector:hover {
+    background-color: var(--bg-third-color);
+}
+
+.multiselect-selector .arrow {
+    transition: all 0.1s ease;
+}
+
+.multiselect-container.open .arrow {
+    transition: all 0.1s ease;
+    transform: rotateZ(180deg);
+}
+
+.multiselect-options-container {
+    position: relative;
+    bottom: 64px;
+    z-index: 2;
+    background-color: var(--bg-second-color);
+    border-radius: 21px;
+    opacity: 0;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    transform: translateY(0);
+    pointer-events: none;
+}
+
+.multiselect-container.open .multiselect-options-container {
+    opacity: 1;
+    transform: translateY(10px);
+    pointer-events: auto;
+}
+
+.multiselect-options-option {
+    display: flex;
+    justify-content: center;
+    padding: 10px 14px;
+    font-size: 18px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.multiselect-options-option:hover {
+    background-color: var(--primary-color);
+}
 
 /*+=====END OF CSS=====+*/
 
