@@ -1,3 +1,91 @@
 <div class="main-container">
-    <button id="abc">click</button>
+    <div class="group-input-container">
+        <div class="multiselect-container">
+            <span>
+                select<br>Class:
+            </span>
+
+            <div class="multiselect-warper">
+                <div class="multiselect-selector">
+                    <span class="multiselect-selector-name">X-1</span>
+                    <svg class="arrow" width="22" height="22" viewBox="0 0 24 24">
+                        <path d="M6 9l6 6 6-6" stroke="white" stroke-width="3" fill="none"/>
+                    </svg>
+                </div>
+                <div class="multiselect-options-container">
+                    <div data-value="0" class="multiselect-options-option">X-1</div>
+                    <div data-value="1" class="multiselect-options-option">X-2</div>
+                    <div data-value="2" class="multiselect-options-option">X-3</div>
+                    <div data-value="3" class="multiselect-options-option">X-4</div>
+                    <div data-value="4" class="multiselect-options-option">X-5</div>
+                    <div data-value="5" class="multiselect-options-option">X-6</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="group-input-type-container">
+            <span>
+                Type<br>search:
+            </span>
+            <div class="group-input-type-select">
+                <label class="group-type-select-label">
+                    <input type="radio" name="group-type" value="group">
+                    <span class="group-type-select-name">Group</span>
+                </label>
+                <label class="group-type-select-label">
+                    <input type="radio" name="group-type" value="member">
+                    <span class="group-type-select-name">Member</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="group-input-number-container">
+            <span>
+                How<br>Much:
+            </span>
+            <input type="number" name="group-number" class="group-input-number"
+                    min="3" max="10" value="3" placeholder="3-10">
+        </div>
+
+        <div class="group-smartFinder-container">
+            <span>
+                Smart<br>Finder:
+            </span>
+            <label class="group-smartFinder-switch">
+                <input type="checkbox" disabled>
+                <span class="group-smartFinder-switch-slider"></span>
+            </label>
+        </div>
+        
+        <div class="group-gen-type-container">
+            <span>
+                Generation type
+            </span>
+            <div class="group-gen-option-container">
+                <label class="group-gen-type-option">
+                    <input type="radio" name="group-gen-type" value="name">
+                    <span>
+                        Student Name
+                    </span>
+                </label>
+                <label class="group-gen-type-option">
+                    <input type="radio" name="group-gen-type" value="absent">
+                    <span>
+                        Student Number
+                    </span>
+                </label>
+            </div>  
+        </div>
+
+        <button class="group-input-button">
+            <span>Generate</span>
+        </button>
+    </div>
+
+    
+    <div class="group-result-container"></div>
+
+    <div id="group-error-container" class="group-error-container">
+        <span id="group-error-text"></span>
+    </div>
 </div>

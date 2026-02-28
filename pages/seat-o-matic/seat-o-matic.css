@@ -1,8 +1,7 @@
 .seat-input-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 768px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr; 
     height: 80px;
     padding: 12px;
     margin: 0 auto;
@@ -13,9 +12,13 @@
     border-radius: 21px;
 }
 
+.multiselect-container {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
 .seat-input-button {
+    grid-area: 1 / 2 / 2 / 3;
     height: 100%;
-    width: auto;
     padding: 6px;
     padding: 0 8px;
     box-sizing: border-box;
@@ -46,6 +49,7 @@
     margin: 0 auto;
     container-type: inline-size;
     background-color: rgb(255, 255, 255);
+    border: 3px solid var(--border-color);
 }
 
 .seat-result-papan-gede {
@@ -142,4 +146,8 @@
     align-items: center;
     color: black;
     font-size: 6.1cqw;
+}
+
+@media (max-width: 768px) and (min-width: 320px) {
+    
 }

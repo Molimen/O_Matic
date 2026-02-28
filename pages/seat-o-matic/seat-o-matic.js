@@ -140,6 +140,8 @@ export function init() {
             default:
                 break;
         }
+    } else {
+        localStorage.setItem("classSelect", 0);
     }
 
     document.querySelector(".multiselect-selector").addEventListener("click", () => {
@@ -149,8 +151,7 @@ export function init() {
     document.querySelectorAll(".multiselect-options-option").forEach(option => {
         option.addEventListener("click", () => {
             document.querySelector(".multiselect-selector-name").textContent = option.textContent;
-            let classSelectOutput = Number(option.dataset.value);
-            localStorage.setItem("classSelect", classSelectOutput);
+            localStorage.setItem("classSelect", option.dataset.value);
             document.querySelector(".multiselect-container").classList.remove("open");
         });
     });

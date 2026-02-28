@@ -61,6 +61,11 @@ function loadHTML(page,updateHistory) {
 function loadCSS(page) {
     const href = `pages/${page}/${page}.css`;
     return new Promise((resolve, reject) => {
+        if (document.querySelector(`link[href="${href}"]`)) {
+            resolve();
+            return;
+        }
+
         const link = document.createElement("link");
         link.rel = "stylesheet";
         link.href = href;
