@@ -23,19 +23,19 @@ async function errorMessageGroup(type) {
 
     switch (type) {
         case 0:
-            text.textContent = 'Please Selected "Type search"!';
+            text.textContent = 'Please Select "Type search"!';
             break;
         case 1:
-            text.textContent = 'Group exceeding allowed total!';
+            text.textContent = 'Group exceeded allowed total!';
             break;
         case 2:
-            text.textContent = 'Group unexceeding allowed total!';
+            text.textContent = 'Too little amount of group!';
             break;
         case 3:
-            text.textContent = 'Member exceeding allowed total!';
+            text.textContent = 'Member exceeded allowed total!';
             break;
         case 4:
-            text.textContent = 'Member unexceeding allowed total!';
+            text.textContent = 'Too little amount of Member(s)';
             break;
         case 5:
             text.textContent = 'Negative input is NOT allowed!';
@@ -224,7 +224,7 @@ async function writeKel(isWrite) {
         document.querySelector(".group-result-container").appendChild(wraper);
     }
 
-    
+
     let counter = 0;
     document.querySelectorAll(".group-result-wraper").forEach(wraper => {
         const title = document.createElement("span");
@@ -239,7 +239,12 @@ async function writeKel(isWrite) {
         for (let i = 0; i < group[counter].length; i++) {
             const item = document.createElement("span");
             item.className = "group-item";
-            item.textContent = `${group[counter][i][groupNameOutputType === "name" ? 3 : 0]}`
+            item.textContent = `${group[counter][i][groupNameOutputType === "name" ? 3 : 0]}`;
+            if (group[counter][i][1] === "L") {
+                item.style.color = "royalblue";
+            } else {
+                item.style.color = "hotpink";
+            }
             wraper.appendChild(item);
         }
         counter++;
@@ -310,7 +315,8 @@ export function init() {
         localStorage.setItem("classSelect", 0);
     }
 
-    if (localStorage.getItem("GroupType") !== null) {
+    if (localStorage.getItem("GroupType") !== null && localStorage.getItem("GroupType") !== "0") {
+        console.log(localStorage.getItem("GroupType"))
         document.querySelector(`input[name="group-type"][value="${localStorage.getItem("GroupType")}"]`).checked = true;
     } else {
         localStorage.setItem("GroupType", "group");

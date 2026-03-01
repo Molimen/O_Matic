@@ -3,13 +3,15 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(4, 1fr);
     row-gap: 1rem;
+    column-gap: .5rem;
     width: clamp(310px,85vw,425px) ;
     height: auto;
     margin: 0 auto;
-    padding: 12px;
+    padding: 5px;
     background-color: var(--bg-color);
     border: 1px solid var(--border-color);
     border-radius: 21px;
+    box-sizing: border-box;
 }
 
 .group-input-container > div {
