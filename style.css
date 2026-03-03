@@ -101,6 +101,15 @@ e.g:
     --text-inverted-color: black;
     --text-gray-color: #BBBBBC;
     --bg-footer-color: #17171aA8;
+    --bg-before-color: rgba(0,0,0, 0.6);
+    --menu-disabled-value: .6;
+}
+
+.no-animations *,
+.no-animations *::before,
+.no-animations *::after {
+  animation: none !important;
+  transition: none !important;
 }
 
 @font-face {
@@ -131,7 +140,7 @@ body::before {
     position: fixed;
     z-index: -1;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: var(--bg-before-color);
     pointer-events: none;
     content: "";
 }
@@ -244,10 +253,10 @@ input[type=number]::-webkit-inner-spin-button {
 
 .menu-item-image {
     position: relative;
-    right: 3px; 
-    top: 3px; 
-    width: 34px;
-    height: 34px;
+    right: 2px; 
+    top: 2px; 
+    width: 28px;
+    height: 28px;
     pointer-events: none;
     filter: invert(1);
 }
@@ -301,8 +310,8 @@ input[type=number]::-webkit-inner-spin-button {
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    padding-left: 10px;
-    padding-right: 4px;
+    padding-left: 14px;
+    padding-right: 6px;
     padding-top: 3px;
     box-sizing: border-box;
     font-size: 21px;
@@ -329,7 +338,11 @@ input[type=number]::-webkit-inner-spin-button {
     position: relative;
     bottom: 64px;
     z-index: 2;
-    background-color: var(--bg-second-color);
+    display: flex;
+    flex-direction: column;
+    gap: .12rem;
+    background-color: var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 21px;
     opacity: 0;
     overflow: hidden;
@@ -349,6 +362,7 @@ input[type=number]::-webkit-inner-spin-button {
     justify-content: center;
     padding: 10px 14px;
     font-size: 18px;
+    background-color: var(--bg-second-color);
     transition: all 0.2s ease;
     cursor: pointer;
 }
@@ -398,6 +412,7 @@ input[type=number]::-webkit-inner-spin-button {
         bottom: 0;
         z-index: 10000;
         width: auto;
+        height: 64px;
         gap: 1rem;
         background-color: var(--bg-footer-color);
         backdrop-filter: blur(3px);
@@ -408,11 +423,14 @@ input[type=number]::-webkit-inner-spin-button {
     }
 
     .menu-item-select {
+        top: 9px;
         width: 64px;
+        height: 44px;
     }
 
     .menu-item-button {
         width: 64px;
+        height: 40px;
     }
 
     .main-container {

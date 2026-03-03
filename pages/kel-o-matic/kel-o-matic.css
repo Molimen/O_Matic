@@ -18,7 +18,7 @@
     margin: auto;
 }
 
-.multiselect-container {
+.group-multiselect-container {
     grid-area: 1 / 1 / 2 / 2;
 }
 
@@ -151,7 +151,7 @@ input:checked + .group-smartFinder-switch-slider:before {
 }
 
 .group-smartFinder-switch input:disabled + .group-smartFinder-switch-slider {
-    filter: brightness(.6);
+    filter: brightness(var(--menu-disabled-value));
     cursor: not-allowed;
 }
 

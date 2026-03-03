@@ -135,7 +135,7 @@ const PERSON = [
     [[1, 'P', 0.0, 'Agnes'], 
     [2, 'L', 0.0, 'Alfon'], 
     [3, 'L', 0.0, 'Ricad'], 
-    [4, 'P', 0.0, 'Ara'], 
+    [4, 'P', 0.0, 'Ara'], // lope mika
     [5, 'P', 0.0, 'Quincy'], 
     [6, 'P', 0.0, 'Cayla'], 
     [7, 'L', 0.0, 'Tian'], 
@@ -182,7 +182,7 @@ const PERSON = [
     [15, 'P', 0.0, 'Gaby'], 
     [16, 'P', 0.0, 'Sharon'], 
     [17, 'L', 0.0, 'Faith'], 
-    [18, 'L', 0.0, 'Jojo'], 
+    [18, 'L', 0.0, 'Jojo'], //very ganteng
     [19, 'P', 0.0, 'Joyce'], 
     [20, 'P', 0.0, 'Kiseki'], 
     [21, 'P', 0.0, 'Maria'], 

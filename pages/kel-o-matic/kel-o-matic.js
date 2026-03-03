@@ -315,8 +315,7 @@ export function init() {
         localStorage.setItem("classSelect", 0);
     }
 
-    if (localStorage.getItem("GroupType") !== null && localStorage.getItem("GroupType") !== "0") {
-        console.log(localStorage.getItem("GroupType"))
+    if (localStorage.getItem("GroupType") !== null && localStorage.getItem("GroupType") !== "0" && localStorage.getItem("GroupType") !== "1") {
         document.querySelector(`input[name="group-type"][value="${localStorage.getItem("GroupType")}"]`).checked = true;
     } else {
         localStorage.setItem("GroupType", "group");

@@ -1,7 +1,17 @@
 /*
-TO-DO:
-1. anti spam the menu selector
+TO-DO: 
+0. add 404, easter egg
+1. add footer
+2. anti spam the menu selector
+4. add rigged seat (maybe...)
 */
+
+/*
+dont forget do lang...
+*/
+
+import { theme, effect, isAuto } from './pages/settings/settings.js';
+import { getLang, currentLang } from './pages/lang.js';
 
 async function updateMenuItemSelect(page,skip=false) {
     const selector = document.getElementById('menu-item-select');
@@ -46,7 +56,7 @@ function loadHTML(page,updateHistory) {
             })
             .then(html => {
                 main.innerHTML = html;
-                if (updateHistory) history.pushState({ page: "404" }, "", `#${"404"}`);
+                history.pushState({ page: "404" }, "", `#${"404"}`);
                 resolve(html);
             })
             .catch((err) => {
@@ -83,6 +93,14 @@ async function loadJS(page) {
 }
 
 async function updateDOM(page, updateHistory=false, animMoveType="skip") {
+    if (localStorage.getItem("effect") !== null) {
+        if (localStorage.getItem("effect") === "disable") {
+            animMoveType = "skip";
+        }
+    }
+
+    lang = getLang(currentLang());
+
     if (page === '') page = 'home';
     const main = document.querySelector('main');
 
@@ -115,9 +133,21 @@ async function updateDOM(page, updateHistory=false, animMoveType="skip") {
         main.style.transform = "translateX(-200%)";
     }
 
-    await loadCSS(page);
+    let isError = false;
+    try {
+        await loadCSS(page);
+    } catch {isError = true;}
     await loadHTML(page,updateHistory);
-    loadJS(page);
+    if (!isError) loadJS(page);
+
+    if (localStorage.getItem("effect") !== null) effect(localStorage.getItem("effect"));
+
+    if (document.querySelector(".about-info-debug-menu")) {
+        document.querySelector(".about-info-debug-menu").addEventListener("click", () => {
+            eruda.init();
+            alert("mode debugnya sudah nyaalaa~"); //tbh, i search every encoder but i too lazy to implement it... :>
+        });
+    }
 
     if (animMoveType !== "skip") {
         main.style.transition = `transform ${animTime}ms ease`;
@@ -160,6 +190,8 @@ function detectDirection(page) {
         lastType = currentType;
         return "up";
     }
+
+    return;
 }
 
 document.querySelector('header').addEventListener("click", (event) => {
@@ -175,10 +207,20 @@ window.addEventListener('popstate', (event) => {
     updateDOM(event.state.page);
 });
 
+window.addEventListener('hashchange', () => {
+    updateDOM(location.hash.replace("#", ""), false);
+});
+
 window.matchMedia("(max-width: 768px)").addEventListener("change", () => {
     updateMenuItemSelect(location.hash.replace("#", ""),true);
 });
 
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (isAuto) theme(e.matches ? 'dark' : 'light');
+});
+
+let lang = getLang(currentLang());
+
 //Start the UI
 detectDirection(location.hash.replace("#", ""));
-updateDOM(location.hash.replace("#", ""));
+updateDOM(location.hash.replace("#", ""), true);
