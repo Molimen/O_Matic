@@ -1,60 +1,64 @@
 <div class="main-container">
     <div class="group-input-container">
-        <div class="multiselect-container group-multiselect-container">
-            <span>
-                select<br>Class:
-            </span>
+        <div class="group-input-1-container">
+            <div class="multiselect-container group-multiselect-container">
+                <span>
+                    select<br>Class:
+                </span>
 
-            <div class="multiselect-warper">
-                <div class="multiselect-selector">
-                    <span class="multiselect-selector-name">X-1</span>
-                    <svg class="arrow" width="22" height="22" viewBox="0 0 24 24">
-                        <path d="M6 9l6 6 6-6" stroke="var(--text-color)" stroke-width="2" fill="none"/>
-                    </svg>
+                <div class="multiselect-warper">
+                    <div class="multiselect-selector">
+                        <span class="multiselect-selector-name">X-1</span>
+                        <svg class="arrow" width="22" height="22" viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" stroke="var(--text-color)" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="multiselect-options-container">
+                        <div data-value="0" class="multiselect-options-option">X-1</div>
+                        <div data-value="1" class="multiselect-options-option">X-2</div>
+                        <div data-value="2" class="multiselect-options-option">X-3</div>
+                        <div data-value="3" class="multiselect-options-option">X-4</div>
+                        <div data-value="4" class="multiselect-options-option">X-5</div>
+                        <div data-value="5" class="multiselect-options-option">X-6</div>
+                    </div>
                 </div>
-                <div class="multiselect-options-container">
-                    <div data-value="0" class="multiselect-options-option">X-1</div>
-                    <div data-value="1" class="multiselect-options-option">X-2</div>
-                    <div data-value="2" class="multiselect-options-option">X-3</div>
-                    <div data-value="3" class="multiselect-options-option">X-4</div>
-                    <div data-value="4" class="multiselect-options-option">X-5</div>
-                    <div data-value="5" class="multiselect-options-option">X-6</div>
+            </div>
+
+            <div class="group-input-type-container">
+                <span>
+                    Type<br>search:
+                </span>
+                <div class="group-input-type-select">
+                    <label class="group-type-select-label">
+                        <input type="radio" name="group-type" value="group">
+                        <span class="group-type-select-name">Group</span>
+                    </label>
+                    <label class="group-type-select-label">
+                        <input type="radio" name="group-type" value="member">
+                        <span class="group-type-select-name">Member</span>
+                    </label>
                 </div>
             </div>
         </div>
 
-        <div class="group-input-type-container">
-            <span>
-                Type<br>search:
-            </span>
-            <div class="group-input-type-select">
-                <label class="group-type-select-label">
-                    <input type="radio" name="group-type" value="group">
-                    <span class="group-type-select-name">Group</span>
-                </label>
-                <label class="group-type-select-label">
-                    <input type="radio" name="group-type" value="member">
-                    <span class="group-type-select-name">Member</span>
+        <div class="group-input-2-container">
+            <div class="group-input-number-container">
+                <span>
+                    How<br>Much:
+                </span>
+                <input type="number" name="group-number" class="group-input-number"
+                        min="3" max="10" value="3" placeholder="3-10">
+            </div>
+
+            <div class="group-smartFinder-container">
+                <span>
+                    Smart<br>Finder:
+                </span>
+                <label class="group-smartFinder-switch">
+                    <input type="checkbox" disabled>
+                    <span class="group-smartFinder-switch-slider"></span>
                 </label>
             </div>
-        </div>
-
-        <div class="group-input-number-container">
-            <span>
-                How<br>Much:
-            </span>
-            <input type="number" name="group-number" class="group-input-number"
-                    min="3" max="10" value="3" placeholder="3-10">
-        </div>
-
-        <div class="group-smartFinder-container">
-            <span>
-                Smart<br>Finder:
-            </span>
-            <label class="group-smartFinder-switch">
-                <input type="checkbox" disabled>
-                <span class="group-smartFinder-switch-slider"></span>
-            </label>
         </div>
         
         <div class="group-gen-type-container">

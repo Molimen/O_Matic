@@ -1,8 +1,5 @@
 /*
-TO-DO: 
-0. add 404, easter egg
-1. add footer
-2. anti spam the menu selector
+TO-DO:
 4. add rigged seat (maybe...)
 */
 
@@ -20,7 +17,13 @@ async function updateMenuItemSelect(page,skip=false) {
     }
 
     const btn = document.querySelector(`button[data-id='${page}']`);
-    if (btn === null) return;
+    if (btn === null) {
+        selector.style.left = '-130px';
+        await new Promise(resolve => setTimeout(resolve, 1));
+        selector.style.transition = "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)";
+        return;
+    }
+
 
     if (btn.dataset.id === "home") {
         selector.style.left = `${Math.round(window.innerWidth > 768 ?
@@ -55,6 +58,7 @@ function loadHTML(page,updateHistory) {
                 return res.text();
             })
             .then(html => {
+                loadCSS("404");
                 main.innerHTML = html;
                 history.pushState({ page: "404" }, "", `#${"404"}`);
                 resolve(html);
@@ -92,7 +96,12 @@ async function loadJS(page) {
     module.init();
 }
 
+let spamCheck = false;
 async function updateDOM(page, updateHistory=false, animMoveType="skip") {
+    if (spamCheck) return;
+
+    spamCheck = true;
+
     if (localStorage.getItem("effect") !== null) {
         if (localStorage.getItem("effect") === "disable") {
             animMoveType = "skip";
@@ -155,6 +164,7 @@ async function updateDOM(page, updateHistory=false, animMoveType="skip") {
         await new Promise(resolve => setTimeout(resolve, animTime));
         main.style.transition = "none";
     }
+    spamCheck = false;
 }
 
 let lastType = -1;
@@ -208,7 +218,7 @@ window.addEventListener('popstate', (event) => {
 });
 
 window.addEventListener('hashchange', () => {
-    updateDOM(location.hash.replace("#", ""), false);
+    updateDOM(location.hash.replace("#", ""));
 });
 
 window.matchMedia("(max-width: 768px)").addEventListener("change", () => {
