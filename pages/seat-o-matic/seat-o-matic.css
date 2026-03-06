@@ -104,7 +104,8 @@
     position: absolute; 
     left: 47.6%; 
     width: 52%;
-    font-size: 5.2cqw;
+    font-size: 5cqw;
+    line-height: 5cqw;
     color: black; 
 }
 
@@ -136,7 +137,7 @@
     width: 3%; 
     height: 100%; 
     background-color: black;
-    z-index: 1;
+    z-index: 2;
 }
 
 .seat-placement-divider-left-right {
@@ -144,7 +145,7 @@
     width: 100%; 
     height: .4%; 
     background-color: black; 
-    z-index: 1;
+    z-index: 2;
 }
 
 .seat-placement-actual-seat {
@@ -156,4 +157,98 @@
     align-items: center;
     color: black;
     font-size: 6.1cqw;
+    z-index: 1;
+}
+
+/* gw males bet ngurutin propertinya soo gw minta chatgpt yang urutin */
+.download-share-button {
+
+    /* Box Model */
+    display: flex;
+    width: clamp(200px, 80vw, 400px);
+    height: 3.5rem;
+    margin: 1.25rem auto;
+    padding: 0;
+    overflow: hidden;
+
+    /* Visual */
+    border-width: 0;
+    border-radius: 15px;
+    background-color: var(--primary-color);
+
+    /* Positioning */
+    z-index: 3;
+
+    /* Effects */
+    transition: transform .25s ease;
+}
+
+.download-share-button * {
+
+    /* Effects */
+    pointer-events: none;
+}
+
+.download-svg-container {
+
+    /* Box Model */
+    display: flex;
+    width: 4rem;
+    height: 3.5rem;
+    flex: 0 0 auto;
+
+    /* Visual */
+    background-color: var(--secondary-color);
+
+    /* Effects */
+    transition: width .25s ease;
+
+    /* Alignment */
+    justify-content: center;
+    align-items: center;
+}
+
+.download-svg-container img {
+
+    /* Box Model */
+    height: 80%;
+}
+
+.download-share-text {
+
+    /* Box Model */
+    display: flex;
+    flex: 1;
+    padding: 8px;
+
+    /* Typography */
+    font-size: clamp(1rem, 5vw, 1.25rem);
+    color: var(--text-color);
+
+    /* Alignment */
+    justify-content: center;
+    align-items: center;
+}
+
+.download-share-button:hover {
+
+    /* Effects */
+    transform: scale(1.08);
+    transition: transform .25s ease;
+}
+
+.download-share-button:hover .download-svg-container {
+
+    /* Box Model */
+    width: 5.5rem;
+
+    /* Effects */
+    transition: width .25s ease;
+}
+
+.download-share-button:active {
+
+    /* Effects */
+    transform: scale(1);
+    transition: transform .25s ease;
 }

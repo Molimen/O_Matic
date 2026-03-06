@@ -164,5 +164,39 @@ export function init() {
         writeSeat(false);
     } catch {
     }
-    
+    // keknya kalo bisa tombolnya di-disable-kan dulu pas seatchart masih tanda tanya semua
+    const download_btn = document.getElementById("download-share-btn");
+
+    download_btn.onclick = async () => {
+        const module = await import("./html2canvas.esm.js");
+        const html2canvas = module.default;
+
+        const element_target = document.getElementById("canvas-target");
+        const canvas = await html2canvas(element_target);
+
+        canvas.toBlob(async (blob) => {
+            const file = new File([blob], "hasil.png", {type: "image/png"});
+
+            //firefox kaga support share
+            if (navigator.share && navigator.canShare?.({ files: [file] })) {
+                await navigator.share({
+                    files: [file],
+                    title: "Seat chart baru"
+                });
+                } 
+            // Fallback download
+            else {
+            const url = URL.createObjectURL(blob);
+        
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "hasil.png";
+            a.click();
+        
+            URL.revokeObjectURL(url);
+            window.alert("Browser ga bisa share, cek hasil dalam histori download")
+            }
+
+        }, "image/png")
+    }
 }

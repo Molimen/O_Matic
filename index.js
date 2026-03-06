@@ -12,29 +12,26 @@ import { getLang, currentLang } from './pages/lang.js';
 
 async function updateMenuItemSelect(page,skip=false) {
     const selector = document.getElementById('menu-item-select');
-    if (skip) {
-        selector.style.transition = "none";
-    }
-
     const btn = document.querySelector(`button[data-id='${page}']`);
+
     if (btn === null) {
         selector.style.left = '-130px';
         await new Promise(resolve => setTimeout(resolve, 1));
-        selector.style.transition = "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)";
+        selector.style.transition = skip === false ? "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)" : "none";
         return;
     }
 
 
     if (btn.dataset.id === "home") {
-        selector.style.left = `${Math.round(window.innerWidth > 768 ?
-            btn.offsetLeft > 0 ? btn.offsetLeft : 30 : -100)}px`;
+        selector.style.transition = skip === false ? "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)" : "none";
         await new Promise(resolve => setTimeout(resolve, 1));
-        selector.style.transition = "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)";
+        selector.style.left = `${Math.round(window.innerWidth > 768 ? btn.offsetLeft > 0 ? btn.offsetLeft : 30 : -100)}px`;
         return;
     }
-    selector.style.left = `${Math.round(window.innerWidth > 768 ? btn.offsetLeft-1 : btn.offsetLeft-2)}px`;
+
+    selector.style.transition = skip === false ? "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)" : "none";
     await new Promise(resolve => setTimeout(resolve, 1));
-    selector.style.transition = "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)";
+    selector.style.left = `${Math.round(window.innerWidth > 768 ? btn.offsetLeft-1 : btn.offsetLeft-2)}px`;
 }
 
 function loadHTML(page,updateHistory) {

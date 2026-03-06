@@ -42,6 +42,7 @@
     display: grid;
     grid-template-rows: 60px 1fr 50px;
     justify-content: space-between;
+    flex: 0 1 auto;
     padding: .75rem;
     gap: .5rem;
     margin: .4rem;
@@ -49,6 +50,7 @@
     height: 280px;
     background-color: var(--bg-second-color);
     border-radius: 10px;
+    aspect-ratio: 3/4;
 }
 
 .home-card-title {
@@ -106,12 +108,24 @@
 } /* gw nonton tutorial buat ngisi ni @property */
 
 #home-card1::after, #home-card1::before {
-    background-image: conic-gradient(from calc(var(--angle) + 180deg), transparent 20%,#1b53ec, #f0f346 , #f04747); 
+    background-image: conic-gradient(
+        from calc(var(--angle) + 180deg),
+        transparent 20%,
+        rgb(70, 120, 255),
+        rgb(90, 220, 140),
+        rgb(255, 95, 95)
+    ); 
     animation: spin 10s linear infinite !important;
 }
 
 #home-card2::after, #home-card2::before {
-    background-image: conic-gradient(from var(--angle), transparent 20%, #c2ff1c , #fa2c71,#6c22ce, #0eefff);
+    background-image: conic-gradient(
+        from var(--angle),
+        transparent 20%,
+        rgb(70, 210, 220),
+        rgb(150, 110, 255),
+        rgb(255, 110, 180)
+    );
     animation: spin 10s linear infinite !important;
 }
 
