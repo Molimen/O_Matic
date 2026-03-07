@@ -45,6 +45,10 @@ function loadHTML(page,updateHistory) {
             return res.text();
         })
         .then(html => {
+            new DOMParser().parseFromString(html, "text/html").querySelectorAll("meta").forEach(item => {
+                if (item.name === "page-type") throw new Error("FALLBACK DETECTED!");
+            });
+
             main.innerHTML = html;
             if (updateHistory) history.pushState({ page: `${page}` }, '', `#${page}`);
             resolve(html);
@@ -56,6 +60,10 @@ function loadHTML(page,updateHistory) {
                 return res.text();
             })
             .then(html => {
+                new DOMParser().parseFromString(html, "text/html").querySelectorAll("meta").forEach(item => {
+                    if (item.name === "page-type") throw new Error("FALLBACK DETECTED!");
+                });
+
                 loadCSS("404");
                 main.innerHTML = html;
                 history.pushState({ page: "404" }, "", `#${"404"}`);
