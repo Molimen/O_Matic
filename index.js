@@ -1,6 +1,7 @@
 /*
 TO-DO:
-4. add rigged seat (maybe...)
+(on seat)
+5. add rigged seat (maybe...)
 */
 
 /*
@@ -95,7 +96,10 @@ async function loadJS(page) {
 
 let spamCheck = false;
 async function updateDOM(page, updateHistory=false, animMoveType="skip") {
-    if (spamCheck) return;
+    if (spamCheck) {
+        detectDirection(location.hash.replace("#", ""));
+        return;
+    }
 
     spamCheck = true;
 

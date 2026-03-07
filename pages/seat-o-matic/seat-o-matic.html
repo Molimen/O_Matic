@@ -1,34 +1,45 @@
 <div class="main-container">
     <div class="seat-input-container">
-        <div class="multiselect-container seat-multiselect-container">
-            <span>
-                select<br>Class:
-            </span>
+        <div class="seat-input-container-1">
+            <div class="multiselect-container">
+                <span>
+                    select<br>Class:
+                </span>
 
-            <div class="multiselect-warper">
-                <div class="multiselect-selector">
-                    <span class="multiselect-selector-name">X-1</span>
-                    <svg class="arrow" width="22" height="22" viewBox="0 0 24 24">
-                        <path d="M6 9l6 6 6-6" stroke="var(--text-color)" stroke-width="2" fill="none"/>
-                    </svg>
-                </div>
-                <div class="multiselect-options-container">
-                    <div data-value="0" class="multiselect-options-option">X-1</div>
-                    <div data-value="1" class="multiselect-options-option">X-2</div>
-                    <div data-value="2" class="multiselect-options-option">X-3</div>
-                    <div data-value="3" class="multiselect-options-option">X-4</div>
-                    <div data-value="4" class="multiselect-options-option">X-5</div>
-                    <div data-value="5" class="multiselect-options-option">X-6</div>
+                <div class="multiselect-warper">
+                    <div class="multiselect-selector">
+                        <span class="multiselect-selector-name">X-1</span>
+                        <svg class="arrow" width="22" height="22" viewBox="0 0 24 24">
+                            <path d="M6 9l6 6 6-6" stroke="var(--text-color)" stroke-width="2" fill="none"/>
+                        </svg>
+                    </div>
+                    <div class="multiselect-options-container">
+                        <div data-value="0" class="multiselect-options-option">X-1</div>
+                        <div data-value="1" class="multiselect-options-option">X-2</div>
+                        <div data-value="2" class="multiselect-options-option">X-3</div>
+                        <div data-value="3" class="multiselect-options-option">X-4</div>
+                        <div data-value="4" class="multiselect-options-option">X-5</div>
+                        <div data-value="5" class="multiselect-options-option">X-6</div>
+                    </div>
                 </div>
             </div>
+
+            <button class="seat-input-button">
+                <span>Generate</span>
+            </button>
         </div>
 
-        <button class="seat-input-button">
-            <span>Generate</span>
-        </button>
+        <div class="seat-input-container-2">
+            <button class="seat-input-downloadnshare-button">
+                <div class="seat-input-downloadnshare-svg">
+                    <img src="assets/icon/progress-download.svg" alt="download-svg">
+                </div>
+                <span class="seat-input-downloadnshare-text">Download and share Seat-Chart</span>
+            </button>
+        </div>
     </div>
 
-    <div class="seat-result-container" id="canvas-target">
+    <div class="seat-result-container">
         <span class="seat-result-hidden-text">made by: o-matic.pages.dev</span>
         <span class="seat-result-papan-gede"></span>
         <span class="seat-result-pintu"></span>
@@ -102,11 +113,4 @@
             </div>
         </div>
     </div>
-
-    <button class="download-share-button" id="download-share-btn">
-        <div class="download-svg-container">
-            <img src="assets/icon/progress-download.svg" alt="download-svg">
-        </div>
-        <div class="download-share-text">Download and share Seat-Chart</div>
-    </button>
 </div>

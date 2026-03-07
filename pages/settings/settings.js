@@ -7,8 +7,10 @@ if (localStorage.getItem("theme") === null) localStorage.setItem("theme", "auto"
 if (localStorage.getItem("theme") === "auto") isAuto = true;
 else isAuto = false;
 
-if (!window.matchMedia('(prefers-color-scheme: dark)').matches) theme("light");
-else theme("dark");
+if (isAuto) {
+    if (!window.matchMedia('(prefers-color-scheme: dark)').matches) theme("light");
+    else theme("dark");
+} else theme(localStorage.getItem("theme"));
 
 export function theme(mode) {
     if (mode === "light") {
@@ -16,6 +18,7 @@ export function theme(mode) {
         document.documentElement.style.setProperty('--bg-footer-color', '#81818142');
         document.documentElement.style.setProperty('--bg-before-color', 'rgba(0, 0, 0, 0.13)');
         document.documentElement.style.setProperty('--primary-color', '#FD7AD6');
+        document.documentElement.style.setProperty('--secondary-color', '#ff8fdc');
         document.documentElement.style.setProperty('--bg-color', '#f5f5f5');
         document.documentElement.style.setProperty('--bg-second-color', '#DBDBDB');
         document.documentElement.style.setProperty('--bg-third-color', '#C4C4C4');
@@ -32,6 +35,7 @@ export function theme(mode) {
         document.documentElement.style.setProperty('--bg-footer-color', '#17171aA8');
         document.documentElement.style.setProperty('--bg-before-color', 'rgba(0,0,0, 0.6)');
         document.documentElement.style.setProperty('--primary-color', '#FC3EC4');
+        document.documentElement.style.setProperty('--secondary-color', '#ff65cc');
         document.documentElement.style.setProperty('--bg-color', '#17171a');
         document.documentElement.style.setProperty('--bg-second-color', '#2E2E34');
         document.documentElement.style.setProperty('--bg-third-color', '#414149');

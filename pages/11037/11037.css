@@ -1,1 +1,38 @@
+.backgroundaoe {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+    background-color: white;
+}
 
+.sceneaoe {
+    width: 90%;
+    transform-style: preserve-3d; 
+    perspective: 700px; 
+    perspective-origin: 50% 50%;
+}
+
+.videoaoe {
+    position:relative;
+    /* top: 140px; */
+    padding-bottom:56.25%;
+    overflow:hidden;
+    /* animation: spina 5s linear infinite; */
+    transform: rotateX(45deg) rotateY(45deg);
+}
+
+.frameaoe {
+    position:absolute;
+    left:0px;
+    top:0px;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    border:none;
+}
+
+@keyframes spina {
+    from {transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);}
+    to {transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg);}
+}
