@@ -68,7 +68,7 @@
 }
 
 .seat-input-downloadnshare-button:disabled {
-    filter: brightness(var(--menu-disabled-value));
+    filter: brightness(calc(var(--menu-disabled-value) - .1));
     cursor: not-allowed;
 }
 

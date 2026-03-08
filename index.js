@@ -1,7 +1,6 @@
 /*
 TO-DO:
-(on seat)
-5. add rigged seat (maybe...)
+none!
 */
 
 /*

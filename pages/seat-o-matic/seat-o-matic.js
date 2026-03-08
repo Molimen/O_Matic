@@ -1,14 +1,14 @@
 import { returnPerson } from '../person.js';
 
-function shuffle(array) {
-  const copy = [...array];
+function shuffleSeat(array) {
+    const copy = [...array];
 
-  for (let i = copy.length - 1; i > 0; i--) {
-    const randomIndex = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]];
-  }
+    for (let i = copy.length - 1; i > 0; i--) {
+        const randomIndex = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]];
+    }
 
-  return copy;
+    return copy;
 }
 
 function resetSeat() {
@@ -22,6 +22,19 @@ function resetSeat() {
     });
 }
 
+// return 0 if boy else if girl 1
+function getGender(absent) {
+    let person = returnPerson()[Number(localStorage.getItem("classSelect"))];
+    
+    return person[absent-1][1] === "L" ? 0 : 1;
+}
+
+let RSeat1;
+let RSeat2;
+// yes it's is possibe to have both gender on the same seat, but that shit is too obvious
+const RSeatItemCONST = [[1,17],[1,26],[21,13],[32,18],[32,17],[32,13],[21,18],[21,17]]; // please add more...
+let RSeatChangeHappen = 50;
+let RseatUpTo = 3;
 let globalSeat;
 function writeSeat(isWrite) {
     resetSeat();
@@ -37,8 +50,8 @@ function writeSeat(isWrite) {
             else if (person[i][1] === "P") woman.push(person[i]);
         }
 
-        let manRandom = shuffle(man);
-        let womanRandom = shuffle(woman);
+        let manRandom = shuffleSeat(man);
+        let womanRandom = shuffleSeat(woman);
         let checkBalanced;
         if (manRandom.length === womanRandom.length) checkBalanced = 0;
         else if (manRandom.length > womanRandom.length) checkBalanced = 1;
@@ -48,9 +61,9 @@ function writeSeat(isWrite) {
             if (manRandom.length === 0 || womanRandom.length === 0) {
                 if (checkBalanced > 0) {
                     if (checkBalanced === 1) {
-                        seatOrder.push([manRandom.pop()[0]+100,manRandom.pop()[0]+100]);
+                        seatOrder.push([manRandom.pop()[0],manRandom.pop()[0]]);
                     } else if (checkBalanced === 2) {
-                        seatOrder.push([womanRandom.pop()[0]+200,womanRandom.pop()[0]+200]);
+                        seatOrder.push([womanRandom.pop()[0],womanRandom.pop()[0]]);
                     }
 
                     checkBalanced = 0;
@@ -61,9 +74,9 @@ function writeSeat(isWrite) {
 
             if (Math.floor(Math.random()*101) > 85 && checkBalanced > 0) {
                 if (checkBalanced === 1) {
-                    seatOrder.push([manRandom.pop()[0]+100,manRandom.pop()[0]+100]);
+                    seatOrder.push([manRandom.pop()[0],manRandom.pop()[0]]);
                 } else if (checkBalanced === 2) {
-                    seatOrder.push([womanRandom.pop()[0]+200,womanRandom.pop()[0]+200]);
+                    seatOrder.push([womanRandom.pop()[0],womanRandom.pop()[0]]);
                 }
                 if (manRandom.length === womanRandom.length) {
                     checkBalanced = 0;
@@ -72,6 +85,54 @@ function writeSeat(isWrite) {
                 seatOrder.push([manRandom.pop()[0],womanRandom.pop()[0]]);
             }
         }
+
+        if (!(Math.floor(Math.random()*101) > RSeatChangeHappen)) {
+            console.log("RIGGED MODE ON!");
+            let RSeatItem = [];
+            let RSeatItemIndexDone = [];
+            let RSeatItemAbsentDone = [];
+            let hitung = 0;
+
+            for (let i = 0; i < RseatUpTo; i++) {
+                if (hitung > 10000) {
+                    console.warn("there is duplicate absent and the data doesn't offer any to replace the data!");
+                    break;
+                }
+                hitung++;
+                const randomIndex = Math.floor(Math.random() * (RSeatItemCONST.length));
+
+                if (RSeatItemIndexDone.includes(randomIndex) || (RSeatItemAbsentDone.includes(RSeatItemCONST[randomIndex][0]) || RSeatItemAbsentDone.includes(RSeatItemCONST[randomIndex][1]))) {
+                    i--;
+                    continue;
+                }
+                RSeatItemAbsentDone.push(RSeatItemCONST[randomIndex][0]);
+                RSeatItemAbsentDone.push(RSeatItemCONST[randomIndex][1]);
+                RSeatItemIndexDone.push(randomIndex);
+
+                RSeatItem.push(RSeatItemCONST[randomIndex]);
+            }
+
+            for (let i = 0; i < RSeatItem.length; i++) {
+                for (let j = 0; j < seatOrder.length; j++) {
+                    if (seatOrder[j][getGender(RSeatItem[i][0])] === RSeatItem[i][0]) {
+                        RSeat1 = j;
+                        break
+                    }
+                }
+
+                for (let j = 0; j < seatOrder.length; j++) {
+                    if (seatOrder[j][getGender(RSeatItem[i][1])] === RSeatItem[i][1]) {
+                        RSeat2 = j;
+                        break
+                    }
+                }
+
+                let temp = seatOrder[RSeat2][getGender(RSeatItem[i][1])^1];
+                seatOrder[RSeat2][getGender(RSeatItem[i][1])^1] = seatOrder[RSeat1][getGender(RSeatItem[i][0])];
+                seatOrder[RSeat1][getGender(RSeatItem[i][0])] = temp;
+            }
+        }
+
         globalSeat = structuredClone(seatOrder);
         document.querySelector(".seat-input-downloadnshare-button").disabled = false;
     } else if (!isWrite) {
@@ -81,15 +142,10 @@ function writeSeat(isWrite) {
     let counter = 0;
     document.querySelectorAll('.seat-item-L').forEach(el => {
         if (counter < 16) {
-            if (seatOrder[counter][0] > 100 && seatOrder[counter][0] < 200) {
-                el.textContent = seatOrder[counter][0]-100;
-                el.style.backgroundColor = "#9FFFA5";
-            } else if (seatOrder[counter][0] > 200) {
-                el.textContent = seatOrder[counter][1]-200;
-                el.style.backgroundColor = "#FFFA9F";
-            } else {
-                el.textContent = seatOrder[counter][0];
-            }
+            el.textContent = seatOrder[counter][0];
+            if (getGender(seatOrder[counter][0]) === 0) el.style.backgroundColor = "#9FFFA5";
+            else if (getGender(seatOrder[counter][0]) === 1) el.style.backgroundColor = "#FFFA9F";
+            
             counter++;
         } else {
             el.textContent = "XX";
@@ -99,15 +155,10 @@ function writeSeat(isWrite) {
     counter = 0;
     document.querySelectorAll('.seat-item-P').forEach(el => {
         if (counter < 16) {
-            if (seatOrder[counter][1] > 100 && seatOrder[counter][1] < 200) {
-                el.textContent = seatOrder[counter][1]-100;
-                el.style.backgroundColor = "#9FFFA5";
-            } else if (seatOrder[counter][0] > 200) {
-                el.textContent = seatOrder[counter][0]-200;
-                el.style.backgroundColor = "#FFFA9F";
-            } else {
-                el.textContent = seatOrder[counter][1];
-            }
+            el.textContent = seatOrder[counter][1];
+            if (getGender(seatOrder[counter][1]) === 0) el.style.backgroundColor = "#9FFFA5";
+            else if (getGender(seatOrder[counter][1]) === 1) el.style.backgroundColor = "#FFFA9F";
+
             counter++;
         } else {
             el.textContent = "XX";

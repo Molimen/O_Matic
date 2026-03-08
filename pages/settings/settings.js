@@ -14,7 +14,7 @@ if (isAuto) {
 
 export function theme(mode) {
     if (mode === "light") {
-        document.documentElement.style.setProperty('--menu-disabled-value', .9);
+        document.documentElement.style.setProperty('--menu-disabled-value', .86);
         document.documentElement.style.setProperty('--bg-footer-color', '#81818142');
         document.documentElement.style.setProperty('--bg-before-color', 'rgba(0, 0, 0, 0.13)');
         document.documentElement.style.setProperty('--primary-color', '#FD7AD6');
