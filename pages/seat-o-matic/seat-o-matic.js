@@ -1,4 +1,4 @@
-import { returnPerson } from '../person.js';
+import { returnPerson } from '../modules/person.js';
 
 function shuffleSeat(array) {
     const copy = [...array];

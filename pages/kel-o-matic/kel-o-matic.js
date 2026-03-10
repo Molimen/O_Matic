@@ -1,4 +1,4 @@
-import { returnPerson } from '../person.js';
+import { returnPerson } from '../modules/person.js';
 
 /*
 type 0 = empty type search (groupSearchTypeOutput NaN);

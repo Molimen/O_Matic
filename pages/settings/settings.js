@@ -1,4 +1,4 @@
-import { currentLangFull } from '../lang.js';
+import { currentLangFull } from '../modules/lang.js';
 
 export let isAuto = false;
 

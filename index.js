@@ -8,7 +8,7 @@ dont forget do lang...
 */
 
 import { theme, effect, isAuto } from './pages/settings/settings.js';
-import { getLang, currentLang } from './pages/lang.js';
+import { getLang, currentLang } from './pages/modules/lang.js';
 
 async function updateMenuItemSelect(page,skip=false) {
     const selector = document.getElementById('menu-item-select');
