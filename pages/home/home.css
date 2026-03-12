@@ -15,7 +15,7 @@
     background-size: cover;
     background-position: right;
     background-repeat: no-repeat;
-    border: 2px solid var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 21px;
     transition: background-color .1s ease;
 }
@@ -28,12 +28,12 @@
     align-items: center;
     row-gap: 1.75rem;
     column-gap: 1.2rem;
-    margin: 1rem auto;
+    margin: 0 auto;
     height: auto;
     width: 80%;
     padding: 25px;
     background-color: var(--bg-color);
-    border: 2px solid var(--border-color);
+    border: 1px solid var(--border-color);
     border-radius: 21px;
 }
 
@@ -127,6 +127,23 @@
         rgb(255, 110, 180)
     );
     animation: spin 10s linear infinite !important;
+}
+
+.birthday-container {
+    z-index: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    align-items: center;
+    row-gap: 1.75rem;
+    column-gap: 1.2rem;
+    margin: 0 auto;
+    height: auto;
+    width: 80%;
+    padding: 25px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 21px;
 }
 
 @keyframes spin {
