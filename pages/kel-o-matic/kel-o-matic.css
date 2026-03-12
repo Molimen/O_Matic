@@ -288,3 +288,67 @@
         flex-direction: column;
     }
 }
+
+/* download button */
+
+.group-input-downloadnshare-button {
+    display: flex;
+    width: clamp(200px, 100%, 300px);
+    height: 3.5rem;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--primary-color);
+    border-width: 0;
+    border-radius: 21px;
+    transition: all .25s ease;
+    margin: auto;
+}
+
+.group-input-downloadnshare-button * {
+    pointer-events: none;
+}
+
+.group-input-downloadnshare-button:not(button:disabled):hover {
+    scale: 1.06;
+}
+
+.group-input-downloadnshare-button:not(button:disabled):hover .download-svg-container {
+    width: 5.5rem;
+}
+
+.group-input-downloadnshare-button:not(button:disabled):active {
+    scale: 1;
+}
+
+.group-input-downloadnshare-button:disabled {
+    filter: brightness(calc(var(--menu-disabled-value) - .1));
+    cursor: not-allowed;
+}
+
+.group-input-downloadnshare-svg {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    padding-left: .5rem;
+    width: 5rem;
+    background-color: var(--secondary-color);
+    mask-image: linear-gradient(to right, black 70%, transparent 100%); /*black is just a template, dont change it!*/
+    transition: width .25s ease;
+}
+
+.group-input-downloadnshare-svg img {
+    height: 80%;
+}
+
+.group-input-downloadnshare-text {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    font-size: clamp(1rem, 5vw, 1.25rem);
+    color: var(--text-color);
+    text-wrap: balance;
+}
+
+/* ------------------------------ */
