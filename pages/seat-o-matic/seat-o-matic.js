@@ -171,7 +171,7 @@ async function downloadSeat() {
         return;
     }
 
-    const module = await import("./html2canvas.esm.js");
+    const module = await import("../modules/html2canvas.esm.js");
     const html2canvas = module.default;
 
     const element_target = document.querySelector('.seat-result-container');

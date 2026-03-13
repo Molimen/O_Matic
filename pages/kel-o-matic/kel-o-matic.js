@@ -1,5 +1,7 @@
 import { returnPerson } from '../modules/person.js';
 
+// FIX LINE 214 CUZ IT ERRORS OF UNDEFINED VAR
+
 /*
 type 0 = empty type search (groupSearchTypeOutput NaN);
 type 1 = too much group inputed (totalGroup > totalPerson);
@@ -63,7 +65,7 @@ function resetGroup(isWrite) {
     }, isWrite == true ? 100 : 0);
 }
 
-let globalGroup = [];
+let globalGroup;
 async function writeKel(isWrite) {
     resetGroup(isWrite);
     // Input User
@@ -211,12 +213,13 @@ async function writeKel(isWrite) {
         globalGroup = structuredClone(group);
     } else {
         group = structuredClone(globalGroup);
-        if (group.length === 0) {
-            return;
-        }
+        if (typeof group === "undefined") return;
     }
 
     await new Promise(resolve => setTimeout(resolve, isWrite == true ? 180 : 0));
+
+    document.querySelector(".group-input-downloadnshare-button").disabled = false;
+
     for (let i = 0; i < totalGroup; i++) {
         const wraper = document.createElement('div');
         wraper.className = 'group-result-wraper';
@@ -283,6 +286,45 @@ function checkGroupGentype(type) {
             });
             break;
     }
+}
+
+async function downloadGroup() {
+    if (typeof globalGroup === "undefined") {
+        return;
+    }
+
+    const module = await import("../modules/html2canvas.esm.js");
+    const html2canvas = module.default;
+
+    const element_target = document.querySelector('.group-result-container');
+    element_target.style.borderRadius = "0px";
+    const canvas = await html2canvas(element_target);
+
+    canvas.toBlob(async (blob) => {
+        const file = new File([blob], "hasil.png", {type: "image/png"});
+
+        //firefox kaga support share
+        if (navigator.share && navigator.canShare?.({ files: [file] })) {
+            await navigator.share({
+                files: [file],
+                title: "Group-chart baru"
+            });
+            } 
+        // Fallback download
+        else {
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "hasil.png";
+            a.click();
+
+            URL.revokeObjectURL(url);
+            window.alert("Browser ga bisa share, cek hasil dalam histori download")
+        }
+
+    }, "image/png")
+    element_target.style.borderRadius = "21px";
 }
 
 export function init() {
@@ -378,4 +420,11 @@ export function init() {
         writeKel(false);
     } catch {
     }
+
+    if (typeof globalGroup !== "undefined") document.querySelector(".group-input-downloadnshare-button").disabled = false;
+    else document.querySelector(".group-input-downloadnshare-button").disabled = true;
+
+    document.querySelector('.group-input-downloadnshare-button').addEventListener("click", () => {
+        downloadGroup();
+    })
 }
