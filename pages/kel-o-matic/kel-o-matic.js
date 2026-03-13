@@ -65,7 +65,7 @@ function resetGroup(isWrite) {
     }, isWrite == true ? 100 : 0);
 }
 
-let globalGroup;
+let globalGroup = [];
 async function writeKel(isWrite) {
     resetGroup(isWrite);
     // Input User
@@ -296,6 +296,7 @@ async function downloadGroup() {
     const html2canvas = module.default;
 
     const element_target = document.querySelector('.group-result-container');
+    element_target.style.borderRadius = "0px";
     const canvas = await html2canvas(element_target);
 
     canvas.toBlob(async (blob) => {
@@ -322,6 +323,7 @@ async function downloadGroup() {
         }
 
     }, "image/png")
+    element_target.style.borderRadius = "21px";
 }
 
 export function init() {
@@ -409,6 +411,7 @@ export function init() {
 
     document.querySelector(".group-input-button").addEventListener("click", () => {
         writeKel(true);
+        canDownload();
     });
 
     checkGroupGentype(localStorage.getItem("classSelect"));
@@ -418,12 +421,15 @@ export function init() {
     } catch {
     }
 
-    if (typeof globalGroup !== "undefined") {
-        document.querySelector(".group-input-downloadnshare-button").disabled = false;
+    function canDownload () {
+        if (globalGroup.length !== 0) {
+            document.querySelector(".group-input-downloadnshare-button").disabled = false;
+        } else {
+            document.querySelector(".group-input-downloadnshare-button").disabled = true;
+        }  
     }
-    else {
-        document.querySelector(".group-input-downloadnshare-button").disabled = true;
-    }
+
+    canDownload();
 
     document.querySelector('.group-input-downloadnshare-button').addEventListener("click", () => {
         downloadGroup();
