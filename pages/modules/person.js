@@ -201,3 +201,36 @@ const PERSON = [
 export function returnPerson() {
     return PERSON;
 }
+
+const BIRTHDAY = [
+    //january
+    [[3, "1000 Blows", "Special"]],
+    //febuary
+    [],
+    //maruary
+    [],
+    //apruary
+    [],
+    //mayuary
+    [],
+    //junuary
+    [[3, "Joyce"],[15, "Kelly"]],
+    //juluary
+    [],
+    //auguary
+    [[12, "Jonathan"]],
+    //sepuary
+    [12, "saye"],
+    //octuary
+    [],
+    //novuary
+    [],
+    //decuary
+    [],
+    // TEST DOANG INI SI... (month === "March")
+    [[3, "Toko"],[9, "Hiyoko"],[14, "Chiaki"],[14, "Chihiro"],[26, "Kaede"],[27, "Natsumi"]],
+];
+
+export function returnBirthday() {
+    return BIRTHDAY;
+}
