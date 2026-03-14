@@ -65,7 +65,7 @@ function resetGroup(isWrite) {
     }, isWrite == true ? 100 : 0);
 }
 
-let globalGroup = [];
+let globalGroup;
 async function writeKel(isWrite) {
     resetGroup(isWrite);
     // Input User
@@ -213,12 +213,13 @@ async function writeKel(isWrite) {
         globalGroup = structuredClone(group);
     } else {
         group = structuredClone(globalGroup);
-        if (group.length === 0) {
-            return;
-        }
+        if (typeof group === "undefined") return;
     }
 
     await new Promise(resolve => setTimeout(resolve, isWrite == true ? 180 : 0));
+
+    document.querySelector(".group-input-downloadnshare-button").disabled = false;
+
     for (let i = 0; i < totalGroup; i++) {
         const wraper = document.createElement('div');
         wraper.className = 'group-result-wraper';
@@ -411,7 +412,6 @@ export function init() {
 
     document.querySelector(".group-input-button").addEventListener("click", () => {
         writeKel(true);
-        canDownload();
     });
 
     checkGroupGentype(localStorage.getItem("classSelect"));
@@ -421,15 +421,8 @@ export function init() {
     } catch {
     }
 
-    function canDownload () {
-        if (globalGroup.length !== 0) {
-            document.querySelector(".group-input-downloadnshare-button").disabled = false;
-        } else {
-            document.querySelector(".group-input-downloadnshare-button").disabled = true;
-        }  
-    }
-
-    canDownload();
+    if (typeof globalGroup !== "undefined") document.querySelector(".group-input-downloadnshare-button").disabled = false;
+    else document.querySelector(".group-input-downloadnshare-button").disabled = true;
 
     document.querySelector('.group-input-downloadnshare-button').addEventListener("click", () => {
         downloadGroup();
