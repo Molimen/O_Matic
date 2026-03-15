@@ -1,6 +1,9 @@
 .seat-input-container {
     display: flex;
-    height: 80px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    height: auto;
     padding: 12px;
     margin: 0 auto;
     box-sizing: border-box;
@@ -29,6 +32,7 @@
     border-radius: 21px;
     transition: scale 0.3s;
     cursor: pointer;
+    flex: 1 1 auto;
 }
 
 .seat-input-button:hover {
@@ -223,4 +227,83 @@
         flex-direction: column;
         height: auto;
     }
+    
+    /* a little color thing here */
+    .color-container label:first-child {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
+
+/* ------------------------------ color thing (START) ------------------------------ */
+
+.color-input-widget {
+    height: auto;
+    width: clamp(11rem,50%,25rem);
+    background-color: var(--bg-second-color);
+    display: flex;
+    flex-direction: column;
+    row-gap: .2rem;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    padding: 5px 0;
+    box-sizing: border-box;
+    font-family: inherit;
+    font-size: 1.05rem;
+    color: var(--text-color);
+}
+
+.color-container label {
+    display: flex;
+    justify-content: space-evenly;
+    width: 90%;
+    margin: auto;
+    align-items: center;
+    padding: 3px 0;
+    cursor: pointer;
+}
+.color-container {
+    width: 8.5rem;
+    height: 2rem;
+}
+
+.color-input {
+    width: 1.5rem;
+    height: 1.5rem;
+    border: 2px solid black;
+    border-radius: .5rem;
+    box-sizing: border-box;
+}
+
+.boy-color .color-input {
+    background-color: #9fffa5;
+}
+.girl-color .color-input {
+    background-color: #fffa9f;
+}
+
+input[type="color"] {
+    display: none;
+}
+
+.color-input-title {
+    font-size: 1.3rem;
+    width: 100%;
+    text-align: center;
+    margin: auto;
+    font-weight: bold;
+    letter-spacing: .1rem;
+}
+
+.main-color-container {
+    display: flex;
+    flex-wrap: wrap;
+    white-space: nowrap;
+    width: max(90%, 11rem);
+    justify-content: space-around;
+    align-items: center;
+}
+
+/* ------------------------------ color thing (END) --------------------------------  */
