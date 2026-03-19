@@ -2,14 +2,15 @@ import { returnBirthday } from '../modules/person.js';
 
 const now = new Date();
 
-let test = true;
-let testDate = 14;
+let test = false;
+let testDate = 19;
+let testMonth = 9;
 
 let month;
 let date;
 
 if (test) {
-    month = 12;
+    month = testMonth-1;
     date = testDate;
 
 } else {
@@ -37,14 +38,15 @@ function showBirthday() {
         line.className = "birthday-date";
         line.textContent = `${birthday[counter][0]}`;
 
+        const birthday_gap = 3;
         if (date <= birthday[counter][0]) {
             if (Math.abs(date-birthday[counter][0]) <= 0) {
                 wraper.style.background = "#FFD700";
                 wraper.style.color = "black";
-            } else if (Math.abs(date-birthday[counter][0]) <= 1) {
+            } else if (Math.abs(date-birthday[counter][0]) <= Math.floor(birthday_gap/2)) {
                 wraper.style.background = "#CE8946";
                 wraper.style.color = "black";
-            } else if (Math.abs(date-birthday[counter][0]) <= 3) {
+            } else if (Math.abs(date-birthday[counter][0]) <= birthday_gap) {
                 wraper.style.background = "#C4C4C4";
                 wraper.style.color = "black";
             }
