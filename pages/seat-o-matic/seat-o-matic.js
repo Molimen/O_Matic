@@ -55,7 +55,7 @@ function resetSeat() {
     document.querySelectorAll('.seat-item-L').forEach(el => {
         el.textContent = '??';
         el.style.backgroundColor = localStorage.getItem("boy_color") === null ? "#9FFFA5" : localStorage.getItem("boy_color");
-        el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color") === null ? "#FFFA9F" : localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
+        el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color") === null ? "#9FFFA5" : localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
     });
     document.querySelectorAll('.seat-item-P').forEach(el => {
         el.textContent = '??';
