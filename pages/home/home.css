@@ -5,7 +5,8 @@
     width: auto;
     height: 100px;
     padding: 15px;
-    font-size: clamp(2rem,5vw,3rem);
+    font-size: clamp(2rem,10vw,3.25rem);
+    line-height: clamp(2rem,8.25vw,3.25rem);
     letter-spacing: .1rem;
     font-weight: bolder;
     font-style: oblique;
