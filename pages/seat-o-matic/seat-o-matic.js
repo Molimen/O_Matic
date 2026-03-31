@@ -1,5 +1,45 @@
 import { returnPerson } from '../modules/person.js';
 
+function getLuminanceFromColor(color) {
+
+    const hexRegex = /^#([A-Fa-f0-9]{3}){1,2}$/;
+    if (!hexRegex.test(color)) { //handle rgb
+
+      const values = color.substring(color.indexOf('(') + 1, color.indexOf(')'));
+      
+      const parts = values.split(',');
+
+      const red = parts[0].trim();
+      const green = parts[1].trim();
+      const blue = parts[2].trim();
+      
+      console.log(`R: ${red}, G: ${green}, B: ${blue}`);
+      return 0.2126 * Number(red) + 0.7152 * Number(green) + 0.0722 * Number(blue); 
+      
+    } else {
+        let cleanHex = color.replace('#', '');
+        if (cleanHex.length === 3) {
+        cleanHex = cleanHex.split('').map(char => char + char).join(''); 
+        }
+    
+        const r = parseInt(cleanHex.substring(0, 2), 16);
+        const g = parseInt(cleanHex.substring(2, 4), 16);
+        const b = parseInt(cleanHex.substring(4, 6), 16);
+    
+
+        const [rs, gs, bs] = [r, g, b].map(v => {
+        v /= 255;
+        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        
+        return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs; //outputnya antara 0 (ireng) sampe 1 (very putih)
+        // warna terang : warna > 0.179
+        // warna gelap : warna <= 0.179
+    }
+  
+    
+  }
+  
 function shuffleSeat(array) {
     const copy = [...array];
 
@@ -15,10 +55,12 @@ function resetSeat() {
     document.querySelectorAll('.seat-item-L').forEach(el => {
         el.textContent = '??';
         el.style.backgroundColor = localStorage.getItem("boy_color") === null ? "#9FFFA5" : localStorage.getItem("boy_color");
+        el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color") === null ? "#9FFFA5" : localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
     });
     document.querySelectorAll('.seat-item-P').forEach(el => {
         el.textContent = '??';
         el.style.backgroundColor = localStorage.getItem("girl_color") === null ? "#FFFA9F" : localStorage.getItem("girl_color");
+        el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color") === null ? "#FFFA9F" : localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
     });
 }
 
@@ -341,7 +383,8 @@ export function init() {
                 color_hint[index+1].style.backgroundColor = localStorage.getItem("boy_color");
                 
                 document.querySelectorAll(".seat-item-L").forEach((seat) => {
-                    seat.style.backgroundColor = localStorage.getItem("boy_color"); 
+                    seat.style.backgroundColor = localStorage.getItem("boy_color");
+                    seat.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
                 });
             } else if (index === 1) {
 
@@ -351,6 +394,7 @@ export function init() {
 
                 document.querySelectorAll(".seat-item-P").forEach((seat) => {
                     seat.style.backgroundColor = localStorage.getItem("girl_color");
+                    seat.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
                 });
             }
 

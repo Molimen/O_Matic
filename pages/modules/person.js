@@ -202,7 +202,7 @@ export function returnPerson() {
     return PERSON;
 }
 
-const BIRTHDAY = [ //gw cuma masukin yang gw yakin ada di smak
+const BIRTHDAY = [ //gw cuma masukin yang gw yakin ada di smak (MAX NAME IS 8!)
     //january
     [[3, "1000 Blows", "Special"],[12,"Davina A"],[22, "Mario C"]],
     //febuary
