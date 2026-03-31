@@ -201,3 +201,36 @@ const PERSON = [
 export function returnPerson() {
     return PERSON;
 }
+
+const BIRTHDAY = [ //gw cuma masukin yang gw yakin ada di smak
+    //january
+    [[3, "1000 Blows", "Special"],[12,"Davina A"],[22, "Mario C"]],
+    //febuary
+    [[11, "William"],[19, "Marvin"]],
+    //maruary
+    [[10, "Evelyn"], [25, "C Kevin"], [28, "Benzema"],[29,"Davina P"]],
+    //apruary
+    [[19,"Zefanya G"],[21, "Andra"],[26, "Joshua"],[30,"Mika"]],
+    //mayuary
+    [[1,"Nelson", "Raissa"],[2, "Rosa"],[30,"Josia"]],
+    //junuary
+    [[3, "Joyce"],[15, "Kelly"],[25,"Jo Her"],[30,"Mario J"]],
+    //juluary
+    [[6,"Brandon"],[13, "Jo S.B."],[27,"Chatleene"],[24,"Faith"],[31,"Pedro"]],
+    //auguary
+    [[12, "Jonathan"],[20,"Beryl"],[28,"Agnes"],[29,"Alex","Otniel"],[31,"Freyya"]],
+    //sepuary
+    [[1,"Kevin M", "Liona"],[11,"Nayma"],[12, "Daniel"],[15,"Gabriel"],[20,"Jassen"],[24,"Rachel M"]],
+    //octuary
+    [[21,"Alfon"]],
+    //novuary
+    [[4, "Nathan D"]],
+    //decuary
+    [[21,"Nael"]],
+    // TEST DOANG INI SI... (month === "March")
+    [[3, "Toko"],[9, "Hiyoko"],[14, "Chiaki"],[14, "Chihiro"],[26, "Kaede"],[27, "Natsumi"]],
+];
+
+export function returnBirthday() {
+    return BIRTHDAY;
+}
