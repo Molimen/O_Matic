@@ -63,6 +63,7 @@ export function init() {
         btn.addEventListener("click", () => {
             history.replaceState(null, '', `#${btn.dataset.id}`);
             window.dispatchEvent(new HashChangeEvent('hashchange'));
+            localStorage.setItem("transition", true);
         });
     });
 

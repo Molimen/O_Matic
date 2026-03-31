@@ -226,7 +226,10 @@ window.addEventListener('popstate', (event) => {
 });
 
 window.addEventListener('hashchange', () => {
-    updateDOM(location.hash.replace("#", ""));
+    if (localStorage.getItem("transition") !== null && localStorage.getItem("transition") === "true") {
+        updateDOM(location.hash.replace("#", ""),false,detectDirection(location.hash.replace("#", "")));
+        localStorage.setItem("transition", false);
+    } else updateDOM(location.hash.replace("#", ""));
 });
 
 window.matchMedia("(max-width: 768px)").addEventListener("change", () => {
