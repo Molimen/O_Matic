@@ -253,6 +253,15 @@
     font-family: inherit;
     font-size: 1.05rem;
     color: var(--text-color);
+    transition: filter .2s ease;
+}
+.color-input-widget.disabled {
+    filter: brightness(calc(var(--menu-disabled-value) - 0.35));
+    cursor: not-allowed;
+    transition: all .2s ease;
+}
+.color-input-widget.disabled * {
+    pointer-events: none;
 }
 
 .color-container label {

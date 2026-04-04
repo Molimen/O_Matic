@@ -75,7 +75,7 @@ let RSeat1;
 let RSeat2;
 // yes it's is possibe to have both gender on the same seat, but that shit is too obvious
 const RSeatItemCONST = [[1,17],[1,26],[21,13],[32,18],[32,17],[32,13],[21,18],[21,17],[1,18]]; // please add more...
-let RSeatChangeHappen = 50; //definitely should be around 25% chance, cuz imagine if we got rigged seat like 5 times in a row
+let RSeatChangeHappen = 25; //definitely should be around 25% chance, cuz imagine if we got rigged seat like 5 times in a row
 let RseatUpTo = 3;
 let globalSeat;
 function writeSeat(isWrite) {
@@ -179,6 +179,7 @@ function writeSeat(isWrite) {
 
         globalSeat = structuredClone(seatOrder);
         document.querySelector(".seat-input-downloadnshare-button").disabled = false;
+        document.querySelector('.color-input-widget').classList.remove('disabled');
     } else if (!isWrite) {
         seatOrder = structuredClone(globalSeat);
     }
@@ -187,8 +188,13 @@ function writeSeat(isWrite) {
     document.querySelectorAll('.seat-item-L').forEach(el => {
         if (counter < 16) {
             el.textContent = seatOrder[counter][0];
-            if (getGender(seatOrder[counter][0]) === 0) el.style.backgroundColor = localStorage.getItem("boy_color");
-            else if (getGender(seatOrder[counter][0]) === 1) el.style.backgroundColor = localStorage.getItem("girl_color");
+            if (getGender(seatOrder[counter][0]) === 0) {
+                el.style.backgroundColor = localStorage.getItem("boy_color");
+                el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
+            } else if (getGender(seatOrder[counter][0]) === 1) {
+                el.style.backgroundColor = localStorage.getItem("girl_color");
+                el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+            } 
             
             counter++;
         } else {
@@ -200,8 +206,13 @@ function writeSeat(isWrite) {
     document.querySelectorAll('.seat-item-P').forEach(el => {
         if (counter < 16) {
             el.textContent = seatOrder[counter][1];
-            if (getGender(seatOrder[counter][1]) === 0) el.style.backgroundColor = localStorage.getItem("boy_color");
-            else if (getGender(seatOrder[counter][1]) === 1) el.style.backgroundColor = localStorage.getItem("girl_color");
+            if (getGender(seatOrder[counter][1]) === 0) {
+                el.style.backgroundColor = localStorage.getItem("boy_color");
+                el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
+            } else if (getGender(seatOrder[counter][1]) === 1) {
+                el.style.backgroundColor = localStorage.getItem("girl_color");
+                el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+            } 
 
             counter++;
         } else {
@@ -298,8 +309,14 @@ export function init() {
     } catch {
     }
 
-    if (typeof globalSeat !== "undefined") document.querySelector(".seat-input-downloadnshare-button").disabled = false;
-    else document.querySelector(".seat-input-downloadnshare-button").disabled = true;
+    if (typeof globalSeat !== "undefined") {
+        document.querySelector(".seat-input-downloadnshare-button").disabled = false;
+        document.querySelector('.color-input-widget').classList.remove('disabled');
+    } else {
+        document.querySelector(".seat-input-downloadnshare-button").disabled = true;
+        document.querySelector('.color-input-widget').classList.add('disabled');
+    }
+     
 
     document.querySelector(".seat-input-downloadnshare-button").addEventListener("click", () => {
         downloadSeat();
@@ -333,20 +350,14 @@ export function init() {
             default: index === 0 ? localStorage.getItem("boy_color") : localStorage.getItem("girl_color"),
     
             swatches: [
-                'rgba(244, 67, 54, 1)',
-                'rgba(233, 30, 99, 0.95)',
-                'rgba(156, 39, 176, 0.9)',
-                'rgba(103, 58, 183, 0.85)',
-                'rgba(63, 81, 181, 0.8)',
-                'rgba(33, 150, 243, 0.75)',
-                'rgba(3, 169, 244, 0.7)',
-                'rgba(0, 188, 212, 0.7)',
-                'rgba(0, 150, 136, 0.75)',
-                'rgba(76, 175, 80, 0.8)',
-                'rgba(139, 195, 74, 0.85)',
-                'rgba(205, 220, 57, 0.9)',
-                'rgba(255, 235, 59, 0.95)',
-                'rgba(255, 193, 7, 1)'
+                '#9FFFA5',
+                '#FFFA9F',
+                '#2196F3',
+                '#FF48C4',
+                '#84A98C',
+                '#FDA4AF',
+                '#733BD9',
+                '#F59E0B'
             ],
     
             components: {
@@ -382,19 +393,31 @@ export function init() {
                 
                 color_hint[index+1].style.backgroundColor = localStorage.getItem("boy_color");
                 
-                document.querySelectorAll(".seat-item-L").forEach((seat) => {
-                    seat.style.backgroundColor = localStorage.getItem("boy_color");
-                    seat.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
+                document.querySelectorAll(".seat-placement-actual-seat").forEach((seat) => {
+                    if (getGender(Number(seat.textContent)) === 0) {
+                        seat.style.backgroundColor = localStorage.getItem("boy_color");
+                        seat.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
+                    } else {
+                        seat.style.backgroundColor = localStorage.getItem("girl_color");
+                        seat.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+                    }
+
+                    
                 });
             } else if (index === 1) {
-
                 localStorage.setItem("girl_color", hex);
                 
                 color_hint[index-1].style.backgroundColor = localStorage.getItem("girl_color");
 
-                document.querySelectorAll(".seat-item-P").forEach((seat) => {
-                    seat.style.backgroundColor = localStorage.getItem("girl_color");
-                    seat.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+                document.querySelectorAll(".seat-placement-actual-seat").forEach((seat) => {
+                    if (getGender(Number(seat.textContent)) === 1) {
+                        seat.style.backgroundColor = localStorage.getItem("girl_color");
+                        seat.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+                    } else {
+                        seat.style.backgroundColor = localStorage.getItem("boy_color");
+                        seat.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
+                    }
+                    
                 });
             }
 

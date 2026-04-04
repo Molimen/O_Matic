@@ -47,6 +47,7 @@
 
 .settings-item-title {
     font-size: 26px;
+    color: var(--tertiary-color)
 }
 
 .settings-content-desc-title {

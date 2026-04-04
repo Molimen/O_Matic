@@ -93,6 +93,7 @@ e.g:
 :root {
     --primary-color: #FC3EC4;
     --secondary-color: #ff65cc;
+    --tertiary-color: #ff3b63;
     --bg-color: #17171a;
     --bg-second-color: #2E2E34;
     --bg-third-color: #414149;
