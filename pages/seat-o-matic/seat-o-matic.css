@@ -145,6 +145,9 @@
 }
 
 .seat-result-meja-guru {
+    display: inline-flex; 
+    justify-content: center;
+    align-items: center; 
     position: absolute; 
     left: 1.4%; 
     top: 12.3%;
@@ -152,7 +155,11 @@
     height: 9.6%; 
     background-color: #FF9FCF; 
     border: 3px solid black; 
-    border-radius: 3px; 
+    border-radius: 3px;
+}
+.seat-result-meja-guru img {
+    width: 6cqw;
+    aspect-ratio: 1/1 ;
 }
 
 .seat-result-color-type {

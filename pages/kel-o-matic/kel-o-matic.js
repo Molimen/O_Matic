@@ -298,7 +298,7 @@ async function downloadGroup() {
 
     const element_target = document.querySelector('.group-result-container');
     element_target.style.borderRadius = "0px";
-    const canvas = await html2canvas(element_target);
+    const canvas = await html2canvas(element_target,{scale : 2});
 
     canvas.toBlob(async (blob) => {
         const file = new File([blob], "hasil.png", {type: "image/png"});

@@ -52,6 +52,11 @@ function shuffleSeat(array) {
 }
 
 function resetSeat() {
+    if (localStorage.getItem('seatClassSelect') !== '5') {
+        document.querySelector('.seat-result-info').style.display = 'none';
+    } else {
+        document.querySelector('.seat-result-info').style.display = 'inline';
+    };
     document.querySelectorAll('.seat-item-L').forEach(el => {
         el.textContent = '??';
         el.style.backgroundColor = localStorage.getItem("boy_color") === null ? "#9FFFA5" : localStorage.getItem("boy_color");
@@ -66,7 +71,7 @@ function resetSeat() {
 
 // return 0 if boy else if girl 1
 function getGender(absent) {
-    let person = returnPerson()[Number(localStorage.getItem("classSelect"))];
+    let person = returnPerson()[Number(localStorage.getItem("seatClassSelect"))];
     
     return person[absent-1][1] === "L" ? 0 : 1;
 }
@@ -74,8 +79,9 @@ function getGender(absent) {
 let RSeat1;
 let RSeat2;
 // yes it's is possibe to have both gender on the same seat, but that shit is too obvious
-const RSeatItemCONST = [[1,17],[1,26],[21,13],[32,18],[32,17],[32,13],[21,18],[21,17],[1,18]]; // please add more...
-let RSeatChangeHappen = 25; //definitely should be around 25% chance, cuz imagine if we got rigged seat like 5 times in a row
+// we should probably disable this someday
+const RSeatItemCONST = [[1,17],[1,26],[21,13],[32,18],[32,17],[32,13],[21,18],[21,17],[1,18]]; // please add more... (no)
+let RSeatChangeHappen = 25; //definitely should be low chance, cuz imagine if we got rigged seat like 5 times in a row
 let RseatUpTo = 3;
 let globalSeat;
 function writeSeat(isWrite) {
@@ -83,7 +89,7 @@ function writeSeat(isWrite) {
     let seatOrder = [];
 
     if (isWrite) {
-        let person = structuredClone(returnPerson()[Number(localStorage.getItem("classSelect"))]);
+        let person = structuredClone(returnPerson()[Number(localStorage.getItem("seatClassSelect"))]);
         let man = [];
         let woman = [];
 
@@ -129,7 +135,7 @@ function writeSeat(isWrite) {
         }
 
         if (!(Math.floor(Math.random()*101) > RSeatChangeHappen)) {
-            if (localStorage.getItem("classSelect") === "5") {
+            if (localStorage.getItem("seatClassSelect") === "5") {
                 console.log("RIGGED MODE ON!");
                 let RSeatItem = [];
                 let RSeatItemIndexDone = [];
@@ -230,7 +236,7 @@ async function downloadSeat() {
     const html2canvas = module.default;
 
     const element_target = document.querySelector('.seat-result-container');
-    const canvas = await html2canvas(element_target);
+    const canvas = await html2canvas(element_target,{scale : 1.5});
 
     canvas.toBlob(async (blob) => {
         const file = new File([blob], "hasil.png", {type: "image/png"});
@@ -259,10 +265,10 @@ async function downloadSeat() {
 }
 
 export function init() {
-    if (localStorage.getItem("classSelect") !== null) {
+    if (localStorage.getItem("seatClassSelect") !== null) {
         const text = document.querySelector(".multiselect-selector-name");
 
-        switch (Number(localStorage.getItem("classSelect"))) {
+        switch (Number(localStorage.getItem("seatClassSelect"))) {
             case 0:
                 text.textContent = "X-1";
                 break;
@@ -285,7 +291,7 @@ export function init() {
                 break;
         }
     } else {
-        localStorage.setItem("classSelect", 0);
+        localStorage.setItem("seatClassSelect", 0);
     }
 
     document.querySelector(".multiselect-selector").addEventListener("click", () => {
@@ -295,7 +301,7 @@ export function init() {
     document.querySelectorAll(".multiselect-options-option").forEach(option => {
         option.addEventListener("click", () => {
             document.querySelector(".multiselect-selector-name").textContent = option.textContent;
-            localStorage.setItem("classSelect", option.dataset.value);
+            localStorage.setItem("seatClassSelect", option.dataset.value);
             document.querySelector(".multiselect-container").classList.remove("open");
         });
     });

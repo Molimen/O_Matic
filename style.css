@@ -337,12 +337,12 @@ input[type=number]::-webkit-inner-spin-button {
 
 .multiselect-options-container {
     position: relative;
-    bottom: 64px;
+    bottom: 0px;
     z-index: 2;
     display: flex;
     flex-direction: column;
     background-color: var(--bg-second-color);
-    border: 1px solid var(--border-color);
+    border: 1px solid oklch(from var(--tertiary-color) calc(l - 0.1) c h);
     border-radius: 21px;
     opacity: 0;
     overflow: hidden;
@@ -372,7 +372,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .multiselect-options-option:hover {
-    background-color: var(--primary-color);
+    background-color: var(--tertiary-color);
 }
 
 /*+=====END OF CSS=====+*/
