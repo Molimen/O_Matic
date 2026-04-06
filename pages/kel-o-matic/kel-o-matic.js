@@ -69,7 +69,7 @@ let globalGroup;
 async function writeKel(isWrite) {
     resetGroup(isWrite);
     // Input User
-    let classOutput = Number(localStorage.getItem("classSelect"));
+    let classOutput = Number(localStorage.getItem(localStorage.getItem("classSelect") !== localStorage.getItem("groupLatestClassSelect") ? "groupLatestClassSelect" : "classSelect"));
     let groupSearchTypeOutput = localStorage.getItem("GroupType");
     let groupNumberOutput = Number(localStorage.getItem("GroupNumber"));
     let groupGenTypeOutput = localStorage.getItem("GroupGenType");
@@ -411,6 +411,7 @@ export function init() {
     });
 
     document.querySelector(".group-input-button").addEventListener("click", () => {
+        localStorage.setItem("groupLatestClassSelect", localStorage.getItem("classSelect"));
         writeKel(true);
     });
 

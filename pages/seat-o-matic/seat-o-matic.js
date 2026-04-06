@@ -52,7 +52,7 @@ function shuffleSeat(array) {
 }
 
 function resetSeat() {
-    if (localStorage.getItem('seatClassSelect') !== '5') {
+    if (localStorage.getItem('seatLatestClassSelect') !== '5') {
         document.querySelector('.seat-result-info').style.display = 'none';
     } else {
         document.querySelector('.seat-result-info').style.display = 'inline';
@@ -71,7 +71,7 @@ function resetSeat() {
 
 // return 0 if boy else if girl 1
 function getGender(absent) {
-    let person = returnPerson()[Number(localStorage.getItem("seatClassSelect"))];
+    let person = returnPerson()[Number(localStorage.getItem(localStorage.getItem("classSelect") !== localStorage.getItem("seatLatestClassSelect") ? "seatLatestClassSelect" : "classSelect"))];
     
     return person[absent-1][1] === "L" ? 0 : 1;
 }
@@ -89,7 +89,7 @@ function writeSeat(isWrite) {
     let seatOrder = [];
 
     if (isWrite) {
-        let person = structuredClone(returnPerson()[Number(localStorage.getItem("seatClassSelect"))]);
+        let person = structuredClone(returnPerson()[Number(localStorage.getItem(localStorage.getItem("classSelect") === localStorage.getItem("seatLatestClassSelect") ? "seatLatestClassSelect" : "classSelect"))]);
         let man = [];
         let woman = [];
 
@@ -135,7 +135,7 @@ function writeSeat(isWrite) {
         }
 
         if (!(Math.floor(Math.random()*101) > RSeatChangeHappen)) {
-            if (localStorage.getItem("seatClassSelect") === "5") {
+            if (localStorage.getItem("classSelect") === "5") {
                 console.log("RIGGED MODE ON!");
                 let RSeatItem = [];
                 let RSeatItemIndexDone = [];
@@ -265,10 +265,10 @@ async function downloadSeat() {
 }
 
 export function init() {
-    if (localStorage.getItem("seatClassSelect") !== null) {
+    if (localStorage.getItem("classSelect") !== null) {
         const text = document.querySelector(".multiselect-selector-name");
 
-        switch (Number(localStorage.getItem("seatClassSelect"))) {
+        switch (Number(localStorage.getItem("classSelect"))) {
             case 0:
                 text.textContent = "X-1";
                 break;
@@ -291,7 +291,7 @@ export function init() {
                 break;
         }
     } else {
-        localStorage.setItem("seatClassSelect", 0);
+        localStorage.setItem("classSelect", 0);
     }
 
     document.querySelector(".multiselect-selector").addEventListener("click", () => {
@@ -301,12 +301,14 @@ export function init() {
     document.querySelectorAll(".multiselect-options-option").forEach(option => {
         option.addEventListener("click", () => {
             document.querySelector(".multiselect-selector-name").textContent = option.textContent;
-            localStorage.setItem("seatClassSelect", option.dataset.value);
+            localStorage.setItem("classSelect", option.dataset.value);
+            localStorage.setItem("seatLatestClassSelect", option.dataset.value);
             document.querySelector(".multiselect-container").classList.remove("open");
         });
     });
 
     document.querySelector('.seat-input-button').addEventListener("click", () => {
+        localStorage.setItem("seatLatestClassSelect", localStorage.getItem("classSelect"));
         writeSeat(true);
     });
 
@@ -347,7 +349,7 @@ export function init() {
         color_hint[1].style.backgroundColor = localStorage.getItem("boy_color");
         color_hint[0].style.backgroundColor = localStorage.getItem("girl_color");
         color_gui[0].style.backgroundColor = localStorage.getItem("boy_color");
-        color_gui[1].style.backgroundColor = localStorage.getItem("girl_color")
+        color_gui[1].style.backgroundColor = localStorage.getItem("girl_color");
 
     color_input.forEach((element,index) => {
         const pickr = Pickr.create({

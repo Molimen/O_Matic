@@ -181,6 +181,7 @@ button {
 
 input {
     font-family: inherit;
+    accent-color: var(--tertiary-color);
 }
 
 input[type=number] {
