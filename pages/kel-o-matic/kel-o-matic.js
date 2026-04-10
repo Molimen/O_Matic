@@ -1,6 +1,18 @@
 import { returnPerson } from '../modules/person.js';
 
-// FIX LINE 214 CUZ IT ERRORS OF UNDEFINED VAR
+async function getPersonData(idx) {
+    const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=person&index=${idx}`, {
+        cache: "force-cache"
+    });
+    
+    if (!response.ok) {
+        throw new Error("Gagal mengambil data");
+    }
+
+    const rawdata = await response.json();
+    return rawdata["result"];
+}
+
 
 /*
 type 0 = empty type search (groupSearchTypeOutput NaN);

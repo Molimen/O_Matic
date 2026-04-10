@@ -2,15 +2,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 600px;
+    height: 500px;
     background-color: white;
+    border-radius: 200px 0;
+    position: relative;
+    overflow: hidden;
+    border: 5px solid var(--secondary-color);
 }
 
 .sceneaoe {
     width: 90%;
     transform-style: preserve-3d; 
-    perspective: 700px; 
+    perspective: 1000px; 
     perspective-origin: 50% 50%;
+    display: flex;
+    justify-content: center;
 }
 
 .videoaoe {
@@ -18,8 +24,11 @@
     /* top: 140px; */
     padding-bottom:56.25%;
     overflow:hidden;
-    /* animation: spina 5s linear infinite; */
-    transform: rotateX(45deg) rotateY(45deg);
+    animation: spina 15s linear infinite;
+    transform: rotateX(15deg) rotateY(35deg);
+    width: 80%;
+    height: 100%;
+    z-index: 0;
 }
 
 .frameaoe {
@@ -30,8 +39,16 @@
     height:100%;
     overflow:hidden;
     border:none;
+    z-index: 1;
 }
 
+.ear-savior {
+    height: 100%;
+    width: 100%;
+    background-color: rgba(255, 0, 0, 0);
+    z-index: 2;
+    position: absolute;
+}
 @keyframes spina {
     from {transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);}
     to {transform: rotateX(360deg) rotateY(720deg) rotateZ(360deg);}
