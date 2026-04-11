@@ -1,16 +1,18 @@
-import { returnPerson } from '../modules/person.js';
-
 async function getPersonData(idx) {
-    const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=person&index=${idx}`, {
-        cache: "force-cache"
-    });
-    
-    if (!response.ok) {
-        throw new Error("Gagal mengambil data");
-    }
+    try {
 
-    const rawdata = await response.json();
-    return rawdata["result"];
+        const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=person&index=${idx}`);
+        if (!response.ok) throw new Error("Gagal mengambil data");
+        const rawdata = await response.json();
+        return rawdata["result"];
+
+    } catch {
+
+        if (!navigator.onLine) throw new Error("Tidak ada koneksi internet");
+        throw new Error("Koneksi bermasalah, coba lagi");
+
+    }
+    
 }
 
 
@@ -102,7 +104,7 @@ async function writeKel(isWrite) {
 
     // Pre-Check
     let group = [];
-    let person = structuredClone(returnPerson()[classOutput]);
+    let person = structuredClone(await getPersonData(classOutput));
     let totalPerson = person.length;
 
     if (localStorage.getItem("GroupNumber") === '') {
@@ -422,9 +424,13 @@ export function init() {
         });
     });
 
-    document.querySelector(".group-input-button").addEventListener("click", () => {
+    document.querySelector(".group-input-button").addEventListener("click", async () => {
         localStorage.setItem("groupLatestClassSelect", localStorage.getItem("classSelect"));
-        writeKel(true);
+        document.querySelector(".group-input-button").disabled = true;
+        document.querySelector(".group-input-button").classList.add("disabled");
+        await writeKel(true);
+        document.querySelector(".group-input-button").classList.remove("disabled");
+        document.querySelector(".group-input-button").disabled = false;
     });
 
     checkGroupGentype(localStorage.getItem("classSelect"));

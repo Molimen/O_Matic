@@ -33,22 +33,24 @@ function getLuminanceFromColor(color) {
         return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs; //outputnya antara 0 (ireng) sampe 1 (very putih)
         // warna terang : warna > 0.179
         // warna gelap : warna <= 0.179
-    }
-  
-    
+    } 
   }
 
 async function getPersonData(idx) {
-    const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=person&index=${idx}`, {
-        cache: "force-cache"
-    });
-    
-    if (!response.ok) {
-        throw new Error("Gagal mengambil data");
-    }
+    try {
 
-    const rawdata = await response.json();
-    return rawdata["result"];
+        const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=person&index=${idx}`);
+        if (!response.ok) throw new Error("Gagal mengambil data");
+        const rawdata = await response.json();
+        return rawdata["result"];
+
+    } catch {
+
+        if (!navigator.onLine) throw new Error("Tidak ada koneksi internet");
+        throw new Error("Koneksi bermasalah, coba lagi");
+
+    }
+    
 }
 
 function shuffleSeat(array) {
@@ -317,9 +319,13 @@ export function init() {
         });
     });
 
-    document.querySelector('.seat-input-button').addEventListener("click", () => {
+    document.querySelector('.seat-input-button').addEventListener("click", async () => {
         localStorage.setItem("seatLatestClassSelect", localStorage.getItem("classSelect"));
-        writeSeat(true);
+        document.querySelector(".seat-input-button").disabled = true;
+        document.querySelector(".seat-input-button").classList.add("disabled");
+        await writeSeat(true);
+        document.querySelector(".seat-input-button").classList.remove("disabled");
+        document.querySelector(".seat-input-button").disabled = false;
     });
 
     try {

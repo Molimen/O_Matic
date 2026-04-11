@@ -14,5 +14,5 @@ export function init() {
     }
     
     // Cara penggunaan:
-    // SHA256converter("C7Mfv2Ox").then(hash => console.log(hash));
+    // SHA256converter("nothing to see here").then(hash => console.log(hash));
 }

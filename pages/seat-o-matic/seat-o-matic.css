@@ -262,13 +262,14 @@
     color: var(--text-color);
     transition: filter .2s ease;
 }
-.color-input-widget.disabled {
+.disabled {
     filter: brightness(calc(var(--menu-disabled-value) - 0.35));
     cursor: not-allowed;
     transition: all .2s ease;
 }
-.color-input-widget.disabled * {
+.disabled * {
     pointer-events: none;
+    transition: all .2s ease;
 }
 
 .color-container label {
