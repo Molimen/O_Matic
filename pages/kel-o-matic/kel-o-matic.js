@@ -1,6 +1,20 @@
-import { returnPerson } from '../modules/person.js';
+async function getPersonData(idx) {
+    try {
 
-// FIX LINE 214 CUZ IT ERRORS OF UNDEFINED VAR
+        const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=person&index=${idx}`);
+        if (!response.ok) throw new Error("Gagal mengambil data");
+        const rawdata = await response.json();
+        return rawdata["result"];
+
+    } catch {
+
+        if (!navigator.onLine) throw new Error("Tidak ada koneksi internet");
+        throw new Error("Koneksi bermasalah, coba lagi");
+
+    }
+    
+}
+
 
 /*
 type 0 = empty type search (groupSearchTypeOutput NaN);
@@ -90,7 +104,7 @@ async function writeKel(isWrite) {
 
     // Pre-Check
     let group = [];
-    let person = structuredClone(returnPerson()[classOutput]);
+    let person = structuredClone(await getPersonData(classOutput));
     let totalPerson = person.length;
 
     if (localStorage.getItem("GroupNumber") === '') {
@@ -410,9 +424,13 @@ export function init() {
         });
     });
 
-    document.querySelector(".group-input-button").addEventListener("click", () => {
+    document.querySelector(".group-input-button").addEventListener("click", async () => {
         localStorage.setItem("groupLatestClassSelect", localStorage.getItem("classSelect"));
-        writeKel(true);
+        document.querySelector(".group-input-button").disabled = true;
+        document.querySelector(".group-input-button").classList.add("disabled");
+        await writeKel(true);
+        document.querySelector(".group-input-button").classList.remove("disabled");
+        document.querySelector(".group-input-button").disabled = false;
     });
 
     checkGroupGentype(localStorage.getItem("classSelect"));
