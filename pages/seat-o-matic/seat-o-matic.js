@@ -240,40 +240,43 @@ async function writeSeat(isWrite) {
 }
 
 async function downloadSeat() {
-    if (typeof globalSeat === "undefined") {
-        return;
-    }
-
-    const module = await import("../modules/html2canvas.esm.js");
-    const html2canvas = module.default;
+    if (typeof globalSeat === "undefined") return;
 
     const element_target = document.querySelector('.seat-result-container');
-    const canvas = await html2canvas(element_target,{scale : 1.5});
 
-    canvas.toBlob(async (blob) => {
-        const file = new File([blob], "hasil.png", {type: "image/png"});
+    try {
+        // 🔥 capture pakai html-to-image
+        const blob = await htmlToImage.toBlob(element_target, {
+            pixelRatio: 1.5,
+            cacheBust: true
+        });
 
-        //firefox kaga support share
+        const file = new File([blob], "hasil.png", { type: "image/png" });
+
+        // share kalau bisa
         if (navigator.share && navigator.canShare?.({ files: [file] })) {
             await navigator.share({
                 files: [file],
                 title: "Seat chart baru"
             });
-            } 
-        // Fallback download
+        } 
+        // fallback download
         else {
-        const url = URL.createObjectURL(blob);
+            const url = URL.createObjectURL(blob);
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "hasil.png";
-        a.click();
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "hasil.png";
+            a.click();
 
-        URL.revokeObjectURL(url);
-        window.alert("Browser ga bisa share, cek hasil dalam histori download")
+            URL.revokeObjectURL(url);
+            window.alert("Browser ga bisa share, cek hasil dalam histori download");
         }
 
-    }, "image/png")
+    } catch (err) {
+        console.error("Gagal generate gambar:", err);
+        window.alert("Gagal generate gambar, coba ulangi");
+    }
 }
 
 export function init() {
@@ -316,6 +319,7 @@ export function init() {
             localStorage.setItem("classSelect", option.dataset.value);
             localStorage.setItem("seatLatestClassSelect", option.dataset.value);
             document.querySelector(".multiselect-container").classList.remove("open");
+            document.querySelector(".color-input-widget").classList.add("disabled");
         });
     });
 
