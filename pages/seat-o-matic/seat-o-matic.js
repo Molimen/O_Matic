@@ -1,449 +1,257 @@
-import { returnPerson } from '../modules/person.js';
+import { getStudentsData } from "../modules/person.js";
 
-function getLuminanceFromColor(color) {
-
-    const hexRegex = /^#([A-Fa-f0-9]{3}){1,2}$/;
-    if (!hexRegex.test(color)) { //handle rgb
-
-      const values = color.substring(color.indexOf('(') + 1, color.indexOf(')'));
-      
-      const parts = values.split(',');
-
-      const red = parts[0].trim();
-      const green = parts[1].trim();
-      const blue = parts[2].trim();
-      
-      console.log(`R: ${red}, G: ${green}, B: ${blue}`);
-      return 0.2126 * Number(red) + 0.7152 * Number(green) + 0.0722 * Number(blue); 
-      
-    } else {
-        let cleanHex = color.replace('#', '');
-        if (cleanHex.length === 3) {
-        cleanHex = cleanHex.split('').map(char => char + char).join(''); 
-        }
-    
-        const r = parseInt(cleanHex.substring(0, 2), 16);
-        const g = parseInt(cleanHex.substring(2, 4), 16);
-        const b = parseInt(cleanHex.substring(4, 6), 16);
-    
-
-        const [rs, gs, bs] = [r, g, b].map(v => {
-        v /= 255;
-        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-        });
-        
-        return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs; //outputnya antara 0 (ireng) sampe 1 (very putih)
-        // warna terang : warna > 0.179
-        // warna gelap : warna <= 0.179
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
-  
-    
-  }
-  
-function shuffleSeat(array) {
-    const copy = [...array];
-
-    for (let i = copy.length - 1; i > 0; i--) {
-        const randomIndex = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]];
-    }
-
-    return copy;
+    return array;
 }
 
-function resetSeat() {
-    if (localStorage.getItem('seatLatestClassSelect') !== '5') {
+function resetSeatsDisplay() {
+    document.querySelector('.indicator-modified').style.display = 'none';
+
+    if (document.querySelector('.class-select').value !== '6') {
         document.querySelector('.seat-result-info').style.display = 'none';
     } else {
         document.querySelector('.seat-result-info').style.display = 'inline';
-    };
+    }
+
     document.querySelectorAll('.seat-item-L').forEach(el => {
         el.textContent = '??';
-        el.style.backgroundColor = localStorage.getItem("boy_color") === null ? "#9FFFA5" : localStorage.getItem("boy_color");
-        el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color") === null ? "#9FFFA5" : localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
+        el.style.backgroundColor = '#9FFFA5';
+        // el.style.color = 'black';
     });
     document.querySelectorAll('.seat-item-P').forEach(el => {
         el.textContent = '??';
-        el.style.backgroundColor = localStorage.getItem("girl_color") === null ? "#FFFA9F" : localStorage.getItem("girl_color");
-        el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color") === null ? "#FFFA9F" : localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+        el.style.backgroundColor = '#   ';
+        // el.style.color = 'black';
     });
 }
 
-// return 0 if boy else if girl 1
-function getGender(absent) {
-    let person = returnPerson()[Number(localStorage.getItem(localStorage.getItem("classSelect") !== localStorage.getItem("seatLatestClassSelect") ? "seatLatestClassSelect" : "classSelect"))];
-    
-    return person[absent-1][1] === "L" ? 0 : 1;
+// EY CEPLOX21, DONT FORGET ADD THIS INTO YO DATABASE, THANKS :>
+// original name 'listStudentsThatStudentHateSittingRightBesideOnX6' is too long, so i change it to 'blacklistedPartner' :>
+let blacklistedPartner = {
+    // 1: [],
+    // 2: [],
+    // 3: [],
+    // 4: [],
+    // 5: [],
+    // 6: [],
+    // 7: [],
+    // 8: [],
+    // 9: [],
+    // 10: [],
+    // 11: [],
+    // 12: [],
+    13: [3, 5, 6, 7, 9, 10, 15, 20, 23, 28, 29],
+    // 14: [],
+    // 15: [],
+    // 16: [],
+    // 17: [],
+    // 18: [],
+    // 19: [],
+    // 20: [],
+    // 21: [],
+    // 22: [],
+    // 23: [],
+    // 24: [],
+    // 25: [],
+    // 26: [],
+    // 27: [],
+    // 28: [],
+    // 29: [],
+    30: [3, 5, 7, 9, 10, 15, 20, 23, 28, 29],
+    // 31: [],
+    // 32: []
+};
+
+// coming soon!
+let favoritePartner = {
+    // 1: [],
+    // 2: [],
+    // 3: [],
+    // 4: [],
+    // 5: [],
+    // 6: [],
+    // 7: [],
+    // 8: [],
+    // 9: [],
+    // 10: [],
+    // 11: [],
+    // 12: [],
+    // 13: [],
+    // 14: [],
+    // 15: [],
+    // 16: [],
+    // 17: [],
+    // 18: [],
+    // 19: [],
+    // 20: [],
+    // 21: [],
+    // 22: [],
+    // 23: [],
+    // 24: [],
+    // 25: [],
+    // 26: [],
+    // 27: [],
+    // 28: [],
+    // 29: [],
+    // 30: [],
+    // 31: [],
+    // 32: []
 }
 
-let RSeat1;
-let RSeat2;
-// yes it's is possibe to have both gender on the same seat, but that shit is too obvious
-// we should probably disable this someday
-const RSeatItemCONST = [[1,17],[1,26],[21,13],[32,18],[32,17],[32,13],[21,18],[21,17],[1,18]]; // please add more... (no)
-let RSeatChangeHappen = 25; //definitely should be low chance, cuz imagine if we got rigged seat like 5 times in a row
-let RseatUpTo = 3;
-let globalSeat;
-function writeSeat(isWrite) {
-    resetSeat();
-    let seatOrder = [];
+async function generateSeats() {
+    const classSelected = document.querySelector('.class-select').value;
 
-    if (isWrite) {
-        let person = structuredClone(returnPerson()[Number(localStorage.getItem(localStorage.getItem("classSelect") === localStorage.getItem("seatLatestClassSelect") ? "seatLatestClassSelect" : "classSelect"))]);
-        let man = [];
-        let woman = [];
+    let seatOrder = []; 
 
-        for (let i = 0; i < person.length; i++) {
-            if (person[i][1] === "L") man.push(person[i]);
-            else if (person[i][1] === "P") woman.push(person[i]);
+    let students = structuredClone(await getStudentsData(classSelected));
+
+    let studentsGirls = [];
+    let studentsBoys = [];
+
+    for (let student of students) {
+        if (student[1] === 'P') studentsGirls.push(student);
+        else if (student[1] === 'L') studentsBoys.push(student);
+    }
+
+    studentsGirls = shuffle(studentsGirls);
+    studentsBoys = shuffle(studentsBoys);
+
+    let biasTowards = 'none';
+    if (studentsGirls.length > studentsBoys.length) biasTowards = 'P';
+    else if (studentsBoys.length > studentsGirls.length) biasTowards = 'L';
+
+    while (true) {
+        if (studentsGirls.length === 0 || studentsBoys.length === 0) {
+            while (true) {
+                if (studentsGirls.length === 1) {
+                    seatOrder.push(['??', studentsGirls.pop()]);
+                    break;
+                } else if (studentsBoys.length === 1) {
+                    seatOrder.push([studentsBoys.pop(), '??']);
+                    break;
+                }
+
+                if (studentsGirls.length > 1) {
+                    seatOrder.push([studentsGirls.pop(), studentsGirls.pop()]);
+                } 
+                if (studentsBoys.length > 1) {
+                    seatOrder.push([studentsBoys.pop(), studentsBoys.pop()]);
+                }
+
+                if (studentsGirls.length === 0 && studentsBoys.length === 0) {
+                    seatOrder.splice(Math.floor(Math.random() * seatOrder.length), 0, seatOrder.pop());
+                    break;
+                }
+            }
+            break;
         }
 
-        let manRandom = shuffleSeat(man);
-        let womanRandom = shuffleSeat(woman);
-        let checkBalanced;
-        if (manRandom.length === womanRandom.length) checkBalanced = 0;
-        else if (manRandom.length > womanRandom.length) checkBalanced = 1;
-        else if (manRandom.length < womanRandom.length) checkBalanced = 2;
+        seatOrder.push([studentsBoys.pop(), studentsGirls.pop()]);
+    }
 
-        while (true) {
-            if (manRandom.length === 0 || womanRandom.length === 0) {
-                if (checkBalanced > 0) {
-                    if (checkBalanced === 1) {
-                        seatOrder.push([manRandom.pop()[0],manRandom.pop()[0]]);
-                    } else if (checkBalanced === 2) {
-                        seatOrder.push([womanRandom.pop()[0],womanRandom.pop()[0]]);
-                    }
+    // this only and only FOR x6, because x6 is the only class that has a lot of students that hate each other :>
+    // and i too lazy to make this work for other class, so yeah, this is only for x6 <3
+    let isThereAnyChange = false;
+    if (classSelected === '6') {
+        for (let seat of seatOrder) {
+            if (blacklistedPartner[seat[0][0]] !== undefined && blacklistedPartner[seat[0][0]] .includes(seat[1][0])) {
+                for (let swap of seatOrder) {
+                    if (!blacklistedPartner[seat[0][0]].includes(swap[1][0])) {
+                        const temp = seat[1];
 
-                    checkBalanced = 0;
-                }
+                        seatOrder[seatOrder.indexOf(seat)][1] = swap[1];
+                        seatOrder[seatOrder.indexOf(swap)][1] = temp;
 
-                break;
-            }
-
-            if (Math.floor(Math.random()*101) > 85 && checkBalanced > 0) {
-                if (checkBalanced === 1) {
-                    seatOrder.push([manRandom.pop()[0],manRandom.pop()[0]]);
-                } else if (checkBalanced === 2) {
-                    seatOrder.push([womanRandom.pop()[0],womanRandom.pop()[0]]);
-                }
-                if (manRandom.length === womanRandom.length) {
-                    checkBalanced = 0;
-                }
-            } else {
-                seatOrder.push([manRandom.pop()[0],womanRandom.pop()[0]]);
-            }
-        }
-
-        if (!(Math.floor(Math.random()*101) > RSeatChangeHappen)) {
-            if (localStorage.getItem("classSelect") === "5") {
-                console.log("RIGGED MODE ON!");
-                let RSeatItem = [];
-                let RSeatItemIndexDone = [];
-                let RSeatItemAbsentDone = [];
-                let hitung = 0;
-
-                for (let i = 0; i < RseatUpTo; i++) {
-                    if (hitung > 10000) {
-                        console.warn("there is duplicate absent and the data doesn't offer any to replace the data!");
+                        isThereAnyChange = true;
                         break;
                     }
-                    hitung++;
-                    const randomIndex = Math.floor(Math.random() * (RSeatItemCONST.length));
-
-                    if (RSeatItemIndexDone.includes(randomIndex) || (RSeatItemAbsentDone.includes(RSeatItemCONST[randomIndex][0]) || RSeatItemAbsentDone.includes(RSeatItemCONST[randomIndex][1]))) {
-                        i--;
-                        continue;
-                    }
-                    RSeatItemAbsentDone.push(RSeatItemCONST[randomIndex][0]);
-                    RSeatItemAbsentDone.push(RSeatItemCONST[randomIndex][1]);
-                    RSeatItemIndexDone.push(randomIndex);
-
-                    RSeatItem.push(RSeatItemCONST[randomIndex]);
                 }
+            }
 
-                for (let i = 0; i < RSeatItem.length; i++) {
-                    for (let j = 0; j < seatOrder.length; j++) {
-                        if (seatOrder[j][getGender(RSeatItem[i][0])] === RSeatItem[i][0]) {
-                            RSeat1 = j;
-                            break
-                        }
+            if (blacklistedPartner[seat[1][0]] !== undefined && blacklistedPartner[seat[1][0]].includes(seat[0][0])) {
+                for (let swap of seatOrder) {
+                    if (!blacklistedPartner[seat[1][0]].includes(swap[0][0])) {
+                        const temp = seat[0];
+
+                        seatOrder[seatOrder.indexOf(seat)][0] = swap[0];
+                        seatOrder[seatOrder.indexOf(swap)][0] = temp;
+
+                        isThereAnyChange = true;
+                        break;
                     }
-
-                    for (let j = 0; j < seatOrder.length; j++) {
-                        if (seatOrder[j][getGender(RSeatItem[i][1])] === RSeatItem[i][1]) {
-                            RSeat2 = j;
-                            break
-                        }
-                    }
-
-                    let temp = seatOrder[RSeat2][getGender(RSeatItem[i][1])^1];
-                    seatOrder[RSeat2][getGender(RSeatItem[i][1])^1] = seatOrder[RSeat1][getGender(RSeatItem[i][0])];
-                    seatOrder[RSeat1][getGender(RSeatItem[i][0])] = temp;
                 }
             }
         }
+    }
 
-        globalSeat = structuredClone(seatOrder);
-        document.querySelector(".seat-input-downloadnshare-button").disabled = false;
-        document.querySelector('.color-input-widget').classList.remove('disabled');
-    } else if (!isWrite) {
-        seatOrder = structuredClone(globalSeat);
+    if (isThereAnyChange) {
+        document.querySelector('.indicator-modified').style.display = 'inline';
     }
 
     let counter = 0;
-    document.querySelectorAll('.seat-item-L').forEach(el => {
+    for (const el of document.querySelectorAll('.seat-item-L')) {
         if (counter < 16) {
-            el.textContent = seatOrder[counter][0];
-            if (getGender(seatOrder[counter][0]) === 0) {
-                el.style.backgroundColor = localStorage.getItem("boy_color");
-                el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
-            } else if (getGender(seatOrder[counter][0]) === 1) {
-                el.style.backgroundColor = localStorage.getItem("girl_color");
-                el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+            el.textContent = seatOrder[counter][0][0];
+            if (seatOrder[counter][0][1] === 'L') {
+                el.style.backgroundColor = '#9FFFA5';
+                el.style.color = 'black';
+            } else if (seatOrder[counter][0][1] === 'P') {
+                el.style.backgroundColor = '#FFFA9F';
+                el.style.color = 'black';
             } 
             
             counter++;
         } else {
             el.textContent = "XX";
         }
-    });
+    };
 
     counter = 0;
-    document.querySelectorAll('.seat-item-P').forEach(el => {
+    for (const el of document.querySelectorAll('.seat-item-P')) {
         if (counter < 16) {
-            el.textContent = seatOrder[counter][1];
-            if (getGender(seatOrder[counter][1]) === 0) {
-                el.style.backgroundColor = localStorage.getItem("boy_color");
-                el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
-            } else if (getGender(seatOrder[counter][1]) === 1) {
-                el.style.backgroundColor = localStorage.getItem("girl_color");
-                el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+            el.textContent = seatOrder[counter][1][0];
+            if (seatOrder[counter][1][1] === 'L') {
+                el.style.backgroundColor = '#9FFFA5';
+                el.style.color = 'black';
+            } else if (seatOrder[counter][1][1] === 'P') {
+                el.style.backgroundColor = '#FFFA9F';
+                el.style.color = 'black';
             } 
-
+            
             counter++;
         } else {
             el.textContent = "XX";
         }
-    });
+    };
+
+    // console.log('studentsGirls: ', studentsGirls);
+    // console.log('studentsBoys: ', studentsBoys);
+    // console.log('biasTowards: ', biasTowards);
+    // console.log('seatOrder: ', seatOrder);
 }
 
-async function downloadSeat() {
-    if (typeof globalSeat === "undefined") {
-        return;
-    }
+function initInput() {
+    if (localStorage.getItem('classSelected') !== null) {
+        document.querySelector('.class-select').value = localStorage.getItem('classSelected');
+        resetSeatsDisplay();
+    };
+}
 
-    const module = await import("../modules/html2canvas.esm.js");
-    const html2canvas = module.default;
+function initDetectInput() {
+    document.querySelector('.class-select').addEventListener('change', (e) => {
+        localStorage.setItem('classSelected', e.target.value);
+    });
 
-    const element_target = document.querySelector('.seat-result-container');
-    const canvas = await html2canvas(element_target,{scale : 1.5});
-
-    canvas.toBlob(async (blob) => {
-        const file = new File([blob], "hasil.png", {type: "image/png"});
-
-        //firefox kaga support share
-        if (navigator.share && navigator.canShare?.({ files: [file] })) {
-            await navigator.share({
-                files: [file],
-                title: "Seat chart baru"
-            });
-            } 
-        // Fallback download
-        else {
-        const url = URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "hasil.png";
-        a.click();
-
-        URL.revokeObjectURL(url);
-        window.alert("Browser ga bisa share, cek hasil dalam histori download")
-        }
-
-    }, "image/png")
+    document.querySelector('.process-button').addEventListener('click', () => {
+        generateSeats();
+    });
 }
 
 export function init() {
-    if (localStorage.getItem("classSelect") !== null) {
-        const text = document.querySelector(".multiselect-selector-name");
-
-        switch (Number(localStorage.getItem("classSelect"))) {
-            case 0:
-                text.textContent = "X-1";
-                break;
-            case 1:
-                text.textContent = "X-2";
-                break;
-            case 2:
-                text.textContent = "X-3";
-                break;
-            case 3:
-                text.textContent = "X-4";
-                break;
-            case 4:
-                text.textContent = "X-5";
-                break;
-            case 5:
-                text.textContent = "X-6";
-                break;
-            default:
-                break;
-        }
-    } else {
-        localStorage.setItem("classSelect", 0);
-    }
-
-    document.querySelector(".multiselect-selector").addEventListener("click", () => {
-        document.querySelector(".multiselect-container").classList.toggle("open");
-    });
-
-    document.querySelectorAll(".multiselect-options-option").forEach(option => {
-        option.addEventListener("click", () => {
-            document.querySelector(".multiselect-selector-name").textContent = option.textContent;
-            localStorage.setItem("classSelect", option.dataset.value);
-            localStorage.setItem("seatLatestClassSelect", option.dataset.value);
-            document.querySelector(".multiselect-container").classList.remove("open");
-        });
-    });
-
-    document.querySelector('.seat-input-button').addEventListener("click", () => {
-        localStorage.setItem("seatLatestClassSelect", localStorage.getItem("classSelect"));
-        writeSeat(true);
-    });
-
-    try {
-        writeSeat(false);
-    } catch {
-    }
-
-    if (typeof globalSeat !== "undefined") {
-        document.querySelector(".seat-input-downloadnshare-button").disabled = false;
-        document.querySelector('.color-input-widget').classList.remove('disabled');
-    } else {
-        document.querySelector(".seat-input-downloadnshare-button").disabled = true;
-        document.querySelector('.color-input-widget').classList.add('disabled');
-    }
-     
-
-    document.querySelector(".seat-input-downloadnshare-button").addEventListener("click", () => {
-        downloadSeat();
-    });
-
-    // color thing (start) ------------------------------------------------------------------------------------------
-    let color_input = document.querySelectorAll(".true-color-input");
-    let color_gui = document.querySelectorAll(".color-input");
-    let color_hint = document.querySelectorAll(".seat-result-color-type");
-
-        //bikin value warna yang persisten, sekaligus fallback default
-    if (localStorage.getItem("boy_color") === null || localStorage.getItem("girl_color") === null) {
-        localStorage.setItem("boy_color", "#9FFFA5");
-        localStorage.setItem("girl_color", "#FFFA9F");
-    };
-
-        // nyetel value awal
-    color_input[0].value = localStorage.getItem("boy_color");
-    color_input[1].value = localStorage.getItem("girl_color");
-
-        // biar warna ui ga ke reset?
-        color_hint[1].style.backgroundColor = localStorage.getItem("boy_color");
-        color_hint[0].style.backgroundColor = localStorage.getItem("girl_color");
-        color_gui[0].style.backgroundColor = localStorage.getItem("boy_color");
-        color_gui[1].style.backgroundColor = localStorage.getItem("girl_color");
-
-    color_input.forEach((element,index) => {
-        const pickr = Pickr.create({
-            el: element,
-            theme: 'monolith',
-            default: index === 0 ? localStorage.getItem("boy_color") : localStorage.getItem("girl_color"),
-    
-            swatches: [
-                '#9FFFA5',
-                '#FFFA9F',
-                '#2196F3',
-                '#FF48C4',
-                '#84A98C',
-                '#FDA4AF',
-                '#733BD9',
-                '#F59E0B'
-            ],
-    
-            components: {
-    
-                // Main components
-                preview: true,
-                opacity: true,
-                hue: true,
-    
-                // Input / output Options
-                interaction: {
-                    hex: true,
-                    rgba: true,
-                    hsla: true,
-                    hsva: true,
-                    cmyk: true,
-                    input: true,
-                    clear: true,
-                    save: true
-                }
-            }
-        });
-        pickr.on('init', instance => {
-            console.log('Event: "init"', instance);
-        }).on('hide', instance => {
-            console.log('Event: "hide"', instance);
-        }).on('show', (color, instance) => {
-            console.log('Event: "show"', color, instance);
-        }).on('save', (color, instance) => { //THE USED THING, also the instance variable isnt used 
-            const hex = color.toHEXA().toString();
-            if (index === 0) {
-                localStorage.setItem("boy_color", hex);
-                
-                color_hint[index+1].style.backgroundColor = localStorage.getItem("boy_color");
-                
-                document.querySelectorAll(".seat-placement-actual-seat").forEach((seat) => {
-                    if (getGender(Number(seat.textContent)) === 0) {
-                        seat.style.backgroundColor = localStorage.getItem("boy_color");
-                        seat.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
-                    } else {
-                        seat.style.backgroundColor = localStorage.getItem("girl_color");
-                        seat.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
-                    }
-
-                    
-                });
-            } else if (index === 1) {
-                localStorage.setItem("girl_color", hex);
-                
-                color_hint[index-1].style.backgroundColor = localStorage.getItem("girl_color");
-
-                document.querySelectorAll(".seat-placement-actual-seat").forEach((seat) => {
-                    if (getGender(Number(seat.textContent)) === 1) {
-                        seat.style.backgroundColor = localStorage.getItem("girl_color");
-                        seat.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
-                    } else {
-                        seat.style.backgroundColor = localStorage.getItem("boy_color");
-                        seat.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
-                    }
-                    
-                });
-            }
-
-            color_gui[index].style.backgroundColor = hex;
-
-            pickr.hide();
-        }).on('clear', instance => {
-            console.log('Event: "clear"', instance);
-        }).on('change', (color, source, instance) => {
-            console.log('Event: "change"', color, source, instance);
-        }).on('changestop', (source, instance) => {
-            console.log('Event: "changestop"', source, instance);
-        }).on('cancel', instance => {
-            console.log('Event: "cancel"', instance);
-        }).on('swatchselect', (color, instance) => {
-            console.log('Event: "swatchselect"', color, instance);
-        });
-
-    });
-    // color thing (end) --------------------------------------------------------------------------------------------
+    initInput();
+    initDetectInput();
 }
