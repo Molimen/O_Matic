@@ -18,6 +18,16 @@ body {
     font-family: 'ProFontWindows', sans-serif;
 }
 
+body::before {
+    position: fixed;
+    z-index: -1;
+    inset: 0;
+    background-image: url('assets/images/bg.png');
+    opacity: 4%;
+    pointer-events: none;
+    content: '';
+}
+
 h1, h2, h3 {
     font-family: 'ProFontWindows', sans-serif;
 }
@@ -90,6 +100,7 @@ h1, h2, h3 {
     border: 3px solid black; 
     border-radius: 3px;
 }
+
 .seat-result-meja-guru img {
     width: 6cqw;
     aspect-ratio: 1/1 ;

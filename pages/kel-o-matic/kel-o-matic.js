@@ -208,8 +208,6 @@ async function generateGroups() {
     }
     groups = newGroups;
 
-    // WIP
-    // needing fix too much girls/boys in group!
     let groupCounter = 0;
     let blacklistedCounter = 0;
     let blacklistedCounterEachGroup = [];
@@ -224,7 +222,7 @@ async function generateGroups() {
                     for (let partner of group) {
                         if (blacklistedPartner[student[0]].includes(partner[0])) {
                             blacklistedCounter++;
-                            listOfBlacklistedPartnerInGroup.push(partner[0]);
+                            listOfBlacklistedPartnerInGroup.push(partner);
                         }
                     }
                     break;
@@ -233,33 +231,33 @@ async function generateGroups() {
             blacklistedCounterEachGroup.push([groups.indexOf(group), blacklistedCounter, listOfBlacklistedPartnerInGroup, originStudentsInGroup]);
             groupCounter++;
         }
-    }
 
-    for (let blacklisted of blacklistedCounterEachGroup) {
-        if (blacklisted[1] === null) continue;
+        for (let blacklisted of blacklistedCounterEachGroup) {
+            if (blacklisted[1] === null) continue;
 
-        let ratio = (groups[blacklisted[0]].length - blacklisted[1])/blacklisted[1];
+            let ratio = (groups[blacklisted[0]].length - blacklisted[1])/blacklisted[1];
 
-        if (ratio < 2.5) {
-            let whoIsSwapPartner = null;
-            for (let i = 0; i < blacklisted[1]; i++) {
-                let parnerGroupIndex = Math.floor(Math.random() * groups.length);
-                for (let student of groups[parnerGroupIndex]) {
-                    if (!blacklistedPartner[blacklisted[3]].includes(student[0]) && student[0] !== blacklisted[3]) {
-                        whoIsSwapPartner = student;
-                        break;
+            if (ratio < 2.5) {
+                let whoIsSwapPartner = null;
+                for (let i = 0; i < blacklisted[1]; i++) {
+                    let parnerGroupIndex = Math.floor(Math.random() * groups.length);
+                    for (let student of groups[parnerGroupIndex]) {
+                        if (!blacklistedPartner[blacklisted[3]].includes(student[0]) && student[0] !== blacklisted[3] && student[1] === blacklisted[2][i][1]) {
+                            whoIsSwapPartner = student;
+                            break;
+                        }
                     }
-                }
 
-                if (whoIsSwapPartner !== null) {
-                    const temp = groups[blacklisted[0]][groups[blacklisted[0]].indexOf(groups[blacklisted[0]].find(student => student[0] === blacklisted[2][i]))];
+                    if (whoIsSwapPartner !== null) {
+                        const temp = groups[blacklisted[0]][groups[blacklisted[0]].indexOf(blacklisted[2][i])];
 
-                    groups[blacklisted[0]][groups[blacklisted[0]].indexOf(groups[blacklisted[0]].find(student => student[0] === blacklisted[2][i]))] = whoIsSwapPartner;
-                    groups[parnerGroupIndex][groups[parnerGroupIndex].indexOf(whoIsSwapPartner)] = temp;
+                        groups[blacklisted[0]][groups[blacklisted[0]].indexOf(blacklisted[2][i])] = whoIsSwapPartner;
+                        groups[parnerGroupIndex][groups[parnerGroupIndex].indexOf(whoIsSwapPartner)] = temp;
 
-                    whoIsSwapPartner = null;
-                } else {
-                    i--;
+                        whoIsSwapPartner = null;
+                    } else {
+                        i--;
+                    }
                 }
             }
         }
