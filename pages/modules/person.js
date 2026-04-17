@@ -21,3 +21,15 @@ export async function getStudentsData(idx) {
         throw new Error("Connection issue, please try again later :>");
     }
 }
+
+export async function getblacklistData() {
+    try {
+        const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=blacklist&index=5`);
+        if (!response.ok) throw new Error("Failed to fetch student data");
+        const rawdata = await response.json();
+        return rawdata["result"];
+    } catch {
+        if (!navigator.onLine) throw new Error("No internet connection");
+        throw new Error("Connection issue, please try again later :>");
+    }
+}

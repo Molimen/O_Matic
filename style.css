@@ -25,6 +25,7 @@ body::before {
     background-image: url('assets/images/bg.png');
     opacity: 4%;
     pointer-events: none;
+    background-position: center;
     content: '';
 }
 
