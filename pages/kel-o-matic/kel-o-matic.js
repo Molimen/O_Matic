@@ -303,27 +303,28 @@ function checkGroupGentype(type) {
 }
 
 async function downloadGroup() {
-    if (typeof globalGroup === "undefined") return;
+    if (typeof globalGroup === "undefined") {
+        return;
+    }
+
+    const module = await import("../modules/html2canvas.esm.js");
+    const html2canvas = module.default;
 
     const element_target = document.querySelector('.group-result-container');
+    element_target.style.borderRadius = "0px";
+    const canvas = await html2canvas(element_target,{scale : 2});
 
-    try {
-        // 🔥 capture pakai html-to-image
-        const blob = await htmlToImage.toBlob(element_target, {
-            pixelRatio: 1.5,
-            cacheBust: true
-        });
+    canvas.toBlob(async (blob) => {
+        const file = new File([blob], "hasil.png", {type: "image/png"});
 
-        const file = new File([blob], "hasil.png", { type: "image/png" });
-
-        // share kalau bisa
+        //firefox kaga support share
         if (navigator.share && navigator.canShare?.({ files: [file] })) {
             await navigator.share({
                 files: [file],
-                title: "Group chart baru"
+                title: "Group-chart baru"
             });
-        } 
-        // fallback download
+            } 
+        // Fallback download
         else {
             const url = URL.createObjectURL(blob);
 
@@ -333,13 +334,11 @@ async function downloadGroup() {
             a.click();
 
             URL.revokeObjectURL(url);
-            window.alert("Browser ga bisa share, cek hasil dalam histori download");
+            window.alert("Browser ga bisa share, cek hasil dalam histori download")
         }
 
-    } catch (err) {
-        console.error("Gagal generate gambar:", err);
-        window.alert("Gagal generate gambar, coba ulangi");
-    }
+    }, "image/png")
+    element_target.style.borderRadius = "21px";
 }
 
 export function init() {
