@@ -8,6 +8,34 @@ function shuffle(array) {
     return array;
 }
 
+function hexToBrightness(hex) {
+    // remove #
+    hex = hex.replace('#', '');
+
+    // handle shorthand (#abc → #aabbcc)
+    if (hex.length === 3) {
+    hex = hex.split('').map(c => c + c).join('');
+    }
+
+    // parse RGB
+    let r = parseInt(hex.substring(0, 2), 16) / 255;
+    let g = parseInt(hex.substring(2, 4), 16) / 255;
+    let b = parseInt(hex.substring(4, 6), 16) / 255;
+
+    // gamma correction (this is the important part you skipped earlier)
+    const toLinear = (v) =>
+    v <= 0.03928
+        ? v / 12.92
+        : Math.pow((v + 0.055) / 1.055, 2.4);
+
+    r = toLinear(r);
+    g = toLinear(g);
+    b = toLinear(b);
+
+    // luminance
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
 function resetSeatsDisplay() {
     document.querySelector('.indicator-modified').style.display = 'none';
 
@@ -19,19 +47,51 @@ function resetSeatsDisplay() {
 
     document.querySelectorAll('.seat-item-L').forEach(el => {
         el.textContent = '??';
-        el.style.backgroundColor = '#9FFFA5';
-        // el.style.color = 'black';
     });
     document.querySelectorAll('.seat-item-P').forEach(el => {
         el.textContent = '??';
-        el.style.backgroundColor = '#   ';
-        // el.style.color = 'black';
     });
+}
+
+function showSeatDisplay(seatOrder) {
+    const girlsColor = localStorage.getItem('girlsColor');
+    const boysColor = localStorage.getItem('boysColor');
+    let counter = 0;
+    for (const el of document.querySelectorAll('.seat-item-L')) {
+        if (counter < 16) {
+            el.textContent = seatOrder[counter][0][0];
+            if (seatOrder[counter][0][1] === 'L') {
+                el.style.backgroundColor = boysColor;
+            } else if (seatOrder[counter][0][1] === 'P') {
+                el.style.backgroundColor = girlsColor;
+            } 
+            
+            counter++;
+        } else {
+            el.textContent = "XX";
+        }
+    };
+
+    counter = 0;
+    for (const el of document.querySelectorAll('.seat-item-P')) {
+        if (counter < 16) {
+            el.textContent = seatOrder[counter][1][0];
+            if (seatOrder[counter][1][1] === 'L') {
+                el.style.backgroundColor = boysColor;
+            } else if (seatOrder[counter][1][1] === 'P') {
+                el.style.backgroundColor = girlsColor;
+            } 
+            
+            counter++;
+        } else {
+            el.textContent = "XX";
+        }
+    };
 }
 
 // EY CEPLOX21, DONT FORGET ADD THIS INTO YO DATABASE, THANKS :>
 // original name 'listStudentsThatStudentHateSittingRightBesideOnX6' is too long, so i change it to 'blacklistedPartner' :>
-let blacklistedPartner = {
+let blacklistedPartner = {  
     // 1: [],
     // 2: [],
     // 3: [],
@@ -49,7 +109,7 @@ let blacklistedPartner = {
     // 15: [],
     // 16: [],
     // 17: [],
-    // 18: [],
+    18: [3, 5, 6, 7, 9, 10, 15, 20, 23, 28, 29],
     // 19: [],
     // 20: [],
     // 21: [],
@@ -101,6 +161,9 @@ let favoritePartner = {
     // 31: [],
     // 32: []
 }
+
+let resumeSeat;
+let resumeIndicator = 'none';
 
 async function generateSeats() {
     const classSelected = document.querySelector('.class-select').value;
@@ -188,45 +251,18 @@ async function generateSeats() {
         }
     }
 
+    resumeSeat = structuredClone(seatOrder);
+
+    resetSeatsDisplay();
+
     if (isThereAnyChange) {
         document.querySelector('.indicator-modified').style.display = 'inline';
+        resumeIndicator = 'inline';
+    } else {
+        resumeIndicator = 'none';
     }
 
-    let counter = 0;
-    for (const el of document.querySelectorAll('.seat-item-L')) {
-        if (counter < 16) {
-            el.textContent = seatOrder[counter][0][0];
-            if (seatOrder[counter][0][1] === 'L') {
-                el.style.backgroundColor = '#9FFFA5';
-                el.style.color = 'black';
-            } else if (seatOrder[counter][0][1] === 'P') {
-                el.style.backgroundColor = '#FFFA9F';
-                el.style.color = 'black';
-            } 
-            
-            counter++;
-        } else {
-            el.textContent = "XX";
-        }
-    };
-
-    counter = 0;
-    for (const el of document.querySelectorAll('.seat-item-P')) {
-        if (counter < 16) {
-            el.textContent = seatOrder[counter][1][0];
-            if (seatOrder[counter][1][1] === 'L') {
-                el.style.backgroundColor = '#9FFFA5';
-                el.style.color = 'black';
-            } else if (seatOrder[counter][1][1] === 'P') {
-                el.style.backgroundColor = '#FFFA9F';
-                el.style.color = 'black';
-            } 
-            
-            counter++;
-        } else {
-            el.textContent = "XX";
-        }
-    };
+    showSeatDisplay(seatOrder);
 
     // console.log('studentsGirls: ', studentsGirls);
     // console.log('studentsBoys: ', studentsBoys);
@@ -251,7 +287,79 @@ function initDetectInput() {
     });
 }
 
+function updateSeatsColor(gender, color) {
+    let textColor = hexToBrightness(color) > 0.179 ? 'black' : 'white';
+    if (gender === 0) {
+        document.querySelectorAll('.seat-item-P').forEach(el => {
+            el.style.backgroundColor = color;
+            el.style.color = textColor;
+        });
+    } else if (gender === 1) {
+        document.querySelectorAll('.seat-item-L').forEach(el => {
+            el.style.backgroundColor = color;
+            el.style.color = textColor;
+        });
+    }
+
+    document.querySelectorAll('.seat-result-color-type').forEach((el, idx) => {
+        if (idx === gender) {
+            el.style.backgroundColor = color;
+        }
+    });
+}
+
+function initColorPicker() {
+    if (localStorage.getItem('girlsColor') === null) {
+        localStorage.setItem('girlsColor', '#FFFA9F');
+    }
+
+    if (localStorage.getItem('boysColor') === null) {
+        localStorage.setItem('boysColor', '#9FFFA5');
+    }
+
+    document.querySelectorAll('.color-input').forEach((el, idx) => {
+        const pickr = Pickr.create({
+            el: el, 
+            theme: 'nano',
+            default: localStorage.getItem(idx === 0 ? 'girlsColor' : 'boysColor'),
+
+            components: {
+                preview: true,
+                hue: true,
+                interaction: {
+                    hex: true,
+                    input: true,
+                    clear: true,
+                    save: true,
+                }
+            }
+        });
+
+        pickr.on('save', (color, instance) => {
+            const hexColor = color.toHEXA().toString();
+            localStorage.setItem(idx === 0 ? 'girlsColor' : 'boysColor', hexColor);
+            updateSeatsColor(idx, hexColor);
+            pickr.hide();
+        });
+    });
+
+    if (localStorage.getItem('girlsColor') !== null) {
+        updateSeatsColor(0, localStorage.getItem('girlsColor'));
+    }
+
+    if (localStorage.getItem('boysColor') !== null) {
+        updateSeatsColor(1, localStorage.getItem('boysColor'));
+    }
+}
+
 export function init() {
     initInput();
     initDetectInput();
+    initColorPicker();
+    
+    if (typeof resumeSeat !== 'undefined') {
+        showSeatDisplay(resumeSeat);
+    }
+
+    document.querySelector('.indicator-modified').style.display = resumeIndicator;
 }

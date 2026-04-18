@@ -24,6 +24,49 @@ function resetGroupsDisplay(hidden = true) {
     if (hidden) document.querySelector('.result-container').classList.add('hidden');
 }
 
+function showGroupsDisplay(groups) {
+    const generationType = document.querySelector('.generation-type').value;
+
+    for (let group of groups) {
+        let groupElement = document.createElement('div');
+        groupElement.classList.add('p-2', 'pb-4', 'glass-panel', 'rounded-lg', 'border', 'border-outline-variant/10', 'flex', 'flex-col', 'items-center');
+        
+        const groupTitle = document.createElement('span');
+        const groupLine = document.createElement('div');
+        const groupMembers = document.createElement('div');
+
+        groupTitle.textContent = `Group ${groups.indexOf(group) + 1}`;
+        groupTitle.classList.add('text-xl');
+        groupLine.classList.add('bg-white', 'h-[3px]', 'w-[80%]', 'mb-1');
+        groupMembers.classList.add('flex', 'flex-col', 'items-center');
+
+        groupElement.appendChild(groupTitle);
+        groupElement.appendChild(groupLine);
+        
+        for (let member of group) {
+            const memberElement = document.createElement('span');
+            if (generationType === 'absent') {
+                memberElement.textContent = member[0];
+            } else if (generationType === 'name') {
+                memberElement.textContent = member[3];
+            }
+            
+            if (member[1] === 'P') {
+                memberElement.classList.add('text-pink-500');
+            } else if (member[1] === 'L') {
+                memberElement.classList.add('text-blue-500');
+            }
+            groupMembers.appendChild(memberElement);
+        }
+
+        groupElement.appendChild(groupMembers);
+
+        document.querySelector('.result-grid').appendChild(groupElement);
+    }
+
+    document.querySelector('.result-container').classList.remove('hidden');
+}
+
 // EY CEPLOX21, DONT FORGET ADD THIS INTO YO DATABASE, THANKS :>
 // original name 'listStudentsThatStudentHateSittingRightBesideOnX6' is too long, so i change it to 'blacklistedPartner' :>
 let blacklistedPartner = {
@@ -97,9 +140,10 @@ let favoritePartner = {
     // 32: []
 }
 
+let resumeGroup;
+
 async function generateGroups() {
     const classSelected = document.querySelector('.class-select').value;
-    const generationType = document.querySelector('.generation-type').value;
     const typeSearch = document.querySelector('.type-search').value;
     const totalItem = parseInt(document.querySelector('.total-item').value);
 
@@ -263,46 +307,11 @@ async function generateGroups() {
         }
     }
 
+    resumeGroup = structuredClone(groups);
+
     resetGroupsDisplay(false);
 
-    for (let group of groups) {
-        let groupElement = document.createElement('div');
-        groupElement.classList.add('p-2', 'pb-4', 'glass-panel', 'rounded-lg', 'border', 'border-outline-variant/10', 'flex', 'flex-col', 'items-center');
-        
-        const groupTitle = document.createElement('span');
-        const groupLine = document.createElement('div');
-        const groupMembers = document.createElement('div');
-
-        groupTitle.textContent = `Group ${groups.indexOf(group) + 1}`;
-        groupTitle.classList.add('text-xl');
-        groupLine.classList.add('bg-white', 'h-[3px]', 'w-[80%]', 'mb-1');
-        groupMembers.classList.add('flex', 'flex-col', 'items-center');
-
-        groupElement.appendChild(groupTitle);
-        groupElement.appendChild(groupLine);
-        
-        for (let member of group) {
-            const memberElement = document.createElement('span');
-            if (generationType === 'absent') {
-                memberElement.textContent = member[0];
-            } else if (generationType === 'name') {
-                memberElement.textContent = member[3];
-            }
-            
-            if (member[1] === 'P') {
-                memberElement.classList.add('text-pink-500');
-            } else if (member[1] === 'L') {
-                memberElement.classList.add('text-blue-500');
-            }
-            groupMembers.appendChild(memberElement);
-        }
-
-        groupElement.appendChild(groupMembers);
-
-        document.querySelector('.result-grid').appendChild(groupElement);
-    }
-
-    document.querySelector('.result-container').classList.remove('hidden');
+    showGroupsDisplay(groups);
 
     groupsMessageInfo('Groups generated somewhat successfully!');
 
@@ -383,4 +392,9 @@ function initDetectInput() {
 export function init() {
     initInput();
     initDetectInput();
+
+    if (typeof resumeGroup !== 'undefined') {
+        showGroupsDisplay(resumeGroup);
+        groupsMessageInfo('showing last groups result!');
+    }
 }

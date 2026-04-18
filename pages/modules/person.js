@@ -33,3 +33,5 @@ export async function getblacklistData() {
         throw new Error("Connection issue, please try again later :>");
     }
 }
+
+// console.log(await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=blacklist&index=5`));
