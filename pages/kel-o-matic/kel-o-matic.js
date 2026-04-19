@@ -1,4 +1,4 @@
-import { getStudentsData } from "../modules/person.js";
+import { getStudentsData, getBlacklistedData } from "../modules/person.js";
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -69,40 +69,7 @@ function showGroupsDisplay(groups) {
 
 // EY CEPLOX21, DONT FORGET ADD THIS INTO YO DATABASE, THANKS :>
 // original name 'listStudentsThatStudentHateSittingRightBesideOnX6' is too long, so i change it to 'blacklistedPartner' :>
-let blacklistedPartner = {
-    // 1: [],
-    // 2: [],
-    // 3: [],
-    // 4: [],
-    // 5: [],
-    // 6: [],
-    // 7: [],
-    // 8: [],
-    // 9: [],
-    // 10: [],
-    // 11: [],
-    // 12: [],
-    13: [3, 5, 7, 9, 10, 15, 20, 23, 28, 29],
-    // 14: [],
-    // 15: [],
-    // 16: [],
-    // 17: [],
-    // 18: [],
-    // 19: [],
-    // 20: [],
-    // 21: [],
-    // 22: [],
-    // 23: [],
-    // 24: [],
-    // 25: [],
-    // 26: [],
-    // 27: [],
-    // 28: [],
-    // 29: [],
-    30: [3, 5, 7, 9, 10, 15, 20, 23, 28, 29],
-    // 31: [],
-    // 32: []
-};
+let blacklistedPartner = getBlacklistedData();
 
 // coming soon!
 let favoritePartner = {
