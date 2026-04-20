@@ -311,6 +311,22 @@ function generationTypeChecker() {
     }
 }
 
+const GroupHowMuchNumber = document.querySelector(".total-item");
+function increase() {
+    let nextNumber = Number(GroupHowMuchNumber.value);
+    nextNumber++;
+    if (Number(GroupHowMuchNumber.value) < Number(GroupHowMuchNumber.max)) {
+        GroupHowMuchNumber.value = String(nextNumber);
+    };
+};
+function decrease() {
+    let nextNumber = Number(GroupHowMuchNumber.value);
+    nextNumber--;
+    if (Number(GroupHowMuchNumber.value) > Number(GroupHowMuchNumber.min)) {
+        GroupHowMuchNumber.value = String(nextNumber);
+    };
+};
+
 function initInput() {
     if (localStorage.getItem('classSelected') !== null) {
         document.querySelector('.class-select').value = localStorage.getItem('classSelected');
@@ -354,6 +370,16 @@ function initDetectInput() {
     document.querySelector('.process-button').addEventListener('click', () => {
         generateGroups();
     });
+
+    document.getElementById("group-hint-button").addEventListener('click', () => {
+        document.getElementById("group-hint-popup").classList.toggle("hidden");
+    });
+    document.getElementById("group-hint-close").addEventListener('click', () => {
+        document.getElementById("group-hint-popup").classList.toggle("hidden");
+    });
+
+    document.getElementById("decrement").addEventListener('click', decrease);
+    document.getElementById("increment").addEventListener('click', increase);
 }
 
 export function init() {
