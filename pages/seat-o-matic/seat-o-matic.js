@@ -1,4 +1,6 @@
 import { getStudentsData, getBlacklistedData } from "../modules/person.js";
+import '../modules/pickr/pickr.min.js';
+import '../modules/snapdom/snapdom.min.js';
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -34,6 +36,17 @@ function hexToBrightness(hex) {
 
     // luminance
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function seatsMessageInfo(message, type = 'info') {
+    document.querySelector('.message-item').textContent = message;
+    if (type === 'error') {
+        document.querySelector('.message-item').classList.remove('text-neon-green');
+        document.querySelector('.message-item').classList.add('text-error');
+    } else {
+        document.querySelector('.message-item').classList.remove('text-error');
+        document.querySelector('.message-item').classList.add('text-neon-green');
+    }
 }
 
 function resetSeatsDisplay() {
@@ -89,9 +102,22 @@ function showSeatDisplay(seatOrder) {
     };
 }
 
-// EY CEPLOX21, DONT FORGET ADD THIS INTO YO DATABASE, THANKS :>
-// original name 'listStudentsThatStudentHateSittingRightBesideOnX6' is too long, so i change it to 'blacklistedPartner' :>
-let blacklistedPartner = getBlacklistedData();
+let seatsImage;
+
+async function generateSeatsImage() {
+    await new Promise(resolve => requestAnimationFrame(() =>
+        requestAnimationFrame(resolve)
+    ));
+
+    const result = await snapdom(document.querySelector('.seat-result-container'), { scale:2, embedFonts: true, backgroundColor: '#000000' });
+    const canvas = await result.toCanvas();
+    
+    const pngBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+
+    seatsImage = new File([pngBlob], 'seats-image.png', {type: 'image/png'});
+}
+
+let blacklistedPartner = await getBlacklistedData();
 
 // coming soon!
 let favoritePartner = {
@@ -231,12 +257,40 @@ async function generateSeats() {
 
     showSeatDisplay(seatOrder);
 
+    generateSeatsImage();
+
+    seatsMessageInfo('Seats generated successfully!');
+
     // console.log('studentsGirls: ', studentsGirls);
     // console.log('studentsBoys: ', studentsBoys);
     // console.log('biasTowards: ', biasTowards);
     // console.log('seatOrder: ', seatOrder);
 }
 
+async function downloadSeats() {
+    if (typeof seatsImage === 'undefined') {
+        return;
+    }
+
+    if (navigator.share && navigator.canShare?.({files: [seatsImage]})) {
+        await navigator.share({
+            files: [seatsImage],
+            title: 'seat-chart baru'
+        });
+        seatsMessageInfo('The groups has been shared!');
+    } else {
+        const url = URL.createObjectURL(seatsImage);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = seatsImage.name;
+        a.click();
+
+        URL.revokeObjectURL(url);
+
+        seatsMessageInfo('The groups has been shared trough download!');
+    }
+}
 
 function initInput() {
     if (localStorage.getItem('classSelected') !== null) {
@@ -252,6 +306,10 @@ function initDetectInput() {
 
     document.querySelector('.process-button').addEventListener('click', () => {
         generateSeats();
+    });
+
+    document.querySelector('.download-button').addEventListener('click', () => {
+        downloadSeats();
     });
 }
 
@@ -274,6 +332,10 @@ function updateSeatsColor(gender, color) {
             el.style.backgroundColor = color;
         }
     });
+
+     document.querySelectorAll(".color-input-label").forEach((el, idx) => {
+        el.style.backgroundColor = localStorage.getItem(idx === 0 ? 'girlsColor' : 'boysColor');
+     });
 }
 
 function initColorPicker() {
@@ -285,10 +347,8 @@ function initColorPicker() {
         localStorage.setItem('boysColor', '#9FFFA5');
     }
 
-    const colorInputLabel = document.querySelectorAll(".color-input-label");
-    
     document.querySelectorAll('.color-input').forEach((el, idx) => {
-        colorInputLabel[idx].style.backgroundColor = localStorage.getItem(idx === 0 ? 'girlsColor' : 'boysColor');
+        document.querySelectorAll(".color-input-label")[idx].style.backgroundColor = localStorage.getItem(idx === 0 ? 'girlsColor' : 'boysColor');
 
         const pickr = Pickr.create({
             el: el, 
@@ -343,6 +403,7 @@ export function init() {
     
     if (typeof resumeSeat !== 'undefined') {
         showSeatDisplay(resumeSeat);
+        seatsMessageInfo('showing last seats result!');
     }
 
     document.querySelector('.indicator-modified').style.display = resumeIndicator;

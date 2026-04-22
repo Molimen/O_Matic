@@ -115,3 +115,7 @@ updateDOM(location.hash.replace("#", ""),true);
 if (localStorage.getItem("lang") !== null) {
     localStorage.clear();
 }
+
+document.querySelector('.debug-menu').addEventListener('click', () => {
+    eruda.init();
+});

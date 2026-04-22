@@ -2,39 +2,19 @@
 <div class="absolute top-0 -left-20 w-96 h-96 bg-primary-dim/10 rounded-full blur-[120px] pointer-events-none"></div>
 <div class="absolute bottom-40 -right-20 w-[500px] h-[500px] bg-secondary-dim/5 rounded-full blur-[150px] pointer-events-none"></div>
 
-<!-- Group Hint Popup -->
-<div id="group-hint-popup" class="overflow-scroll shadow-[0_0_15px_black] hidden select-none p-5 box-border rounded-[15px] fixed w-[clamp(18rem,80vw,32rem)] h-[70vh] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-[#330028] border-2 border-solid border-[#5a0047] duration-[0.1s]">
-    <div class="mb-8 flex justify-between items-center min-h-auto">
-        <div class="text-[clamp(25px,5vw,30px)] leading-[clamp(1.5rem,1vw,0.2rem)] uppercase tracking-[0.15em] font-bold text-pink-400">Input explanation</div>
-        <div id="group-hint-close" class="flex justify-center items-center material-symbols-outlined w-10 h-10 text-right text-[35px] select-none text-red-600 rounded-full hover:bg-red-300 duration-[.1s] bg-[#13000f] cursor-pointer">close</div>
-    </div>
-    <div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">Generation type</div>
-<div class="tracking-wide">Controls result format — <b><i>Student Absent</i></b> shows numbers, <b><i>Student Name</i></b> shows short names.</div>
-<div class="h-4"></div>
-
-<div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">Type search</div>
-<div class="tracking-wide">Choose <b><i>Group</i></b> to set number of groups, or <b><i>Member</i></b> to set students per group.</div>
-<div class="h-4"></div>
-
-<div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">How much</div>
-<div class="tracking-wide">The 'n' for Type Search. For example, <mark style="background-color: #743665; color: white;"><i>Member</i> + 4</mark> = 4 students per group. <mark style="background-color: #743665; color: white;"><i>Group</i> + 3</mark> = 3 groups (with <b>student amount</b> and <b>group's student gender ratio</b> spread evenly).</div>
-<div class="h-4"></div>
-
-<div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">Smart finder</div>
-<div class="tracking-wide">Currently unavailable.</div>
-</div>
-
 <!-- Main Configuration Grid -->
-<div class="gap-6 max-w-4xl mx-auto px-6 z-0 relative z-0" >
+<div class="max-w-4xl mx-auto px-6 z-0 relative">
     <!-- Settings Card -->
     <div class="glass-panel rounded-lg p-8 space-y-6">
-        <!-- Dropdown Group -->
+        <div class="absolute right-0 pr-8 top-0 pt-6">
+            <button class="group-hint-button text-on-surface-variant text-lg hover:text-on-surface flex justify-end items-center gap-3 rounded-full bg-surface-container-highest py-2 px-3 max-w-12 hover:max-w-xl truncate transition-all">
+                <span class="text-on-surface">Input Hint</span> 
+                <span class="material-symbols-outlined" data-icon="help">help</span>
+            </button>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div id="group-hint-button" class="absolute top-[10px] right-[10px] text-pink-400 rounded-full h-8 w-auto flex justify-between items-center select-none border-2 border-gray-700 border-solid bg-gray-900 gap-1 pl-[12px] pr-[8px] pt-[18px] pb-[18px] hover:bg-green-900 duration-[.15s] cursor-pointer">
-                <span class="">Input Hint</span> 
-                <span class="material-symbols-outlined">help</span>
-            </div>
-            <div class="space-y-1">
+            <div class="space-y-2">
                 <label class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80 px-1">Class</label>
 
                 <div class="relative">
@@ -49,7 +29,7 @@
                 </div>
             </div>
 
-            <div class="space-y-1">
+            <div class="space-y-2">
                 <label class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80 px-1">Generation Type</label>
 
                 <div class="relative group">
@@ -61,7 +41,7 @@
             </div>
         </div>
 
-        <div class="space-y-1">
+        <div class="space-y-2">
             <label class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80 px-1">Type Search</label>
 
             <div class="relative group">
@@ -74,7 +54,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
             <!-- Number Input -->
-            <div class="space-y-1">
+            <div class="space-y-2">
                 <label class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80 px-1">How Much</label>
                 
                 <div class="flex items-center bg-surface-container-highest rounded-full px-6 gap-2">
@@ -88,7 +68,7 @@
               </div>
 
             <!-- not gonna implement it btw. just as decoration -->
-            <div class="flex items-center justify-between bg-surface-container-low border border-white/5 rounded-full space-y-1 px-6 py-4">
+            <div class="flex items-center justify-between bg-surface-container-low border border-white/5 rounded-full space-y-2 px-6 py-4">
                 <label class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80 px-1">Smart Finder</label>
                 
                 <!-- bg-primary shadow-[0_0_15px_rgba(255,136,181,0.5)] for checked state else bg-surface-container-highest -->
@@ -99,10 +79,10 @@
             </div>
         </div>
 
-        <div class="space-y-1">
+        <div class="space-y-2">
             <label class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80 px-1">Message</label>
             
-            <div class="space-y-1 px-6 py-4 relative glass-panel rounded-lg border border-outline-variant/10">
+            <div class="space-y-2 px-6 py-4 relative glass-panel rounded-lg border border-outline-variant/10">
                 <span class="message-item text-xl text-neon-green">nothing to do</span>
             </div>
         </div>
@@ -110,20 +90,27 @@
 </div>
 
 <!-- Action Area -->
-<div class="mt-12 flex justify-center px-6">
-    <button class="process-button w-full md:w-auto md:min-w-[300px] bg-neon-gradient text-on-primary-fixed text-xl font-bold py-5 px-12 rounded-full shadow-[0_0_40px_-5px_rgba(255,136,181,0.6)] hover:shadow-[0_0_30px_rgba(255,136,181,0.4)] active:scale-95 transition-all flex items-center justify-center gap-6">
+<div class="mt-12 flex justify-center items-center flex-col md:flex-row px-6 gap-6 max-w-4xl mx-auto">
+    <button class="process-button w-full md:w-auto md:min-w-[300px] bg-neon-gradient text-on-primary-fixed text-lg md:text-xl font-bold py-5 px-12 rounded-full shadow-[0_0_40px_-5px_rgba(255,136,181,0.6)] hover:shadow-[0_0_30px_rgba(255,136,181,0.4)] active:scale-95 transition-all flex items-center justify-center gap-6">
         <span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
         PROCESS GROUP
+    </button>
+
+    <button class="download-button w-full md:w-auto md:min-w-[300px] bg-neon-gradient text-on-primary-fixed text-lg md:text-xl font-bold py-5 px-12 rounded-full shadow-[0_0_40px_-5px_rgba(255,136,181,0.6)] hover:shadow-[0_0_30px_rgba(255,136,181,0.4)] active:scale-95 transition-all flex items-center justify-center gap-6">
+        <span class="material-symbols-outlined" data-icon="download">download</span>
+        DOWNLOAD/SHARE GROUP
     </button>
 </div>
 
 <!-- Result Area -->
-<div class="result-container max-w-4xl mx-auto p-6 relative glass-panel rounded-lg border border-outline-variant/10 mt-12 hidden">
-    <div class="flex items-center bg-surface-container-highest rounded-full px-6 mb-6">
-        <input class="w-full bg-transparent border-0 py-4 text-on-surface focus:ring-0 font-medium text-3xl text-center" style="font-family: 'SFPro', sans-serif;" type="text" placeholder="Group Name"/>
-    </div>
+<div class="max-w-4xl mx-auto mt-12 px-6">
+    <div class="result-container p-6 relative glass-panel rounded-lg border border-outline-variant/10 hidden">
+        <div class="flex items-center bg-surface-container-highest rounded-full px-6 mb-6">
+            <input class="group-name-input w-full bg-transparent border-0 py-4 text-on-surface focus:ring-0 font-medium text-3xl text-center" style="font-family: 'SFPro', sans-serif;" type="text"/>
+        </div>
 
-    <div class="result-grid grid grid-cols-[repeat(auto-fit,minmax(min(90px,100%),1fr))] gap-6">
-        <!-- Generated groups will be appended here -->
+        <div class="result-grid grid grid-cols-[repeat(auto-fit,minmax(min(90px,100%),1fr))] gap-6">
+            <!-- Generated groups will be appended here --> 
+        </div>
     </div>
 </div>

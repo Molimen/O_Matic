@@ -19,6 +19,23 @@
     <title>O-Matic</title>
 </head>
 <body class="bg-surface text-on-surface selection:bg-primary selection:text-on-primary min-h-[100vh] flex flex-col">
+    <!-- blur section for notifikasi -->
+     <div class="notification-window fixed inset-0 z-[100] flex items-center justify-center transition-all px-6 opacity-0 hidden">
+        <div class="notification-bg-blur absolute inset-0 bg-slate-950/80 backdrop-blur-md"></div>
+
+        <div class="mx-auto relative w-full max-w-sm max-h-[70vh] flex flex-col glass-panel rounded-lg border border-fuchsia-500/20 shadow-[0_0_60px_-10px_rgba(252,62,196,0.15)] p-6 overflow-scroll scrollbar-hide">
+            <!-- Close Icon -->
+            <button class="notification-close-button sticky top-0 ml-auto text-on-surface-variant hover:text-on-surface active:scale-90 transition-all w-fit z-[101]">
+                <span class="material-symbols-outlined" data-icon="close">close</span>
+            </button>
+            
+            <!-- Modal Content -->
+            <div class="notification-content flex flex-col space-y-6 relative z-10 pl-2 pr-6">
+                <!-- Notification will be here shortly... -->
+            </div>
+        </div>
+     </div>
+
     <header class="fixed top-0 left-0 right-0 z-50 w-[95%] flex items-center justify-between px-6 h-16 rounded-full mt-4 mx-auto max-w-4xl bg-slate-950/60 backdrop-blur-xl shadow-[0_0_40px_-10px_rgba(216,27,96,0.2)]">
         <div class="flex items-center gap-2 select-none">
             <span class="material-symbols-outlined text-pink-500" data-icon="terminal">terminal</span>
@@ -58,10 +75,10 @@
     </main>
 
     <footer class="max-w-4xl w-full mx-auto px-6 py-6 pb-24 md:py-6 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center gap-4 md:gap-8">
-        <div class="flex items-center gap-2 grayscale opacity-50 select-none">
+        <button class="debug-menu flex items-center gap-2 grayscale opacity-50">
             <span class="material-symbols-outlined" data-icon="terminal">terminal</span>
             <span class="font-bold tracking-tighter">O-Matic</span>
-        </div>
+        </button>
 
         <p class="text-on-surface-variant"><a href="https://github.com/Molimen/O_Matic" rel="noopener" style="color: var(--text-color);">Source Code</a> • 2.0.0</p>
 
@@ -74,8 +91,7 @@
     </footer>
 
     <!-- Dont touch these... -->
-    <!-- <script src="https://cdn.jsdelivr.net/npm/eruda"></script> -->
+    <script src="/pages/modules/eruda/eruda.js"></script>
     <script type="module" src="index.js"></script>
-    <script src="/pages/modules/pickr/pickr.min.js"></script>
 </body>
 </html>

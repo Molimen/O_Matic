@@ -1,4 +1,6 @@
 import { getStudentsData, getBlacklistedData } from "../modules/person.js";
+import { showNotification } from '../modules/notification.js';
+import '../modules/snapdom/snapdom.min.js';
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -67,9 +69,22 @@ function showGroupsDisplay(groups) {
     document.querySelector('.result-container').classList.remove('hidden');
 }
 
-// EY CEPLOX21, DONT FORGET ADD THIS INTO YO DATABASE, THANKS :>
-// original name 'listStudentsThatStudentHateSittingRightBesideOnX6' is too long, so i change it to 'blacklistedPartner' :>
-let blacklistedPartner = getBlacklistedData();
+let GroupsImage;
+
+async function generateGroupsImage() {
+    await new Promise(resolve => requestAnimationFrame(() =>
+        requestAnimationFrame(resolve)
+    ));
+
+    const result = await snapdom(document.querySelector('.result-container'), { scale:2, embedFonts: true, backgroundColor: '#000000' });
+    const canvas = await result.toCanvas();
+    
+    const pngBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+
+    GroupsImage = new File([pngBlob], 'groups-image.png', {type: 'image/png'});
+}
+
+let blacklistedPartner = await getBlacklistedData();
 
 // coming soon!
 let favoritePartner = {
@@ -222,6 +237,7 @@ async function generateGroups() {
     let groupCounter = 0;
     let blacklistedCounter = 0;
     let blacklistedCounterEachGroup = [];
+    let isThereAnyChange = false;
     if (classSelected === '6') {
         for (let group of groups) {
             blacklistedCounter = null;
@@ -248,6 +264,8 @@ async function generateGroups() {
 
             let ratio = (groups[blacklisted[0]].length - blacklisted[1])/blacklisted[1];
 
+            console.log('Group:',blacklisted[0]+1, ratio);
+
             if (ratio < 2.5) {
                 let whoIsSwapPartner = null;
                 for (let i = 0; i < blacklisted[1]; i++) {
@@ -266,6 +284,8 @@ async function generateGroups() {
                         groups[parnerGroupIndex][groups[parnerGroupIndex].indexOf(whoIsSwapPartner)] = temp;
 
                         whoIsSwapPartner = null;
+
+                        isThereAnyChange = true;
                     } else {
                         i--;
                     }
@@ -278,7 +298,16 @@ async function generateGroups() {
 
     resetGroupsDisplay(false);
 
+    const groupNameInput = document.querySelector('.group-name-input');
+    if (isThereAnyChange) {
+        groupNameInput.placeholder = 'Group Name...';
+    } else {
+        groupNameInput.placeholder = 'Group Name';
+    }
+
     showGroupsDisplay(groups);
+
+    generateGroupsImage();
 
     groupsMessageInfo('Groups generated somewhat successfully!');
 
@@ -312,20 +341,60 @@ function generationTypeChecker() {
 }
 
 const GroupHowMuchNumber = document.querySelector(".total-item");
+
 function increase() {
     let nextNumber = Number(GroupHowMuchNumber.value);
     nextNumber++;
     if (Number(GroupHowMuchNumber.value) < Number(GroupHowMuchNumber.max)) {
         GroupHowMuchNumber.value = String(nextNumber);
     };
+    document.querySelector('.total-item').dispatchEvent(new Event('input'));
 };
+
 function decrease() {
     let nextNumber = Number(GroupHowMuchNumber.value);
     nextNumber--;
     if (Number(GroupHowMuchNumber.value) > Number(GroupHowMuchNumber.min)) {
         GroupHowMuchNumber.value = String(nextNumber);
     };
+    document.querySelector('.total-item').dispatchEvent(new Event('input'));
 };
+
+async function downloadGroups() {
+    if (typeof GroupsImage === 'undefined') {
+        groupsMessageInfo('The groups is has not been generated', 'error');
+        return;
+    }
+
+    if (navigator.share && navigator.canShare?.({files: [GroupsImage]})) {
+        await navigator.share({
+            files: [GroupsImage],
+            title: 'Group-chart baru'
+        });
+        groupsMessageInfo('The groups has been shared!');
+    } else {
+        const url = URL.createObjectURL(GroupsImage);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = GroupsImage.name;
+        a.click();
+
+        URL.revokeObjectURL(url);
+
+        groupsMessageInfo('The groups has been shared trough download!');
+    }
+}
+
+function updateGroupsDisplayWhenGenerationTypeChanged() {
+    if (typeof resumeGroup !== 'undefined') {
+        resetGroupsDisplay(false);
+
+        showGroupsDisplay(resumeGroup);
+    }
+
+    generateGroupsImage();
+}
 
 function initInput() {
     if (localStorage.getItem('classSelected') !== null) {
@@ -350,11 +419,16 @@ function initDetectInput() {
 
     document.querySelector('.class-select').addEventListener('change', (e) => {
         localStorage.setItem('classSelected', e.target.value);
+
         generationTypeChecker();
+        resetGroupsDisplay();
+        groupsMessageInfo('nothing to do');
     });
 
     document.querySelector('.generation-type').addEventListener('change', (e) => {
         localStorage.setItem('generationType', e.target.value);
+
+        updateGroupsDisplayWhenGenerationTypeChanged();
     });
 
     document.querySelector('.type-search').addEventListener('change', (e) => {
@@ -367,19 +441,40 @@ function initDetectInput() {
         }
     });
 
+    document.getElementById("decrement").addEventListener('click', decrease);
+    document.getElementById("increment").addEventListener('click', increase);
+
     document.querySelector('.process-button').addEventListener('click', () => {
         generateGroups();
     });
 
-    document.getElementById("group-hint-button").addEventListener('click', () => {
-        document.getElementById("group-hint-popup").classList.toggle("hidden");
-    });
-    document.getElementById("group-hint-close").addEventListener('click', () => {
-        document.getElementById("group-hint-popup").classList.toggle("hidden");
+    document.querySelector('.download-button').addEventListener('click', () => {
+        downloadGroups();
     });
 
-    document.getElementById("decrement").addEventListener('click', decrease);
-    document.getElementById("increment").addEventListener('click', increase);
+    document.querySelector(".group-hint-button").addEventListener('click', () => {
+        const notificationContent = `                
+        <div class="mb-8 flex justify-between items-center min-h-auto">
+            <div class="text-[clamp(25px,5vw,30px)] leading-[clamp(1.5rem,1vw,0.2rem)] uppercase tracking-[0.15em] font-bold text-pink-400">Input explanation</div>
+        </div>
+        <div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">Generation type</div>
+        <div class="tracking-wide">Controls result format — <b><i>Student Absent</i></b> shows numbers, <b><i>Student Name</i></b> shows short names.</div>
+        <div class="h-4"></div>
+
+        <div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">Type search</div>
+        <div class="tracking-wide">Choose <b><i>Group</i></b> to set number of groups, or <b><i>Member</i></b> to set students per group.</div>
+        <div class="h-4"></div>
+
+        <div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">How much</div>
+        <div class="tracking-wide">The 'n' for Type Search. For example, <mark style="background-color: #743665; color: white;"><i>Member</i> + ${parseInt(document.querySelector('.total-item').value)}</mark> = ${parseInt(document.querySelector('.total-item').value)} students per group. <mark style="background-color: #743665; color: white;"><i>Group</i> + ${parseInt(document.querySelector('.total-item').value)}</mark> = ${parseInt(document.querySelector('.total-item').value)} groups (with <b>student amount</b> and <b>group's student gender ratio</b> spread evenly).</div>
+        <div class="h-4"></div>
+
+        <div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">Smart finder</div>
+        <div class="tracking-wide">Currently unavailable. because the dev is not in the mood to add this feature. this is a intensive feature and chalange dev moral to add this.</div>
+        `;
+
+        showNotification(notificationContent);
+    });
 }
 
 export function init() {
