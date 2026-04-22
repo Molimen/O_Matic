@@ -237,6 +237,7 @@ async function generateSeats() {
     // console.log('seatOrder: ', seatOrder);
 }
 
+
 function initInput() {
     if (localStorage.getItem('classSelected') !== null) {
         document.querySelector('.class-select').value = localStorage.getItem('classSelected');
@@ -284,11 +285,26 @@ function initColorPicker() {
         localStorage.setItem('boysColor', '#9FFFA5');
     }
 
+    const colorInputLabel = document.querySelectorAll(".color-input-label");
+    
     document.querySelectorAll('.color-input').forEach((el, idx) => {
+        colorInputLabel[idx].style.backgroundColor = localStorage.getItem(idx === 0 ? 'girlsColor' : 'boysColor');
+
         const pickr = Pickr.create({
             el: el, 
             theme: 'nano',
             default: localStorage.getItem(idx === 0 ? 'girlsColor' : 'boysColor'),
+
+            swatches: [
+                '#FFFA9F',
+                '#9FFFA5',
+                '#FF48C4',
+                '#2196F3',
+                '#FDA4AF',
+                '#84A98C',
+                '#F59E0B',
+                '#733BD9'
+            ],
 
             components: {
                 preview: true,
@@ -306,6 +322,7 @@ function initColorPicker() {
             const hexColor = color.toHEXA().toString();
             localStorage.setItem(idx === 0 ? 'girlsColor' : 'boysColor', hexColor);
             updateSeatsColor(idx, hexColor);
+            colorInputLabel[idx].style.backgroundColor = hexColor;
             pickr.hide();
         });
     });
