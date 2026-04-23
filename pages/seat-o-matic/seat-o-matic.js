@@ -75,8 +75,10 @@ function showSeatDisplay(seatOrder) {
             el.textContent = seatOrder[counter][0][0];
             if (seatOrder[counter][0][1] === 'L') {
                 el.style.backgroundColor = boysColor;
+                el.style.color = hexToBrightness(boysColor) > 0.179 ? 'black' : 'white';
             } else if (seatOrder[counter][0][1] === 'P') {
                 el.style.backgroundColor = girlsColor;
+                el.style.color = hexToBrightness(girlsColor) > 0.179 ? 'black' : 'white';
             } 
             
             counter++;
@@ -91,8 +93,10 @@ function showSeatDisplay(seatOrder) {
             el.textContent = seatOrder[counter][1][0];
             if (seatOrder[counter][1][1] === 'L') {
                 el.style.backgroundColor = boysColor;
+                el.style.color = hexToBrightness(boysColor) > 0.179 ? 'black' : 'white';
             } else if (seatOrder[counter][1][1] === 'P') {
                 el.style.backgroundColor = girlsColor;
+                el.style.color = hexToBrightness(girlsColor) > 0.179 ? 'black' : 'white';
             } 
             
             counter++;
