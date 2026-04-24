@@ -340,9 +340,9 @@ function generationTypeChecker() {
     }
 }
 
-const GroupHowMuchNumber = document.querySelector(".total-item");
-
 function increase() {
+    let GroupHowMuchNumber = document.querySelector(".total-item");
+
     let nextNumber = Number(GroupHowMuchNumber.value);
     nextNumber++;
     if (Number(GroupHowMuchNumber.value) < Number(GroupHowMuchNumber.max)) {
@@ -352,6 +352,8 @@ function increase() {
 };
 
 function decrease() {
+    let GroupHowMuchNumber = document.querySelector(".total-item");
+
     let nextNumber = Number(GroupHowMuchNumber.value);
     nextNumber--;
     if (Number(GroupHowMuchNumber.value) > Number(GroupHowMuchNumber.min)) {
