@@ -70,7 +70,28 @@
 //     showBirthday();
 
 // }
+import { animate, spring, utils, waapi, stagger, splitText } from 'https://esm.sh/animejs@4.3.5';
+
+const { words, chars } = splitText('.hero-header', { words: true, chars: true });
 
 export function init() {
-    
+    waapi.animate(chars.slice(0,8).reverse(), {
+        translate: [`0 -120vw `, `0 0`],
+        delay: stagger(100),
+        duration: 600,
+        ease: spring({ bounce: .15, duration: 400 }),
+    });
+    waapi.animate(chars.slice(17,27).reverse(), {
+        translate: [`-120vw 0`, `0 0`],
+        delay: stagger(100),
+        duration: 600,
+        ease: spring({ bounce: .15, duration: 400}),
+    });
+    waapi.animate(chars.slice(8,17), {
+        translate: [`120vw 0`, `0 0`],
+        delay: stagger(100),
+        duration: 600,
+        ease: spring({ bounce: .15, duration: 400 }),
+    });
+
 }

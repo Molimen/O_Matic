@@ -22,7 +22,11 @@ body::before {
     position: fixed;
     z-index: -1;
     inset: 0;
-    background-image: url('assets/images/bg.png');
+    /* background-image: url('assets/images/bg.png'); */ 
+    /* 
+    somehow that background-image thing affects 
+    the UX so much if removed
+    */
     opacity: 4%;
     pointer-events: none;
     background-position: center;
