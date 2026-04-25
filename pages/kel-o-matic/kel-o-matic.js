@@ -1,449 +1,490 @@
-async function getPersonData(idx) {
-    try {
+import { getStudentsData, getBlacklistedData } from "../modules/person.js";
+import { showNotification } from '../modules/notification.js';
+import '../modules/snapdom/snapdom.min.js';
 
-        const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=person&index=${idx}`);
-        if (!response.ok) throw new Error("Gagal mengambil data");
-        const rawdata = await response.json();
-        return rawdata["result"];
-
-    } catch {
-
-        if (!navigator.onLine) throw new Error("Tidak ada koneksi internet");
-        throw new Error("Koneksi bermasalah, coba lagi");
-
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
     }
-    
+    return array;
 }
 
-
-/*
-type 0 = empty type search (groupSearchTypeOutput NaN);
-type 1 = too much group inputed (totalGroup > totalPerson);
-type 2 = too litte group inputed (totalGroup < 1);
-type 3 = too much member inputed (totalMember > totalPerson);
-type 4 = too much little inputed (totalMember < 1);
-type 5 = negative input NOT allowed! (totalMember < 0 || totalGroup < 0);
-type 6 = Number field MUST not be empty! (groupNumberOutput === '')
-*/
-async function errorMessageGroup(type) {
-    await new Promise(resolve => setTimeout(resolve, 180));
-    const errorContainer = document.getElementById("group-error-container");
-    errorContainer.style.display = "inline";
-    setTimeout(() => {
-        errorContainer.style.opacity = "1";
-        errorContainer.style.transform = "scale(1)";
-        errorContainer.style.visibility = "visible";
-    }, 10);
-
-    const text = document.getElementById("group-error-text");
-
-    switch (type) {
-        case 0:
-            text.textContent = 'Please Select "Type search"!';
-            break;
-        case 1:
-            text.textContent = 'Group exceeded allowed total!';
-            break;
-        case 2:
-            text.textContent = 'Too little amount of group!';
-            break;
-        case 3:
-            text.textContent = 'Member exceeded allowed total!';
-            break;
-        case 4:
-            text.textContent = 'Too little amount of Member(s)';
-            break;
-        case 5:
-            text.textContent = 'Negative input is NOT allowed!';
-            break;
-        case 6:
-            text.textContent = 'Number field must NOT be empty!';
-            break;
-        default:
-            text.textContent = 'Error!';
-            break;
-    }
-}
-
-function resetGroup(isWrite) {
-    document.querySelector(".group-error-container").style.opacity = "0";
-    document.querySelector(".group-error-container").style.transform = "scale(0.9)";
-    document.querySelector(".group-result-container").style.opacity = "0";
-    document.querySelector(".group-result-container").style.transform = "scale(0.9)";
-    setTimeout(() => {
-        document.querySelector(".group-result-container").style.display = "none";
-        document.querySelector(".group-result-container").style.visibility = "collapse";
-        document.querySelector(".group-error-container").style.display = "none";
-        document.querySelector(".group-error-container").style.visibility = "collapse";
-        document.querySelector(".group-result-container").innerHTML = "";
-    }, isWrite == true ? 100 : 0);
-}
-
-let globalGroup;
-async function writeKel(isWrite) {
-    resetGroup(isWrite);
-    // Input User
-    let classOutput = Number(localStorage.getItem(localStorage.getItem("classSelect") !== localStorage.getItem("groupLatestClassSelect") ? "groupLatestClassSelect" : "classSelect"));
-    let groupSearchTypeOutput = localStorage.getItem("GroupType");
-    let groupNumberOutput = Number(localStorage.getItem("GroupNumber"));
-    let groupGenTypeOutput = localStorage.getItem("GroupGenType");
-
-    let totalGroup = null;
-    let totalMember = null;
-
-    let groupNameOutputType;
-    switch (classOutput) {
-        case 4:
-        case 5:
-            groupNameOutputType = groupGenTypeOutput;
-            break;
-        default:
-            groupNameOutputType = "absent";
-            break;
-    }
-
-    // Pre-Check
-    let group = [];
-    let person = structuredClone(await getPersonData(classOutput));
-    let totalPerson = person.length;
-
-    if (localStorage.getItem("GroupNumber") === '') {
-        errorMessageGroup(6);
-        return;
-    }
-
-    if (groupSearchTypeOutput === "group") {
-        totalGroup = groupNumberOutput;
-        totalMember = null;
-    } else if (groupSearchTypeOutput === "member") {
-        totalGroup = null;
-        totalMember = groupNumberOutput;
-    }
-
-    if (totalGroup > totalPerson) {
-        errorMessageGroup(1);
-        return;
-    }
-    if (totalMember > totalPerson) {
-        errorMessageGroup(3);
-        return;
-    }
-    if (totalGroup < 0 || totalMember < 0) {
-        errorMessageGroup(5);
-        return;
-    }
-    if (totalMember < 1 && totalMember !== null) {
-        errorMessageGroup(4);
-        return;
-    }
-    if ((totalGroup > 0 && totalMember > 0) || (totalGroup < 0 && totalMember < 0)) {
-        throw new Error("Invalid Data!");
-    }
-
-    if (totalMember > 0) {
-        totalGroup = Math.floor(totalPerson/totalMember);
-        totalMember = null;
-    }
-
-    if (totalGroup < 1) {
-        errorMessageGroup(2);
-        return;
-    }
-
-    // proses
-    if (isWrite) {
-        let complete = false;
-
-        for (let i = 0; i < totalGroup; i++) {
-            let selected = [];
-            for (let j = 0; j < Math.floor(totalPerson / totalGroup); j++) {
-                const Group = person;
-
-                if (Group.length === 0) {
-                    complete = true;
-                    break;
-                }
-                const index = Math.floor(Math.random() * Group.length);
-
-                selected.push(Group[index]);
-                Group.splice(index, 1);
-            }
-            group.push(selected);
-            if (complete) break;
-        }
-        
-        totalPerson = person.length;
-        let groupIndex = 0;
-        let groupIndexDone = [];
-        for (let i = 0; i < totalPerson; i++) {
-            const Group = person;
-
-            while (true) {
-                groupIndex = Math.floor(Math.random() * totalGroup);
-                if (!groupIndexDone.includes(groupIndex)) {
-                    break;
-                }
-            }
-            const index = Math.floor(Math.random() * Group.length);
-
-            let selected = Group[index];
-            person.splice(index, 1);
-
-            group[groupIndex].push(selected);
-            groupIndexDone.push(groupIndex);
-        }
-
-        const flat = [];
-        for (const row of group) {
-            for (const item of row) {
-                flat.push(item);
-            }
-        }
-        const girl = flat.filter(x => x[1] === 'P');
-        const boy = flat.filter(x => x[1] === 'L');
-
-
-        const newData = [];
-        for (let i = 0; i < group.length; i++) {
-            let rowSize = group[i].length;
-            let numGirlNeeded = Math.round((girl.length / (girl.length + boy.length))*rowSize);
-            let numBoyNeeded = rowSize - numGirlNeeded;
-
-            const newRow = [];
-            for (let j = 0; j < numGirlNeeded; j++) {
-                if (girl.length !== 0) {
-                    newRow.push(girl.pop());
-                }
-            }
-            for (let j = 0; j < numBoyNeeded; j++) {
-                if (boy.length !== 0) {
-                    newRow.push(boy.pop());
-                }
-            }
-
-            newData.push(newRow);
-        }
-        group = structuredClone(newData);
-        globalGroup = structuredClone(group);
+function groupsMessageInfo(message, type = 'info') {
+    document.querySelector('.message-item').textContent = message;
+    if (type === 'error') {
+        document.querySelector('.message-item').classList.remove('text-neon-green');
+        document.querySelector('.message-item').classList.add('text-error');
     } else {
-        group = structuredClone(globalGroup);
-        if (typeof group === "undefined") return;
+        document.querySelector('.message-item').classList.remove('text-error');
+        document.querySelector('.message-item').classList.add('text-neon-green');
     }
+}
 
-    await new Promise(resolve => setTimeout(resolve, isWrite == true ? 180 : 0));
+function resetGroupsDisplay(hidden = true) {
+    document.querySelector('.result-grid').innerHTML = '';
+    if (hidden) document.querySelector('.result-container').classList.add('hidden');
+}
 
-    document.querySelector(".group-input-downloadnshare-button").disabled = false;
+function showGroupsDisplay(groups) {
+    const generationType = document.querySelector('.generation-type').value;
 
-    for (let i = 0; i < totalGroup; i++) {
-        const wraper = document.createElement('div');
-        wraper.className = 'group-result-wraper';
+    for (let group of groups) {
+        let groupElement = document.createElement('div');
+        groupElement.classList.add('p-2', 'pb-4', 'glass-panel', 'rounded-lg', 'border', 'border-outline-variant/10', 'flex', 'flex-col', 'items-center');
+        
+        const groupTitle = document.createElement('span');
+        const groupLine = document.createElement('div');
+        const groupMembers = document.createElement('div');
 
-        document.querySelector(".group-result-container").appendChild(wraper);
-    }
+        groupTitle.textContent = `Group ${groups.indexOf(group) + 1}`;
+        groupTitle.classList.add('text-xl');
+        groupLine.classList.add('bg-white', 'h-[3px]', 'w-[80%]', 'mb-1');
+        groupMembers.classList.add('flex', 'flex-col', 'items-center');
 
-
-    let counter = 0;
-    document.querySelectorAll(".group-result-wraper").forEach(wraper => {
-        const title = document.createElement("span");
-        const line = document.createElement("span");
-
-        title.className = "group-result-title";
-        title.textContent = `KEL ${counter+1}`;
-        line.className = "group-result-line";
-        wraper.appendChild(title);
-        wraper.appendChild(line);
-
-        for (let i = 0; i < group[counter].length; i++) {
-            const item = document.createElement("span");
-            item.className = "group-item";
-            item.textContent = `${group[counter][i][groupNameOutputType === "name" ? 3 : 0]}`;
-            if (group[counter][i][1] === "L") {
-                item.style.color = "royalblue";
-            } else {
-                item.style.color = "hotpink";
+        groupElement.appendChild(groupTitle);
+        groupElement.appendChild(groupLine);
+        
+        for (let member of group) {
+            const memberElement = document.createElement('span');
+            if (generationType === 'absent') {
+                memberElement.textContent = member[0];
+            } else if (generationType === 'name') {
+                memberElement.textContent = member[3];
             }
-            wraper.appendChild(item);
+            
+            if (member[1] === 'P') {
+                memberElement.classList.add('text-pink-500');
+            } else if (member[1] === 'L') {
+                memberElement.classList.add('text-blue-500');
+            }
+            groupMembers.appendChild(memberElement);
         }
-        counter++;
+
+        groupElement.appendChild(groupMembers);
+
+        document.querySelector('.result-grid').appendChild(groupElement);
+    }
+
+    document.querySelector('.result-container').classList.remove('hidden');
+}
+
+let GroupsImage;
+
+async function generateGroupsImage() {
+    await new Promise(resolve => requestAnimationFrame(() =>
+        requestAnimationFrame(resolve)
+    ));
+
+    const result = await snapdom(document.querySelector('.result-container'), { scale:2, embedFonts: true, backgroundColor: '#000000' });
+    const canvas = await result.toCanvas();
+    
+    const pngBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+
+    GroupsImage = new File([pngBlob], 'groups-image.png', {type: 'image/png'});
+}
+
+let blacklistedPartner = await getBlacklistedData();
+
+// coming soon!
+let favoritePartner = {
+    // 1: [],
+    // 2: [],
+    // 3: [],
+    // 4: [],
+    // 5: [],
+    // 6: [],
+    // 7: [],
+    // 8: [],
+    // 9: [],
+    // 10: [],
+    // 11: [],
+    // 12: [],
+    // 13: [],
+    // 14: [],
+    // 15: [],
+    // 16: [],
+    // 17: [],
+    // 18: [],
+    // 19: [],
+    // 20: [],
+    // 21: [],
+    // 22: [],
+    // 23: [],
+    // 24: [],
+    // 25: [],
+    // 26: [],
+    // 27: [],
+    // 28: [],
+    // 29: [],
+    // 30: [],
+    // 31: [],
+    // 32: []
+}
+
+let resumeGroup;
+
+async function generateGroups() {
+    const classSelected = document.querySelector('.class-select').value;
+    const typeSearch = document.querySelector('.type-search').value;
+    const totalItem = parseInt(document.querySelector('.total-item').value);
+
+    let totalGroups = null;
+    let totalMembers = null;
+
+    let groups = [];
+    let students = structuredClone(await getStudentsData(classSelected));
+    let totalStudents = students.length;
+
+    if (isNaN(totalItem)) {
+        groupsMessageInfo('Total item must not be empty.', 'error');
+        resetGroupsDisplay();
+        return;
+    }
+
+    if (typeSearch === 'group') {
+        totalGroups = totalItem;
+        totalMembers = null;
+    } else if (typeSearch === 'member') {
+        totalGroups = null;
+        totalMembers = totalItem;
+    }
+
+    if (totalGroups > students.length) {
+        groupsMessageInfo('Total groups cannot be more than total students.', 'error');
+        resetGroupsDisplay();
+        return;
+    }
+
+    if (totalMembers > students.length) {
+        groupsMessageInfo('Total members cannot be more than total students.', 'error');
+        resetGroupsDisplay();
+        return;
+    }
+
+    if (totalGroups < 0 || totalMembers < 0) {
+        groupsMessageInfo('Total item must be greater than 0.', 'error');
+        resetGroupsDisplay();
+        return;
+    }
+
+    if (totalMembers < 1 && totalGroups === null) {
+        groupsMessageInfo('Total members must be at least 1.', 'error');
+        resetGroupsDisplay();
+        return;
+    }
+
+    if ((totalGroups > 0 && totalMembers > 0) || (totalGroups < 0 && totalMembers < 0)) {
+        groupsMessageInfo('Invalid combination of total groups and members. and i dont expect this to happen. because it should be either groups or members.', 'error');
+        resetGroupsDisplay();
+        return;
+    }
+
+    if (totalMembers > 0) {
+        totalGroups = Math.floor(totalStudents/totalMembers);
+        totalMembers = null;
+    }
+
+    if (totalGroups <= 1) {
+        groupsMessageInfo('Total groups must be greater than 1.', 'error');
+        resetGroupsDisplay();
+        return;
+    }
+
+    // shuffle students
+    students = shuffle(students);
+
+    // generate groups
+    for (let i = 0; i < totalGroups; i++) {
+        groups.push([]);
+    }
+
+    let groupIndex = 0;
+    for (let student of students) {
+        groups[groupIndex].push(student);
+        groupIndex++;
+
+        if (groupIndex >= totalGroups) {
+            groupIndex = 0;
+        }
+    }
+
+    const flattenGroups = groups.flat();
+
+    const studentsGirls = flattenGroups.filter(student => student[1] === 'P');
+    const studentsBoys = flattenGroups.filter(student => student[1] === 'L');
+
+    const newGroups = [];
+    for (let group of groups) {
+        let rowSize = group.length;
+        let numberOfGirls = Math.round((studentsGirls.length / (studentsGirls.length + studentsBoys.length)) * rowSize);
+        let numberOfBoys = rowSize - numberOfGirls;
+
+        const row = [];
+        for (let j = 0; j < numberOfGirls; j++) {
+            if (studentsGirls.length === 0) break;
+            row.push(studentsGirls.pop());
+        }
+        for (let j = 0; j < numberOfBoys; j++) {
+            if (studentsBoys.length === 0) break;
+            row.push(studentsBoys.pop());
+        }
+
+        newGroups.push(row);
+    }
+    groups = newGroups;
+
+    let groupCounter = 0;
+    let blacklistedCounter = 0;
+    let blacklistedCounterEachGroup = [];
+    let isThereAnyChange = false;
+    if (classSelected === '6') {
+        for (let group of groups) {
+            blacklistedCounter = null;
+            let originStudentsInGroup = null;
+            let listOfBlacklistedPartnerInGroup = [];
+            for (let student of group) {
+                if (blacklistedPartner[student[0]] !== undefined) {
+                    originStudentsInGroup = student[0];
+                    for (let partner of group) {
+                        if (blacklistedPartner[student[0]].includes(partner[0])) {
+                            blacklistedCounter++;
+                            listOfBlacklistedPartnerInGroup.push(partner);
+                        }
+                    }
+                    break;
+                }
+            }
+            blacklistedCounterEachGroup.push([groups.indexOf(group), blacklistedCounter, listOfBlacklistedPartnerInGroup, originStudentsInGroup]);
+            groupCounter++;
+        }
+
+        for (let blacklisted of blacklistedCounterEachGroup) {
+            if (blacklisted[1] === null) continue;
+
+            let ratio = (groups[blacklisted[0]].length - blacklisted[1])/blacklisted[1];
+
+            console.log('Group:',blacklisted[0]+1, ratio);
+
+            if (ratio < 2.5) {
+                let whoIsSwapPartner = null;
+                for (let i = 0; i < blacklisted[1]; i++) {
+                    let parnerGroupIndex = Math.floor(Math.random() * groups.length);
+                    for (let student of groups[parnerGroupIndex]) {
+                        if (!blacklistedPartner[blacklisted[3]].includes(student[0]) && student[0] !== blacklisted[3] && student[1] === blacklisted[2][i][1]) {
+                            whoIsSwapPartner = student;
+                            break;
+                        }
+                    }
+
+                    if (whoIsSwapPartner !== null) {
+                        const temp = groups[blacklisted[0]][groups[blacklisted[0]].indexOf(blacklisted[2][i])];
+
+                        groups[blacklisted[0]][groups[blacklisted[0]].indexOf(blacklisted[2][i])] = whoIsSwapPartner;
+                        groups[parnerGroupIndex][groups[parnerGroupIndex].indexOf(whoIsSwapPartner)] = temp;
+
+                        whoIsSwapPartner = null;
+
+                        isThereAnyChange = true;
+                    } else {
+                        i--;
+                    }
+                }
+            }
+        }
+    }
+
+    resumeGroup = structuredClone(groups);
+
+    resetGroupsDisplay(false);
+
+    const groupNameInput = document.querySelector('.group-name-input');
+    if (isThereAnyChange) {
+        groupNameInput.placeholder = 'Group Name...';
+    } else {
+        groupNameInput.placeholder = 'Group Name';
+    }
+
+    showGroupsDisplay(groups);
+
+    generateGroupsImage();
+
+    groupsMessageInfo('Groups generated somewhat successfully!');
+
+    // console.log('total students:', students.length);
+    // console.log('students:', students);
+    // console.log("Class Selected:", classSelected);
+    // console.log("Generation Type:", generationType);
+    // console.log("Type Search:", typeSearch);
+    // console.log("Total Item:", totalItem);
+    // console.log("Total Groups:", totalGroups);
+    // console.log("Total Members:", totalMembers);
+    // console.log('groups:', groups);
+    // groupsMessageInfo('nothing to do');
+}
+
+function generationTypeChecker() {
+    const classSelected = document.querySelector('.class-select').value;
+    const generationType = document.querySelector('.generation-type');
+
+    switch (classSelected) {
+        case '5':
+        case '6':
+            generationType.disabled = false;
+            break;
+        default:
+            generationType.disabled = true;
+            generationType.value = 'absent';
+            generationType.dispatchEvent(new Event('change'));
+            break;
+    }
+}
+
+function increase() {
+    let GroupHowMuchNumber = document.querySelector(".total-item");
+
+    let nextNumber = Number(GroupHowMuchNumber.value);
+    nextNumber++;
+    if (Number(GroupHowMuchNumber.value) < Number(GroupHowMuchNumber.max)) {
+        GroupHowMuchNumber.value = String(nextNumber);
+    };
+    document.querySelector('.total-item').dispatchEvent(new Event('input'));
+};
+
+function decrease() {
+    let GroupHowMuchNumber = document.querySelector(".total-item");
+
+    let nextNumber = Number(GroupHowMuchNumber.value);
+    nextNumber--;
+    if (Number(GroupHowMuchNumber.value) > Number(GroupHowMuchNumber.min)) {
+        GroupHowMuchNumber.value = String(nextNumber);
+    };
+    document.querySelector('.total-item').dispatchEvent(new Event('input'));
+};
+
+async function downloadGroups() {
+    if (typeof GroupsImage === 'undefined') {
+        groupsMessageInfo('The groups is has not been generated', 'error');
+        return;
+    }
+
+    if (navigator.share && navigator.canShare?.({files: [GroupsImage]})) {
+        await navigator.share({
+            files: [GroupsImage],
+            title: 'Group-chart baru'
+        });
+        groupsMessageInfo('The groups has been shared!');
+    } else {
+        const url = URL.createObjectURL(GroupsImage);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = GroupsImage.name;
+        a.click();
+
+        URL.revokeObjectURL(url);
+
+        groupsMessageInfo('The groups has been shared trough download!');
+    }
+}
+
+function updateGroupsDisplayWhenGenerationTypeChanged() {
+    if (typeof resumeGroup !== 'undefined') {
+        resetGroupsDisplay(false);
+
+        showGroupsDisplay(resumeGroup);
+    }
+
+    generateGroupsImage();
+}
+
+function initInput() {
+    if (localStorage.getItem('classSelected') !== null) {
+        document.querySelector('.class-select').value = localStorage.getItem('classSelected');
+    };
+
+    if (localStorage.getItem('generationType') !== null) {
+        document.querySelector('.generation-type').value = localStorage.getItem('generationType');
+    };
+
+    if (localStorage.getItem('typeSearch') !== null) {
+        document.querySelector('.type-search').value = localStorage.getItem('typeSearch');
+    };
+
+    if (localStorage.getItem('totalItem') !== null) {
+        document.querySelector('.total-item').value = localStorage.getItem('totalItem');
+    };
+}
+
+function initDetectInput() {
+    generationTypeChecker();
+
+    document.querySelector('.class-select').addEventListener('change', (e) => {
+        localStorage.setItem('classSelected', e.target.value);
+
+        generationTypeChecker();
+        resetGroupsDisplay();
+        groupsMessageInfo('nothing to do');
     });
 
-    document.querySelector(".group-result-container").style.display = "grid";
+    document.querySelector('.generation-type').addEventListener('change', (e) => {
+        localStorage.setItem('generationType', e.target.value);
 
-    setTimeout(() => {
-        document.querySelector(".group-result-container").style.opacity = "1";
-        document.querySelector(".group-result-container").style.transform = "scale(1)";
-        document.querySelector(".group-result-container").style.visibility = "visible";
-    }, 10);
-}
+        updateGroupsDisplayWhenGenerationTypeChanged();
+    });
 
-function checkGroupGentype(type) {
-    const radio = document.querySelectorAll('input[name="group-gen-type"]');
-    const option = document.querySelectorAll('.group-gen-type-option');
-    switch (Number(type)) {
-        case 4:
-        case 5:
-            radio.forEach(input => {
-                input.disabled = false;
-                input.style.cursor = "pointer";
-            });
-            option.forEach(label => {
-                label.style.cursor = "pointer";
-            });
-            break;
-        default:
-            radio.forEach(input => {
-                input.disabled = true;
-                input.style.cursor = "not-allowed";
-            });
-            option.forEach(label => {
-                label.style.cursor = "not-allowed";
-            });
-            break;
-    }
-}
+    document.querySelector('.type-search').addEventListener('change', (e) => {
+        localStorage.setItem('typeSearch', e.target.value);
+    });
 
-async function downloadGroup() {
-    if (typeof globalGroup === "undefined") {
-        return;
-    }
-
-    const module = await import("../modules/html2canvas.esm.js");
-    const html2canvas = module.default;
-
-    const element_target = document.querySelector('.group-result-container');
-    element_target.style.borderRadius = "0px";
-    const canvas = await html2canvas(element_target,{scale : 2});
-
-    canvas.toBlob(async (blob) => {
-        const file = new File([blob], "hasil.png", {type: "image/png"});
-
-        //firefox kaga support share
-        if (navigator.share && navigator.canShare?.({ files: [file] })) {
-            await navigator.share({
-                files: [file],
-                title: "Group-chart baru"
-            });
-            } 
-        // Fallback download
-        else {
-            const url = URL.createObjectURL(blob);
-
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "hasil.png";
-            a.click();
-
-            URL.revokeObjectURL(url);
-            window.alert("Browser ga bisa share, cek hasil dalam histori download")
+    document.querySelector('.total-item').addEventListener('input', (e) => {
+        if (e.target.value !== '') {
+            localStorage.setItem('totalItem', e.target.value);
         }
+    });
 
-    }, "image/png")
-    element_target.style.borderRadius = "21px";
+    document.getElementById("decrement").addEventListener('click', decrease);
+    document.getElementById("increment").addEventListener('click', increase);
+
+    document.querySelector('.process-button').addEventListener('click', () => {
+        generateGroups();
+    });
+
+    document.querySelector('.download-button').addEventListener('click', () => {
+        downloadGroups();
+    });
+
+    document.querySelector(".group-hint-button").addEventListener('click', () => {
+        const notificationContent = `                
+        <div class="mb-8 flex justify-between items-center min-h-auto">
+            <div class="text-[clamp(25px,5vw,30px)] leading-[clamp(1.5rem,1vw,0.2rem)] uppercase tracking-[0.15em] font-bold text-pink-400">Input explanation</div>
+        </div>
+        <div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">Generation type</div>
+        <div class="tracking-wide">Controls result format — <b><i>Student Absent</i></b> shows numbers, <b><i>Student Name</i></b> shows short names.</div>
+        <div class="h-4"></div>
+
+        <div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">Type search</div>
+        <div class="tracking-wide">Choose <b><i>Group</i></b> to set number of groups, or <b><i>Member</i></b> to set students per group.</div>
+        <div class="h-4"></div>
+
+        <div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">How much</div>
+        <div class="tracking-wide">The 'n' for Type Search. For example, <mark style="background-color: #743665; color: white;"><i>Member</i> + ${parseInt(document.querySelector('.total-item').value)}</mark> = ${parseInt(document.querySelector('.total-item').value)} students per group. <mark style="background-color: #743665; color: white;"><i>Group</i> + ${parseInt(document.querySelector('.total-item').value)}</mark> = ${parseInt(document.querySelector('.total-item').value)} groups (with <b>student amount</b> and <b>group's student gender ratio</b> spread evenly).</div>
+        <div class="h-4"></div>
+
+        <div class="text-[16px] uppercase tracking-[0.2em] font-bold text-pink-500/80">Smart finder</div>
+        <div class="tracking-wide">Currently unavailable. because the dev is not in the mood to add this feature. this is a intensive feature and chalange dev moral to add this.</div>
+        `;
+
+        showNotification(notificationContent);
+    });
 }
 
 export function init() {
-    if (localStorage.getItem("classSelect") !== null) {
-        const text = document.querySelector(".multiselect-selector-name");
+    initInput();
+    initDetectInput();
 
-        switch (Number(localStorage.getItem("classSelect"))) {
-            case 0:
-                text.textContent = "X-1";
-                break;
-            case 1:
-                text.textContent = "X-2";
-                break;
-            case 2:
-                text.textContent = "X-3";
-                break;
-            case 3:
-                text.textContent = "X-4";
-                break;
-            case 4:
-                text.textContent = "X-5";
-                break;
-            case 5:
-                text.textContent = "X-6";
-                break;
-            default:
-                break;
-        }
-    } else {
-        localStorage.setItem("classSelect", 0);
+    if (typeof resumeGroup !== 'undefined') {
+        showGroupsDisplay(resumeGroup);
+        groupsMessageInfo('showing last groups result!');
     }
-
-    if (localStorage.getItem("GroupType") !== null && localStorage.getItem("GroupType") !== "0" && localStorage.getItem("GroupType") !== "1") {
-        document.querySelector(`input[name="group-type"][value="${localStorage.getItem("GroupType")}"]`).checked = true;
-    } else {
-        localStorage.setItem("GroupType", "group");
-        document.querySelector('input[name="group-type"][value="group"]').checked = true;
-    }
-
-    if (localStorage.getItem("GroupNumber") !== null) {
-        document.querySelector('input[name="group-number"]').value = localStorage.getItem("GroupNumber");
-    } else {
-        localStorage.setItem("GroupNumber", 3);
-    }
-
-    if (localStorage.getItem("GroupGenType") !== null) {
-        document.querySelector(`input[name="group-gen-type"][value="${localStorage.getItem("GroupGenType")}"]`).checked = true;
-    } else {
-        localStorage.setItem("GroupGenType", "absent");
-        document.querySelector('input[name="group-gen-type"][value="absent"]').checked = true;
-    }
-
-    document.querySelector(".multiselect-selector").addEventListener("click", () => {
-        document.querySelector(".multiselect-container").classList.toggle("open");
-    });
-
-    document.querySelectorAll(".multiselect-options-option").forEach(option => {
-        option.addEventListener("click", () => {
-            document.querySelector(".multiselect-selector-name").textContent = option.textContent;
-            localStorage.setItem("classSelect", option.dataset.value);
-            checkGroupGentype(option.dataset.value);
-            document.querySelector(".multiselect-container").classList.remove("open");
-        });
-    });
-
-    document.querySelectorAll('input[name="group-type"]').forEach(radio => {
-        radio.addEventListener("change", function () {
-            if (this.checked) {
-                localStorage.setItem("GroupType", this.value);
-            }
-        });
-    });
-
-    document.querySelector('input[name="group-number"]').addEventListener("input", function () {
-        localStorage.setItem("GroupNumber", this.value);
-    });
-
-    document.querySelectorAll('input[name="group-gen-type"]').forEach(radio => {
-        radio.addEventListener("change", function () {
-            if (this.checked) {
-                localStorage.setItem("GroupGenType", this.value);
-            }
-        });
-    });
-
-    document.querySelector(".group-input-button").addEventListener("click", async () => {
-        localStorage.setItem("groupLatestClassSelect", localStorage.getItem("classSelect"));
-        document.querySelector(".group-input-button").disabled = true;
-        document.querySelector(".group-input-button").classList.add("disabled");
-        await writeKel(true);
-        document.querySelector(".group-input-button").classList.remove("disabled");
-        document.querySelector(".group-input-button").disabled = false;
-    });
-
-    checkGroupGentype(localStorage.getItem("classSelect"));
-
-    try {
-        writeKel(false);
-    } catch {
-    }
-
-    if (typeof globalGroup !== "undefined") document.querySelector(".group-input-downloadnshare-button").disabled = false;
-    else document.querySelector(".group-input-downloadnshare-button").disabled = true;
-
-    document.querySelector('.group-input-downloadnshare-button').addEventListener("click", () => {
-        downloadGroup();
-    })
 }

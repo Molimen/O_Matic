@@ -1,87 +1,97 @@
-async function getBirthdayData(idx) {
-    try {
+// import { returnBirthday } from '../modules/person.js';
 
-        const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=birthday&index=${idx}`);
-        if (!response.ok) throw new Error("Gagal mengambil data");
-        const rawdata = await response.json();
-        return rawdata["result"];
+// const now = new Date();
 
-    } catch {
+// let test = false;
+// let testDate = 19;
+// let testMonth = 9;
 
-        if (!navigator.onLine) throw new Error("Tidak ada koneksi internet");
-        throw new Error("Koneksi bermasalah, coba lagi");
+// let month;
+// let date;
 
-    }
-    
-}
+// if (test) {
+//     month = testMonth-1;
+//     date = testDate;
 
-const now = new Date();
+// } else {
+//     month = now.getMonth();
+//     date = now.getDate();
+// }
 
-let test = false;
-let testDate = 11;
-let testMonth = 9;
+// function showBirthday() {
+//     let birthday = returnBirthday()[month];
 
-let month;
-let date;
+//     for (let i = 0; i < birthday.length; i++) {
+//     const wraper = document.createElement('div');
+//     wraper.className = 'birthday-wraper';
 
-if (test) {
-    month = testMonth-1;
-    date = testDate;
+//     document.querySelector(".birthday-content").appendChild(wraper);
+//     }
 
-} else {
-    month = now.getMonth();
-    date = now.getDate();
-}
+//     let counter = 0;
+//     document.querySelectorAll(".birthday-wraper").forEach(wraper => {
+//         const title = document.createElement("div");
+//         const line = document.createElement("div");
 
-async function showBirthday() {
-    let birthday = await getBirthdayData(month);
+//         title.className = "birthday-name";
+//         title.textContent = `${birthday[counter][1]}`;
+//         line.className = "birthday-date";
+//         line.textContent = `${birthday[counter][0]}`;
 
-    for (let i = 0; i < birthday.length; i++) {
-    const wraper = document.createElement('div');
-    wraper.className = 'birthday-wraper';
+//         const birthday_gap = 3;
+//         if (date <= birthday[counter][0]) {
+//             if (Math.abs(date-birthday[counter][0]) <= 0) {
+//                 wraper.style.background = "#FFD700";
+//                 wraper.style.color = "black";
+//             } else if (Math.abs(date-birthday[counter][0]) <= Math.floor(birthday_gap/2)) {
+//                 wraper.style.background = "#CE8946";
+//                 wraper.style.color = "black";
+//             } else if (Math.abs(date-birthday[counter][0]) <= birthday_gap) {
+//                 wraper.style.background = "#C4C4C4";
+//                 wraper.style.color = "black";
+//             }
+//         }
 
-    document.querySelector(".birthday-content").appendChild(wraper);
-    }
+//         wraper.appendChild(title);
+//         wraper.appendChild(line);
+//         counter++;
+//     });
+// }
 
-    let counter = 0;
-    document.querySelectorAll(".birthday-wraper").forEach(wraper => {
-        const title = document.createElement("div");
-        const line = document.createElement("div");
+// export function init() {
+//     document.querySelectorAll(".home-card-btn").forEach(btn => {
+//         btn.addEventListener("click", () => {
+//             history.replaceState(null, '', `#${btn.dataset.id}`);
+//             window.dispatchEvent(new HashChangeEvent('hashchange'));
+//             localStorage.setItem("transition", true);
+//         });
+//     });
 
-        title.className = "birthday-name";
-        title.textContent = `${birthday[counter][1]}`;
-        line.className = "birthday-date";
-        line.textContent = `${birthday[counter][0]}`;
+//     showBirthday();
 
-        const birthday_gap = 7;
-        if (date <= birthday[counter][0]) {
-            if (Math.abs(date-birthday[counter][0]) <= 0) {
-                wraper.classList.add("h-0");
-                wraper.style.color = "white";
-            } else if (Math.abs(date-birthday[counter][0]) <= Math.floor(birthday_gap/2)) {
-                wraper.classList.add("h-3");
-                wraper.style.color = "black";
-            } else if (Math.abs(date-birthday[counter][0]) <= birthday_gap) {
-                wraper.classList.add("h-7");
-                wraper.style.color = "black";
-            }
-        }
+// }
+import { animate, spring, utils, waapi, stagger, splitText } from 'https://esm.sh/animejs@4.3.5';
 
-        wraper.appendChild(title);
-        wraper.appendChild(line);
-        counter++;
-    });
-}
+const { words, chars } = splitText('.hero-header', { words: true, chars: true });
 
 export function init() {
-    document.querySelectorAll(".home-card-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            history.replaceState(null, '', `#${btn.dataset.id}`);
-            window.dispatchEvent(new HashChangeEvent('hashchange'));
-            localStorage.setItem("transition", true);
-        });
+    waapi.animate(chars.slice(0,8).reverse(), {
+        translate: [`0 -120vw `, `0 0`],
+        delay: stagger(100),
+        duration: 600,
+        ease: spring({ bounce: .15, duration: 400 }),
     });
-
-    showBirthday();
+    waapi.animate(chars.slice(17,27).reverse(), {
+        translate: [`-120vw 0`, `0 0`],
+        delay: stagger(100),
+        duration: 600,
+        ease: spring({ bounce: .15, duration: 400}),
+    });
+    waapi.animate(chars.slice(8,17), {
+        translate: [`120vw 0`, `0 0`],
+        delay: stagger(100),
+        duration: 600,
+        ease: spring({ bounce: .15, duration: 400 }),
+    });
 
 }

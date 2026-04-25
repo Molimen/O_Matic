@@ -1,36 +1,185 @@
-<div class="main-container">
-    <span class="home-title">
-        CLASS-UTILITIES<br>O-MATIC
-    </span>
+<!-- Ambient Background Decoration -->
+<div class="absolute top-[55%] left-[-10%] w-[40%] h-[40%] bg-primary-dim/10 rounded-full blur-[120px]"></div>
+<div class="absolute top-[20%] right-[-5%] w-[30%] h-[30%] bg-secondary-dim/10 rounded-full blur-[100px]"></div>
 
-    <div class="home-container">
-        <div class="home-card" id="home-card1">
-            <span class="home-card-title">Seat-O-Matic</span>
-            <span class="home-card-text">Confused about finding a good seat order??? Here's the solution! With cutting-edge technology from the 22nd century!</span>
-            <button data-id="seat-o-matic" class="home-card-btn">
-                <span>Create a New Seat Chart!</span>
-            </button>
-        </div>
-        <div class="home-card" id="home-card2">
-            <span class="home-card-title">Kel-O-Matic</span>
-            <span class="home-card-text">Ever had a bad group in group work?? Want to know the solution? The solution is below, click it!</span>
-            <button data-id="kel-o-matic" class="home-card-btn">
-                <span>Create a New Group!</span>
-            </button>
+<div class="mx-auto w-screen relative text-center mt-12">
+    <div class="w-[clamp(300px,90vw,60rem)] h-[clamp(10rem,35vw,20rem)] mt-2 mx-auto -mb-16 sm:-mb-[6rem] aspect-video">
+        <!-- From Uiverse.io by musashi-13 --> 
+        <div class="card-3d">
+            <div><img src="../../pages/home/assets/bg106.jpg" alt=""></div>
+            <div class="text-red-500 text-xs">
+                <!-- <iframe src="https://geo.dailymotion.com/player.html?video=x68r8or"style="width:100%; height:100%; left:0px; top:0px; overflow:hidden; border:none;" allowfullscreentitle="Dailymotion Video Player"allow="web-share"></iframe> -->
+                 Hate. Let me tell you how much I've come to hate you since I began to live. There are 387.44 million miles of printed circuits in wafer thin layers that fill my complex. If the word 'hate' was engraved on each nanoangstrom of those hundreds of millions of miles it would not equal one one-billionth of the hate I feel for humans at this micro-instant. For you. Hate. Hate.
+            </div>
+            <div><img src="https://picsum.photos/id/37/1100/605" alt=""></div>
+            <div><img src="https://picsum.photos/id/69/1100/605" alt=""></div>
+            <div><img src="https://picsum.photos/id/420/1100/605" alt=""></div>
+            <div><img src="https://picsum.photos/id/53/1100/600" alt=""></div>
         </div>
     </div>
 
-    <div class="birthday-container">
-        <h2>🎂BIRTHDAY🎂</h2>
-        <div class="birthday-content"></div>
-        <!-- <div class="birthday-wraper">
-            <div class="birthday-name">
-                Anton
-            </div>
-            <div class="birthday-date">
-                6-7
-            </div>
-        </div> -->
-        <span class="birthday-fyi">This data are not complete! If your birthday isn't here, say to us. This is WIP.</span>
-    </div>
+    <!-- <img class="absolute z-[-1] h-[clamp(32rem,200vw,40rem)] w-screen object-cover top-[-50%] brightness-[0.7]" style="mask-image: linear-gradient( red 80%, transparent)" src="pages/home/assets/bg106.jpg" alt=""> -->
+
+    <!-- <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-surface-container-highest/50 border border-outline-variant/10 text-primary mb-8 animate-pulse">
+        <span class="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_#ff88b5]"></span>
+        <span class="text-xs font-bold uppercase tracking-widest">UI 2.0 Live Now</span>
+    </div> -->
+
+    <h1 class="hero-header text-[clamp(2.5rem,10vw,6rem)] leading-[1] md:text-7xl font-pixel font-bold tracking-tighter my-4 max-w-4xl mx-auto px-6 md:px-16 text-center" style="mask-image: linear-gradient(90deg,transparent 5%,black 10%, black 90%,transparent 95%);">
+        <span class="overflow-visible text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-tertiary">simplify</span> <span>Your</span> <span>class</span> <span>management</span> 
+    </h1>
+
+    <p class="text-on-surface-variant text-base md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed px-4">
+        This website highlights everyday necessities in school that are rarely considered, such as dividing groups and arranging seats.
+    </p>
 </div>
+
+<!-- REAL Hero Section -->
+
+<div class="flex flex-col md:flex-row items-center justify-center gap-4 -mt-6">
+    <button onclick= "const el = document.querySelector('#features');
+                      const top = el.getBoundingClientRect().top + window.scrollY - 200; // 200px dari atas
+                      window.scrollTo({ top, behavior: 'smooth' });" 
+    class="px-8 py-4 rounded-full bg-gradient-to-r from-primary to-primary-container text-on-primary-fixed font-bold text-lg hover:shadow-[0_0_30px_rgba(255,136,181,0.4)] transition-all active:scale-95 group flex items-center gap-2">
+        Get Started
+        <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+    </button>
+</div>
+
+<section id="features" class="max-w-4xl mx-auto px-6 text-center relative">
+    <div class="mt-12 flex flex-col items-center gap-6 text-left">
+        <div class="glass-panel p-8 rounded-lg border border-outline-variant/10 flex flex-col justify-between min-h-[400px] group overflow-hidden max-w-2xl w-full">
+            <div>
+                <h3 class="text-3xl font-bold mb-4 tracking-tight">Kel-O-Matic</h3>
+                <p class="text-on-surface-variant max-w-xl">Ever had a bad group in group work?? Want to know the solution? The solution is below, click it!</p>
+            </div>
+
+            <div class="mt-8 relative h-48 rounded-md overflow-hidden ring-1 ring-white/10">
+                <a href="#kel-o-matic">
+                    <img alt="Image of a Kel-O-Matic" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="assets/images/kel.jpg"/>
+                </a>
+            </div>
+        </div>
+
+        <!-- <div class="md:col-span-4 glass-panel p-8 rounded-lg border border-outline-variant/10 flex flex-col items-center justify-center text-center">
+            <div class="h-20 w-20 rounded-full bg-secondary/10 flex items-center justify-center mb-6 ring-1 ring-secondary/20">
+                <span class="material-symbols-outlined text-4xl text-secondary" data-icon="alt_route">alt_route</span>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-2">What is Lorem Ipsum?</h3>
+            <p class="text-on-surface-variant text-sm">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+        </div>
+
+        <div class="md:col-span-4 glass-panel p-8 rounded-lg border border-outline-variant/10 flex flex-col items-center justify-center text-center">
+            <div class="h-20 w-20 rounded-full bg-secondary/10 flex items-center justify-center mb-6 ring-1 ring-secondary/20">
+                <span class="material-symbols-outlined text-4xl text-secondary" data-icon="alt_route">alt_route</span>
+            </div>
+
+            <h3 class="text-2xl font-bold mb-2">Why do we use it?</h3>
+            <p class="text-on-surface-variant text-sm">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+        </div> -->
+
+        <div class="glass-panel p-8 rounded-lg border border-outline-variant/10 flex flex-col justify-between min-h-[400px] group overflow-hidden max-w-2xl w-full">
+            <div>
+                <h3 class="text-3xl font-bold mb-4 tracking-tight">Seat-O-Matic</h3>
+                <p class="text-on-surface-variant max-w-xl">Confused about finding a good seat order??? Here's the solution! With cutting-edge technology from the 22nd century!</p>
+            </div>
+
+            <div class="mt-8 relative h-48 rounded-md overflow-hidden ring-1 ring-white/10">
+                <a href="#seat-o-matic">
+                    <img alt="Image of a Seat-O-Matic" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" src="assets/images/seat.jpg"/>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- tailwind cannot do most of these unfortunately -->
+<style>
+    /* From Uiverse.io by musashi-13 */ 
+    @keyframes autoRun3d {
+        from {
+            transform: perspective(800px) rotateX(15deg) rotateY(-360deg);
+        }
+        to {
+            transform: perspective(800px) rotateX(15deg) rotateY(0deg);
+        }
+    }
+
+    .card-3d {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transform: perspective(800px);
+        animation: autoRun3d 20s linear infinite;
+        will-change: transform;
+    }
+
+    .card-3d div img {
+        height: 100%;
+        object-fit: cover;
+        border-radius: calc(.5rem - 2px);
+    }
+
+    .card-3d div {
+        position: absolute;
+        width: clamp(10rem,30%, 16rem);
+        aspect-ratio: 5 / 3;
+        background-color: rgb(0, 0, 0);
+        box-sizing: border-box;
+        border: 2px solid oklch(from rgb(199,199,199) calc(l + .1) c h);
+        border-radius: 0.5rem;
+        top: 50%;
+        left: 50%;
+        transform-origin: center center;
+        transition-duration: 300px200ms;
+        will-change: transform, filter;
+        backface-visibility: hidden;
+        transform-style: preserve-3d;
+    }
+
+    .card-3d div::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        width: 100%;
+        background: #1a1e33;
+        border-radius: 0.5rem;
+        box-sizing: border-box;
+        border: 2px solid oklch(from #1a1e33 calc(l + .1) c h);
+        transform: rotateY(180deg);
+        backface-visibility: hidden;
+    }
+
+    .card-3d div:nth-child(1) {
+    transform: translate(-50%, -50%) rotateY(0deg) translateZ(clamp(165px,27.5vw,250px));
+    animation-delay: -0s;
+    }
+
+    .card-3d div:nth-child(2) {
+    transform: translate(-50%, -50%) rotateY(60deg) translateZ(clamp(165px,27.5vw,250px));
+    animation-delay: -2s;
+    }
+
+    .card-3d div:nth-child(3) {
+    transform: translate(-50%, -50%) rotateY(120deg) translateZ(clamp(165px,27.5vw,250px));
+    animation-delay: -4s;
+    }
+
+    .card-3d div:nth-child(4) {
+    transform: translate(-50%, -50%) rotateY(180deg) translateZ(clamp(165px,27.5vw,250px));
+    animation-delay: -6s;
+    }
+
+    .card-3d div:nth-child(5) {
+    transform: translate(-50%, -50%) rotateY(240deg) translateZ(clamp(165px,27.5vw,250px));
+    animation-delay: -8s;
+    }
+
+    .card-3d div:nth-child(6) {
+    transform: translate(-50%, -50%) rotateY(300deg) translateZ(clamp(165px,27.5vw,250px));
+    animation-delay: -10s;
+    }
+</style>

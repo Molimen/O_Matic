@@ -1,217 +1,84 @@
-function getLuminanceFromColor(color) {
+import { getStudentsData, getBlacklistedData } from "../modules/person.js";
+import '../modules/pickr/pickr.min.js';
+import '../modules/snapdom/snapdom.min.js';
 
-    const hexRegex = /^#([A-Fa-f0-9]{3}){1,2}$/;
-    if (!hexRegex.test(color)) { //handle rgb
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
 
-      const values = color.substring(color.indexOf('(') + 1, color.indexOf(')'));
-      
-      const parts = values.split(',');
+function hexToBrightness(hex) {
+    // remove #
+    hex = hex.replace('#', '');
 
-      const red = parts[0].trim();
-      const green = parts[1].trim();
-      const blue = parts[2].trim();
-      
-      console.log(`R: ${red}, G: ${green}, B: ${blue}`);
-      return 0.2126 * Number(red) + 0.7152 * Number(green) + 0.0722 * Number(blue); 
-      
+    // handle shorthand (#abc → #aabbcc)
+    if (hex.length === 3) {
+    hex = hex.split('').map(c => c + c).join('');
+    }
+
+    // parse RGB
+    let r = parseInt(hex.substring(0, 2), 16) / 255;
+    let g = parseInt(hex.substring(2, 4), 16) / 255;
+    let b = parseInt(hex.substring(4, 6), 16) / 255;
+
+    // gamma correction (this is the important part you skipped earlier)
+    const toLinear = (v) =>
+    v <= 0.03928
+        ? v / 12.92
+        : Math.pow((v + 0.055) / 1.055, 2.4);
+
+    r = toLinear(r);
+    g = toLinear(g);
+    b = toLinear(b);
+
+    // luminance
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function seatsMessageInfo(message, type = 'info') {
+    document.querySelector('.message-item').textContent = message;
+    if (type === 'error') {
+        document.querySelector('.message-item').classList.remove('text-neon-green');
+        document.querySelector('.message-item').classList.add('text-error');
     } else {
-        let cleanHex = color.replace('#', '');
-        if (cleanHex.length === 3) {
-        cleanHex = cleanHex.split('').map(char => char + char).join(''); 
-        }
-    
-        const r = parseInt(cleanHex.substring(0, 2), 16);
-        const g = parseInt(cleanHex.substring(2, 4), 16);
-        const b = parseInt(cleanHex.substring(4, 6), 16);
-    
-
-        const [rs, gs, bs] = [r, g, b].map(v => {
-        v /= 255;
-        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-        });
-        
-        return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs; //outputnya antara 0 (ireng) sampe 1 (very putih)
-        // warna terang : warna > 0.179
-        // warna gelap : warna <= 0.179
-    } 
-  }
-
-async function getPersonData(idx) {
-    try {
-
-        const response = await fetch(`https://misty-haze-0c50b7xf9.ceplox021.workers.dev/?type=person&index=${idx}`);
-        if (!response.ok) throw new Error("Gagal mengambil data");
-        const rawdata = await response.json();
-        return rawdata["result"];
-
-    } catch {
-
-        if (!navigator.onLine) throw new Error("Tidak ada koneksi internet");
-        throw new Error("Koneksi bermasalah, coba lagi");
-
+        document.querySelector('.message-item').classList.remove('text-error');
+        document.querySelector('.message-item').classList.add('text-neon-green');
     }
-    
 }
 
-function shuffleSeat(array) {
-    const copy = [...array];
+function resetSeatsDisplay() {
+    document.querySelector('.indicator-modified').style.display = 'none';
 
-    for (let i = copy.length - 1; i > 0; i--) {
-        const randomIndex = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[randomIndex]] = [copy[randomIndex], copy[i]];
-    }
-
-    return copy;
-}
-
-function resetSeat() {
-    if (localStorage.getItem('seatLatestClassSelect') !== '5') {
+    if (document.querySelector('.class-select').value !== '6') {
         document.querySelector('.seat-result-info').style.display = 'none';
     } else {
         document.querySelector('.seat-result-info').style.display = 'inline';
-    };
+    }
+
     document.querySelectorAll('.seat-item-L').forEach(el => {
         el.textContent = '??';
-        el.style.backgroundColor = localStorage.getItem("boy_color") === null ? "#9FFFA5" : localStorage.getItem("boy_color");
-        el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color") === null ? "#9FFFA5" : localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
     });
     document.querySelectorAll('.seat-item-P').forEach(el => {
         el.textContent = '??';
-        el.style.backgroundColor = localStorage.getItem("girl_color") === null ? "#FFFA9F" : localStorage.getItem("girl_color");
-        el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color") === null ? "#FFFA9F" : localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
     });
 }
 
-// return 0 if boy else if girl 1
-async function getGender(absent) {
-    let data = await getPersonData(localStorage.getItem(localStorage.getItem("classSelect") !== localStorage.getItem("seatLatestClassSelect") ? "seatLatestClassSelect" : "classSelect"));
-    return data[absent-1][1] === "L" ? 0 : 1;
-}
-
-let RSeat1;
-let RSeat2;
-// yes it's is possibe to have both gender on the same seat, but that shit is too obvious
-// we should probably disable this someday
-const RSeatItemCONST = [[1,17],[1,26],[21,13],[32,18],[32,17],[32,13],[21,18],[21,17],[1,18]]; // please add more... (no)
-let RSeatChangeHappen = 25; //definitely should be low chance, cuz imagine if we got rigged seat like 5 times in a row
-let RseatUpTo = 3;
-let globalSeat;
-async function writeSeat(isWrite) {
-    resetSeat();
-    let seatOrder = [];
-
-    if (isWrite) {
-        let person = structuredClone(await getPersonData(localStorage.getItem(localStorage.getItem("classSelect") === localStorage.getItem("seatLatestClassSelect") ? "seatLatestClassSelect" : "classSelect")));
-        let man = [];
-        let woman = [];
-
-        for (let i = 0; i < person.length; i++) {
-            if (person[i][1] === "L") man.push(person[i]);
-            else if (person[i][1] === "P") woman.push(person[i]);
-        }
-
-        let manRandom = shuffleSeat(man);
-        let womanRandom = shuffleSeat(woman);
-        let checkBalanced;
-        if (manRandom.length === womanRandom.length) checkBalanced = 0;
-        else if (manRandom.length > womanRandom.length) checkBalanced = 1;
-        else if (manRandom.length < womanRandom.length) checkBalanced = 2;
-
-        while (true) {
-            if (manRandom.length === 0 || womanRandom.length === 0) {
-                if (checkBalanced > 0) {
-                    if (checkBalanced === 1) {
-                        seatOrder.push([manRandom.pop()[0],manRandom.pop()[0]]);
-                    } else if (checkBalanced === 2) {
-                        seatOrder.push([womanRandom.pop()[0],womanRandom.pop()[0]]);
-                    }
-
-                    checkBalanced = 0;
-                }
-
-                break;
-            }
-
-            if (Math.floor(Math.random()*101) > 85 && checkBalanced > 0) {
-                if (checkBalanced === 1) {
-                    seatOrder.push([manRandom.pop()[0],manRandom.pop()[0]]);
-                } else if (checkBalanced === 2) {
-                    seatOrder.push([womanRandom.pop()[0],womanRandom.pop()[0]]);
-                }
-                if (manRandom.length === womanRandom.length) {
-                    checkBalanced = 0;
-                }
-            } else {
-                seatOrder.push([manRandom.pop()[0],womanRandom.pop()[0]]);
-            }
-        }
-
-        if (!(Math.floor(Math.random()*101) > RSeatChangeHappen)) {
-            if (localStorage.getItem("classSelect") === "5") {
-                console.log("RIGGED MODE ON!");
-                let RSeatItem = [];
-                let RSeatItemIndexDone = [];
-                let RSeatItemAbsentDone = [];
-                let hitung = 0;
-
-                for (let i = 0; i < RseatUpTo; i++) {
-                    if (hitung > 10000) {
-                        console.warn("there is duplicate absent and the data doesn't offer any to replace the data!");
-                        break;
-                    }
-                    hitung++;
-                    const randomIndex = Math.floor(Math.random() * (RSeatItemCONST.length));
-
-                    if (RSeatItemIndexDone.includes(randomIndex) || (RSeatItemAbsentDone.includes(RSeatItemCONST[randomIndex][0]) || RSeatItemAbsentDone.includes(RSeatItemCONST[randomIndex][1]))) {
-                        i--;
-                        continue;
-                    }
-                    RSeatItemAbsentDone.push(RSeatItemCONST[randomIndex][0]);
-                    RSeatItemAbsentDone.push(RSeatItemCONST[randomIndex][1]);
-                    RSeatItemIndexDone.push(randomIndex);
-
-                    RSeatItem.push(RSeatItemCONST[randomIndex]);
-                }
-
-                for (let i = 0; i < RSeatItem.length; i++) {
-                    for (let j = 0; j < seatOrder.length; j++) {
-                        if (seatOrder[j][await getGender(RSeatItem[i][0])] === RSeatItem[i][0]) {
-                            RSeat1 = j;
-                            break
-                        }
-                    }
-
-                    for (let j = 0; j < seatOrder.length; j++) {
-                        if (seatOrder[j][await getGender(RSeatItem[i][1])] === RSeatItem[i][1]) {
-                            RSeat2 = j;
-                            break
-                        }
-                    }
-
-                    let temp = seatOrder[RSeat2][await getGender(RSeatItem[i][1])^1];
-                    seatOrder[RSeat2][await getGender(RSeatItem[i][1])^1] = seatOrder[RSeat1][await getGender(RSeatItem[i][0])];
-                    seatOrder[RSeat1][await getGender(RSeatItem[i][0])] = temp;
-                }
-            }
-        }
-
-        globalSeat = structuredClone(seatOrder);
-        document.querySelector(".seat-input-downloadnshare-button").disabled = false;
-        document.querySelector('.color-input-widget').classList.remove('disabled');
-    } else if (!isWrite) {
-        seatOrder = structuredClone(globalSeat);
-    }
-
+function showSeatDisplay(seatOrder) {
+    const girlsColor = localStorage.getItem('girlsColor');
+    const boysColor = localStorage.getItem('boysColor');
     let counter = 0;
     for (const el of document.querySelectorAll('.seat-item-L')) {
         if (counter < 16) {
-            el.textContent = seatOrder[counter][0];
-            if (await getGender(seatOrder[counter][0]) === 0) {
-                el.style.backgroundColor = localStorage.getItem("boy_color");
-                el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
-            } else if (await getGender(seatOrder[counter][0]) === 1) {
-                el.style.backgroundColor = localStorage.getItem("girl_color");
-                el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+            el.textContent = seatOrder[counter][0][0];
+            if (seatOrder[counter][0][1] === 'L') {
+                el.style.backgroundColor = boysColor;
+                el.style.color = hexToBrightness(boysColor) > 0.179 ? 'black' : 'white';
+            } else if (seatOrder[counter][0][1] === 'P') {
+                el.style.backgroundColor = girlsColor;
+                el.style.color = hexToBrightness(girlsColor) > 0.179 ? 'black' : 'white';
             } 
             
             counter++;
@@ -223,15 +90,15 @@ async function writeSeat(isWrite) {
     counter = 0;
     for (const el of document.querySelectorAll('.seat-item-P')) {
         if (counter < 16) {
-            el.textContent = seatOrder[counter][1];
-            if (await getGender(seatOrder[counter][1]) === 0) {
-                el.style.backgroundColor = localStorage.getItem("boy_color");
-                el.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
-            } else if (await getGender(seatOrder[counter][1]) === 1) {
-                el.style.backgroundColor = localStorage.getItem("girl_color");
-                el.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
+            el.textContent = seatOrder[counter][1][0];
+            if (seatOrder[counter][1][1] === 'L') {
+                el.style.backgroundColor = boysColor;
+                el.style.color = hexToBrightness(boysColor) > 0.179 ? 'black' : 'white';
+            } else if (seatOrder[counter][1][1] === 'P') {
+                el.style.backgroundColor = girlsColor;
+                el.style.color = hexToBrightness(girlsColor) > 0.179 ? 'black' : 'white';
             } 
-
+            
             counter++;
         } else {
             el.textContent = "XX";
@@ -239,230 +106,309 @@ async function writeSeat(isWrite) {
     };
 }
 
-async function downloadSeat() {
-    if (typeof globalSeat === "undefined") return;
+let seatsImage;
 
-    const element_target = document.querySelector('.seat-result-container');
+async function generateSeatsImage() {
+    await new Promise(resolve => requestAnimationFrame(() =>
+        requestAnimationFrame(resolve)
+    ));
 
-    try {
-        // 🔥 capture pakai html-to-image
-        const blob = await htmlToImage.toBlob(element_target, {
-            pixelRatio: 1.5,
-            cacheBust: true
-        });
+    const result = await snapdom(document.querySelector('.seat-result-container'), { scale:2, embedFonts: true, backgroundColor: '#000000' });
+    const canvas = await result.toCanvas();
+    
+    const pngBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
 
-        const file = new File([blob], "hasil.png", { type: "image/png" });
+    seatsImage = new File([pngBlob], 'seats-image.png', {type: 'image/png'});
+}
 
-        // share kalau bisa
-        if (navigator.share && navigator.canShare?.({ files: [file] })) {
-            await navigator.share({
-                files: [file],
-                title: "Seat chart baru"
-            });
-        } 
-        // fallback download
-        else {
-            const url = URL.createObjectURL(blob);
+let blacklistedPartner = await getBlacklistedData();
 
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "hasil.png";
-            a.click();
+// coming soon!
+let favoritePartner = {
+    // 1: [],
+    // 2: [],
+    // 3: [],
+    // 4: [],
+    // 5: [],
+    // 6: [],
+    // 7: [],
+    // 8: [],
+    // 9: [],
+    // 10: [],
+    // 11: [],
+    // 12: [],
+    // 13: [],
+    // 14: [],
+    // 15: [],
+    // 16: [],
+    // 17: [],
+    // 18: [],
+    // 19: [],
+    // 20: [],
+    // 21: [],
+    // 22: [],
+    // 23: [],
+    // 24: [],
+    // 25: [],
+    // 26: [],
+    // 27: [],
+    // 28: [],
+    // 29: [],
+    // 30: [],
+    // 31: [],
+    // 32: []
+}
 
-            URL.revokeObjectURL(url);
-            window.alert("Browser ga bisa share, cek hasil dalam histori download");
+let resumeSeat;
+let resumeIndicator = 'none';
+
+async function generateSeats() {
+    const classSelected = document.querySelector('.class-select').value;
+
+    let seatOrder = []; 
+
+    let students = structuredClone(await getStudentsData(classSelected));
+
+    let studentsGirls = [];
+    let studentsBoys = [];
+
+    for (let student of students) {
+        if (student[1] === 'P') studentsGirls.push(student);
+        else if (student[1] === 'L') studentsBoys.push(student);
+    }
+
+    studentsGirls = shuffle(studentsGirls);
+    studentsBoys = shuffle(studentsBoys);
+
+    let biasTowards = 'none';
+    if (studentsGirls.length > studentsBoys.length) biasTowards = 'P';
+    else if (studentsBoys.length > studentsGirls.length) biasTowards = 'L';
+
+    while (true) {
+        if (studentsGirls.length === 0 || studentsBoys.length === 0) {
+            while (true) {
+                if (studentsGirls.length === 1) {
+                    seatOrder.push(['??', studentsGirls.pop()]);
+                    break;
+                } else if (studentsBoys.length === 1) {
+                    seatOrder.push([studentsBoys.pop(), '??']);
+                    break;
+                }
+
+                if (studentsGirls.length > 1) {
+                    seatOrder.push([studentsGirls.pop(), studentsGirls.pop()]);
+                } 
+                if (studentsBoys.length > 1) {
+                    seatOrder.push([studentsBoys.pop(), studentsBoys.pop()]);
+                }
+
+                if (studentsGirls.length === 0 && studentsBoys.length === 0) {
+                    seatOrder.splice(Math.floor(Math.random() * seatOrder.length), 0, seatOrder.pop());
+                    break;
+                }
+            }
+            break;
         }
 
-    } catch (err) {
-        console.error("Gagal generate gambar:", err);
-        window.alert("Gagal generate gambar, coba ulangi");
+        seatOrder.push([studentsBoys.pop(), studentsGirls.pop()]);
+    }
+
+    // this only and only FOR x6, because x6 is the only class that has a lot of students that hate each other :>
+    // and i too lazy to make this work for other class, so yeah, this is only for x6 <3
+    let isThereAnyChange = false;
+    if (classSelected === '6') {
+        for (let seat of seatOrder) {
+            if (blacklistedPartner[seat[0][0]] !== undefined && blacklistedPartner[seat[0][0]] .includes(seat[1][0])) {
+                for (let swap of seatOrder) {
+                    if (!blacklistedPartner[seat[0][0]].includes(swap[1][0])) {
+                        const temp = seat[1];
+
+                        seatOrder[seatOrder.indexOf(seat)][1] = swap[1];
+                        seatOrder[seatOrder.indexOf(swap)][1] = temp;
+
+                        isThereAnyChange = true;
+                        break;
+                    }
+                }
+            }
+
+            if (blacklistedPartner[seat[1][0]] !== undefined && blacklistedPartner[seat[1][0]].includes(seat[0][0])) {
+                for (let swap of seatOrder) {
+                    if (!blacklistedPartner[seat[1][0]].includes(swap[0][0])) {
+                        const temp = seat[0];
+
+                        seatOrder[seatOrder.indexOf(seat)][0] = swap[0];
+                        seatOrder[seatOrder.indexOf(swap)][0] = temp;
+
+                        isThereAnyChange = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    resumeSeat = structuredClone(seatOrder);
+
+    resetSeatsDisplay();
+
+    if (isThereAnyChange) {
+        document.querySelector('.indicator-modified').style.display = 'inline';
+        resumeIndicator = 'inline';
+    } else {
+        resumeIndicator = 'none';
+    }
+
+    showSeatDisplay(seatOrder);
+
+    generateSeatsImage();
+
+    seatsMessageInfo('Seats generated successfully!');
+
+    // console.log('studentsGirls: ', studentsGirls);
+    // console.log('studentsBoys: ', studentsBoys);
+    // console.log('biasTowards: ', biasTowards);
+    // console.log('seatOrder: ', seatOrder);
+}
+
+async function downloadSeats() {
+    if (typeof seatsImage === 'undefined') {
+        return;
+    }
+
+    if (navigator.share && navigator.canShare?.({files: [seatsImage]})) {
+        await navigator.share({
+            files: [seatsImage],
+            title: 'seat-chart baru'
+        });
+        seatsMessageInfo('The groups has been shared!');
+    } else {
+        const url = URL.createObjectURL(seatsImage);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = seatsImage.name;
+        a.click();
+
+        URL.revokeObjectURL(url);
+
+        seatsMessageInfo('The groups has been shared trough download!');
+    }
+}
+
+function initInput() {
+    if (localStorage.getItem('classSelected') !== null) {
+        document.querySelector('.class-select').value = localStorage.getItem('classSelected');
+        resetSeatsDisplay();
+    };
+}
+
+function initDetectInput() {
+    document.querySelector('.class-select').addEventListener('change', (e) => {
+        localStorage.setItem('classSelected', e.target.value);
+    });
+
+    document.querySelector('.process-button').addEventListener('click', () => {
+        generateSeats();
+    });
+
+    document.querySelector('.download-button').addEventListener('click', () => {
+        downloadSeats();
+    });
+}
+
+function updateSeatsColor(gender, color) {
+    let textColor = hexToBrightness(color) > 0.179 ? 'black' : 'white';
+    if (gender === 0) {
+        document.querySelectorAll('.seat-item-P').forEach(el => {
+            el.style.backgroundColor = color;
+            el.style.color = textColor;
+        });
+    } else if (gender === 1) {
+        document.querySelectorAll('.seat-item-L').forEach(el => {
+            el.style.backgroundColor = color;
+            el.style.color = textColor;
+        });
+    }
+
+    document.querySelectorAll('.seat-result-color-type').forEach((el, idx) => {
+        if (idx === gender) {
+            el.style.backgroundColor = color;
+        }
+    });
+
+     document.querySelectorAll(".color-input-label").forEach((el, idx) => {
+        el.style.backgroundColor = localStorage.getItem(idx === 0 ? 'girlsColor' : 'boysColor');
+     });
+}
+
+function initColorPicker() {
+    if (localStorage.getItem('girlsColor') === null) {
+        localStorage.setItem('girlsColor', '#FFFA9F');
+    }
+
+    if (localStorage.getItem('boysColor') === null) {
+        localStorage.setItem('boysColor', '#9FFFA5');
+    }
+
+    document.querySelectorAll('.color-input').forEach((el, idx) => {
+        document.querySelectorAll(".color-input-label")[idx].style.backgroundColor = localStorage.getItem(idx === 0 ? 'girlsColor' : 'boysColor');
+
+        const pickr = Pickr.create({
+            el: el, 
+            theme: 'nano',
+            default: localStorage.getItem(idx === 0 ? 'girlsColor' : 'boysColor'),
+
+            swatches: [
+                '#FFFA9F',
+                '#9FFFA5',
+                '#FF48C4',
+                '#2196F3',
+                '#FDA4AF',
+                '#84A98C',
+                '#F59E0B',
+                '#733BD9'
+            ],
+
+            components: {
+                preview: true,
+                hue: true,
+                interaction: {
+                    hex: true,
+                    input: true,
+                    clear: true,
+                    save: true,
+                }
+            }
+        });
+
+        pickr.on('save', (color, instance) => {
+            const hexColor = color.toHEXA().toString();
+            localStorage.setItem(idx === 0 ? 'girlsColor' : 'boysColor', hexColor);
+            updateSeatsColor(idx, hexColor);
+            colorInputLabel[idx].style.backgroundColor = hexColor;
+            pickr.hide();
+        });
+    });
+
+    if (localStorage.getItem('girlsColor') !== null) {
+        updateSeatsColor(0, localStorage.getItem('girlsColor'));
+    }
+
+    if (localStorage.getItem('boysColor') !== null) {
+        updateSeatsColor(1, localStorage.getItem('boysColor'));
     }
 }
 
 export function init() {
-    if (localStorage.getItem("classSelect") !== null) {
-        const text = document.querySelector(".multiselect-selector-name");
-
-        switch (Number(localStorage.getItem("classSelect"))) {
-            case 0:
-                text.textContent = "X-1";
-                break;
-            case 1:
-                text.textContent = "X-2";
-                break;
-            case 2:
-                text.textContent = "X-3";
-                break;
-            case 3:
-                text.textContent = "X-4";
-                break;
-            case 4:
-                text.textContent = "X-5";
-                break;
-            case 5:
-                text.textContent = "X-6";
-                break;
-            default:
-                break;
-        }
-    } else {
-        localStorage.setItem("classSelect", 0);
+    initInput();
+    initDetectInput();
+    initColorPicker();
+    
+    if (typeof resumeSeat !== 'undefined') {
+        showSeatDisplay(resumeSeat);
+        seatsMessageInfo('showing last seats result!');
     }
 
-    document.querySelector(".multiselect-selector").addEventListener("click", () => {
-        document.querySelector(".multiselect-container").classList.toggle("open");
-    });
-
-    document.querySelectorAll(".multiselect-options-option").forEach(option => {
-        option.addEventListener("click", () => {
-            document.querySelector(".multiselect-selector-name").textContent = option.textContent;
-            localStorage.setItem("classSelect", option.dataset.value);
-            localStorage.setItem("seatLatestClassSelect", option.dataset.value);
-            document.querySelector(".multiselect-container").classList.remove("open");
-            document.querySelector(".color-input-widget").classList.add("disabled");
-        });
-    });
-
-    document.querySelector('.seat-input-button').addEventListener("click", async () => {
-        localStorage.setItem("seatLatestClassSelect", localStorage.getItem("classSelect"));
-        document.querySelector(".seat-input-button").disabled = true;
-        document.querySelector(".seat-input-button").classList.add("disabled");
-        await writeSeat(true);
-        document.querySelector(".seat-input-button").classList.remove("disabled");
-        document.querySelector(".seat-input-button").disabled = false;
-    });
-
-    try {
-        writeSeat(false);
-    } catch {
-    }
-
-    if (typeof globalSeat !== "undefined") {
-        document.querySelector(".seat-input-downloadnshare-button").disabled = false;
-        document.querySelector('.color-input-widget').classList.remove('disabled');
-    } else {
-        document.querySelector(".seat-input-downloadnshare-button").disabled = true;
-        document.querySelector('.color-input-widget').classList.add('disabled');
-    }
-     
-
-    document.querySelector(".seat-input-downloadnshare-button").addEventListener("click", () => {
-        downloadSeat();
-    });
-
-    // color thing (start) ------------------------------------------------------------------------------------------
-    let color_input = document.querySelectorAll(".true-color-input");
-    let color_gui = document.querySelectorAll(".color-input");
-    let color_hint = document.querySelectorAll(".seat-result-color-type");
-
-        //bikin value warna yang persisten, sekaligus fallback default
-    if (localStorage.getItem("boy_color") === null || localStorage.getItem("girl_color") === null) {
-        localStorage.setItem("boy_color", "#9FFFA5");
-        localStorage.setItem("girl_color", "#FFFA9F");
-    };
-
-        // nyetel value awal
-    color_input[0].value = localStorage.getItem("boy_color");
-    color_input[1].value = localStorage.getItem("girl_color");
-
-        // biar warna ui ga ke reset?
-        color_hint[1].style.backgroundColor = localStorage.getItem("boy_color");
-        color_hint[0].style.backgroundColor = localStorage.getItem("girl_color");
-        color_gui[0].style.backgroundColor = localStorage.getItem("boy_color");
-        color_gui[1].style.backgroundColor = localStorage.getItem("girl_color");
-
-    color_input.forEach((element,index) => {
-        const pickr = Pickr.create({
-            el: element,
-            theme: 'monolith',
-            default: index === 0 ? localStorage.getItem("boy_color") : localStorage.getItem("girl_color"),
-    
-            swatches: [
-                '#9FFFA5',
-                '#FFFA9F',
-                '#2196F3',
-                '#FF48C4',
-                '#84A98C',
-                '#FDA4AF',
-                '#733BD9',
-                '#F59E0B'
-            ],
-    
-            components: {
-    
-                // Main components
-                preview: true,
-                opacity: true,
-                hue: true,
-    
-                // Input / output Options
-                interaction: {
-                    hex: true,
-                    rgba: true,
-                    hsla: true,
-                    hsva: true,
-                    cmyk: true,
-                    input: true,
-                    clear: true,
-                    save: true
-                }
-            }
-        });
-        pickr.on('init', instance => {
-            console.log('Event: "init"', instance);
-        }).on('hide', instance => {
-            console.log('Event: "hide"', instance);
-        }).on('show', (color, instance) => {
-            console.log('Event: "show"', color, instance);
-        }).on('save', async (color, instance) => { //THE USED THING, also the instance variable isnt used 
-            const hex = color.toHEXA().toString();
-            if (index === 0) {
-                localStorage.setItem("boy_color", hex);
-                
-                color_hint[index+1].style.backgroundColor = localStorage.getItem("boy_color");
-                
-                for (const seat of document.querySelectorAll(".seat-placement-actual-seat")) {
-                    if (await getGender(Number(seat.textContent)) === 0) {
-                        seat.style.backgroundColor = localStorage.getItem("boy_color");
-                        seat.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
-                    } else {
-                        seat.style.backgroundColor = localStorage.getItem("girl_color");
-                        seat.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
-                    }
- 
-                };
-            } else if (index === 1) {
-                localStorage.setItem("girl_color", hex);
-                
-                color_hint[index-1].style.backgroundColor = localStorage.getItem("girl_color");
-
-                for (const seat of document.querySelectorAll(".seat-placement-actual-seat")) {
-                    if (await getGender(Number(seat.textContent)) === 1) {
-                        seat.style.backgroundColor = localStorage.getItem("girl_color");
-                        seat.style.color = getLuminanceFromColor(localStorage.getItem("girl_color")) > 0.179 ? "#000000" : "#ffffff";
-                    } else {
-                        seat.style.backgroundColor = localStorage.getItem("boy_color");
-                        seat.style.color = getLuminanceFromColor(localStorage.getItem("boy_color")) > 0.179 ? "#000000" : "#ffffff";
-                    }
-                    
-                };
-            }
-
-            color_gui[index].style.backgroundColor = hex;
-
-            pickr.hide();
-        }).on('clear', instance => {
-            console.log('Event: "clear"', instance);
-        }).on('change', (color, source, instance) => {
-            console.log('Event: "change"', color, source, instance);
-        }).on('changestop', (source, instance) => {
-            console.log('Event: "changestop"', source, instance);
-        }).on('cancel', instance => {
-            console.log('Event: "cancel"', instance);
-        }).on('swatchselect', (color, instance) => {
-            console.log('Event: "swatchselect"', color, instance);
-        });
-
-    });
-    // color thing (end) --------------------------------------------------------------------------------------------
+    document.querySelector('.indicator-modified').style.display = resumeIndicator;
 }

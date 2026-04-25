@@ -1,465 +1,209 @@
-/*HOW TO NAME THING ON HERE:
-
-> group-container
-> group-button
-> group-button-top
-> group-image
-> group-image-spin-to-death
-> seat-result
-> seat-result-button
-> seat-result-placement
-> seat-placement
-> seat-placement-bla-bla
-*/
-
-/*ORDER OF CSS:
-
-1. Positioning
-    position:
-    top:
-    right:
-    bottom:
-    left:
-    z-index:
-
-2. Box Model
-    display:
-    flex / grid:
-    width:
-    height:
-    margin:
-    padding:
-    box-sizing:
-
-3. Typography
-    font-family:
-    font-size:
-    font-weight:
-    line-height:
-    color:
-    text-align:
-
-4. Visual / Appearance
-    background:
-    border:
-    border-radius:
-    box-shadow:
-    opacity:
-
-5. Animation / Effects
-    transition:
-    transform:
-    animation:
-
-e.g:
-
-.DISTRUST {
-    Position
-    position: relative;
-
-    Box model
-    display: flex;
-    flex-direction: column;
-    width: var(--yo-mom);
-    height: var(--shortie);
-    padding: 20px;
-    margin: 18px;
-
-    Typography
-    font-size: 16px;
-    color: #17171a;
-
-    Visual
-    background: #11037;
-    border-radius: 21px;
-    box-shadow: 0 4px 21px rgba(6,9,4,2.0);
-
-    Effects
-    transition: open-gate 0.2s fall;
-}
-*/
-
-/*SOME NOTE:
-> use ease
->
-*/
-
-/*+=====START OF CSS=====+*/
-
-* {
-    user-select: none;
-}
-
-:root {
-    --primary-color: #FC3EC4;
-    --secondary-color: #ff65cc;
-    --tertiary-color: #ff3b63;
-    --bg-color: #17171a;
-    --bg-second-color: #2E2E34;
-    --bg-third-color: #414149;
-    --border-color: #222222;
-    --text-color: white;
-    --text-inverted-color: black;
-    --text-gray-color: #BBBBBC;
-    --bg-footer-color: #17171aA8;
-    --bg-before-color: rgba(0,0,0, 0.6);
-    --menu-disabled-value: .6;
-}
-
-.no-animations *,
-.no-animations *::before,
-.no-animations *::after {
-  animation: none !important;
-  transition: none !important;
+@font-face {
+    font-family: "ProFontWindows";
+    src: url("assets/font/profontwindows.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: "ProFontWindows";
-  src: url("assets/font/profontwindows.woff2") format("woff2");
+    font-family: "PixelFont8x8";
+    src: url("assets/font/gdbydep.woff2") format("woff2");
 }
 
-html, body {
-    height: 100%;
-    margin: 0;
-    overflow-x: hidden;
+@font-face {
+    font-family: "SFProDisplayRegular";
+    src: url("assets/font/SFPRODISPLAYREGULAR.woff2") format("woff2");
 }
 
 body {
+    min-height: max(884px, 100dvh);
     font-family: 'ProFontWindows', sans-serif;
-    font-size: 18px;
-    background: linear-gradient(
-        to bottom,
-        var(--primary-color) 0%,
-        var(--bg-color) 10%
-    );
-    background-size: 100% 600%;
-    color: var(--text-color);
-    transition: background-position .8s ease;
 }
 
 body::before {
     position: fixed;
     z-index: -1;
     inset: 0;
-    background: var(--bg-before-color);
+    /* background-image: url('assets/images/bg.png'); */ 
+    /* 
+    somehow that background-image thing affects 
+    the UX so much if removed
+    */
+    opacity: 4%;
     pointer-events: none;
-    content: "";
+    background-position: center;
+    content: '';
 }
 
-header {
-    display: flex;
-    justify-content: center;
-    padding-top: 21px;
+h1, h2, h3 {
     font-family: 'ProFontWindows', sans-serif;
 }
 
-main {
-    position: relative;
-    top: -4px;
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
-footer {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    height: 48px;
-    z-index: 10000;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 18px;
-    background-color: var(--bg-footer-color);
-    border-top: 1px solid var(--border-color);
-    backdrop-filter: blur(3px);
-    color: var(--text-color);
+.bg-neon-gradient {
+    background: linear-gradient(135deg, #ff88b5 0%, #ff6eaa 100%);
+}
+.bg-secondary-neon-gradient {
+    background: linear-gradient(135deg, #5233a7 0%, #7e62ce 100%);
 }
 
-button {
-    font-family: inherit;
+.glass-panel {
+    background: rgba(34, 37, 50, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
 }
 
-input {
-    font-family: inherit;
-    accent-color: var(--tertiary-color);
+.scrollbar-hide {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
 }
 
-input[type=number] {
-  -moz-appearance: textfield;
+.pickr {
+    width: 0;
+    height: 0;
 }
 
-input[type=number]::-webkit-outer-spin-button,
-input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.menu-container, .menu-mobile-container {
-    position: relative;
-    z-index: 10000;
-    display: inline-flex;
-    flex: 0 0 auto;
-    flex-direction: row;
-    justify-content: space-evenly;
-    height: 80px;
-    width: 768px;
-    padding: 12px 14px;
-    box-sizing: border-box;
-    border-radius: 21px;
-    overflow: hidden;
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-}
-
-.menu-item-select {
-    position: absolute;
-    left: 20px;
-    height: 56px;
-    width: 128px;
-    padding: 6px;
-    box-sizing: border-box;
-    border-radius: 14px;
-    background-color: var(--bg-second-color);
-    transition: all .8s cubic-bezier(0.2, 1.3, 0.3, 1);
-}
-
-.menu-icon-button {
-    height: 56px;
-    width: 128px;
-    padding: 6px;
-    border-width: 0;
-    border-radius: 14px;
-    box-sizing: border-box;
-    background-color: var(--primary-color);
-    cursor: pointer;
-}
-
-.menu-icon-image {
-    position: relative;
-    bottom: 3px;
-    width: 69px;
-    pointer-events: none;
-}
-
-.menu-item-button {
-    z-index: 1;
-    width: 128px;
-    height: 100%;
-    border: 0;
-    font-size: 24px;
-    background: none;
-    box-sizing: border-box;
-    color: var(--text-color);
-    cursor: pointer;
-}
-
-.menu-item-image {
-    position: relative;
-    right: 2px; 
-    top: 2px; 
-    width: 28px;
-    height: 28px;
-    pointer-events: none;
-    filter: invert(1);
-}
-
-.bg-image {
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    margin: 0 auto;
-}
-
-.bg-image::before {
-    position: fixed;
-    z-index: -1;
-    inset: 0;
-    background: url("assets/icon/iconWhiteFull.svg") center no-repeat fixed;
-    background-size: 100% auto;
-    opacity: .02;
-    content: "";
-}
-
-.main-container {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    width: 768px;
-    margin: 0 auto;
-    padding-bottom: 80px;
-    padding-top: 20px;
-    gap: 1rem;
-}
-
-.multiselect-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    gap: 6px;
-}
-
-.multiselect-warper {
-    position: relative;
-    align-self: stretch;
-    height: 54px;
-}
-
-.multiselect-selector {
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    padding-left: 14px;
-    padding-right: 6px;
-    padding-top: 3px;
-    box-sizing: border-box;
-    font-size: 21px;
-    background-color: var(--bg-second-color);
-    border-radius: 21px;
-    transition: all 0.1s ease;
-    cursor: pointer;
-}
-
-.multiselect-selector:hover {
-    background-color: var(--bg-third-color);
-}
-
-.multiselect-selector .arrow {
-    transition: all 0.1s ease;
-}
-
-.multiselect-container.open .arrow {
-    transition: all 0.1s ease;
-    transform: rotateZ(180deg);
-}
-
-.multiselect-options-container {
-    position: relative;
-    bottom: 0px;
-    z-index: 2;
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bg-second-color);
-    border: 1px solid oklch(from var(--tertiary-color) calc(l - 0.1) c h);
-    border-radius: 21px;
+.pcr-button {
     opacity: 0;
-    overflow: hidden;
-    transition: all 0.2s ease;
-    transform: translateY(0);
-    pointer-events: none;
 }
 
-.multiselect-container.open .multiselect-options-container {
-    opacity: 1;
-    transform: translateY(10px);
-    pointer-events: auto;
+.seat-result-container {
+    position: relative;
+    width: 99%; 
+    height: 99%; 
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
+    container-type: inline-size;
+    font-family: 'SFPro', sans-serif;
+    font-weight: bold;
+    background-color: rgb(255, 255, 255);
+    border: 3px solid #222222;
 }
 
-.multiselect-options-option {
-    display: flex;
+.seat-result-hidden-text {
+    position: absolute;
+    font-size: 1.3cqw;
+    color: black;
+}
+
+.seat-result-papan-gede {
+    position: absolute;
+    left: 18%;
+    top: 1.1%;
+    width: 63.9%; 
+    height: 1.2%; 
+    background-color: #BB9679;
+    border: 3px solid black;
+    border-radius: 3px; 
+}
+
+.seat-result-pintu {
+    position: absolute; 
+    left: 97.2%; 
+    top: 7.2%;
+    width: 1.3%; 
+    height: 17.1%; 
+    background-color: #BB9679; 
+    border: 3px solid black; 
+    border-radius: 3px; 
+}
+
+.seat-result-meja-guru {
+    display: inline-flex; 
     justify-content: center;
-    padding: 10px 14px;
-    font-size: 18px;
-    background-color: var(--bg-second-color);
-    transition: all 0.2s ease;
-    cursor: pointer;
+    align-items: center; 
+    position: absolute; 
+    left: 1.4%; 
+    top: 12.3%;
+    width: 16.2%; 
+    height: 9.6%; 
+    background-color: #FF9FCF; 
+    border: 3px solid black; 
+    border-radius: 3px;
 }
 
-.multiselect-options-option:not(:last-child) {
-    border-bottom: 2px solid var(--border-color);
+.seat-result-meja-guru img {
+    width: 6cqw;
+    aspect-ratio: 1/1 ;
 }
 
-.multiselect-options-option:hover {
-    background-color: var(--tertiary-color);
+.seat-result-color-type {
+    position: absolute; 
+    left: 40.3%; 
+    width: 5.8%; 
+    height: 4.6%; 
 }
 
-/*+=====END OF CSS=====+*/
-
-/*+=====FOR MOBILE=====+*/
-
-
-.mobile-only {
-    display: none;
-}
-.desktop-only {
-    display: block;
+.seat-result-color-name {
+    position: absolute; 
+    left: 47.6%; 
+    width: 52%;
+    font-size: 5cqw;
+    line-height: 5cqw;
+    color: black; 
 }
 
-#widthNotSupport {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    gap: 1rem;
+.seat-result-info {
+    position: absolute; 
+    top: 24.4%;
+    width: 99.4%; 
+    font-size: 3.35cqw;
+    color: black; 
+}
+
+.seat-result-placement-container {
+    position: absolute;
+    top: 33.3%;
+    width: 100%;
     height: 100%;
 }
 
-@media (max-width: 768px) and (min-width: 320px) {
-    footer {
-        display: none;
-    }
-
-    body {
-        padding: 10px;
-    }
-
-    .mobile-only {
-        display: block;
-    }
-    
-    .desktop-only {
-        display: none;
-    }
-
-    .menu-container {
-        position: fixed;
-        bottom: 0;
-        z-index: 10000;
-        width: auto;
-        height: 64px;
-        gap: 1rem;
-        background-color: var(--bg-footer-color);
-        backdrop-filter: blur(3px);
-    }
-
-    .menu-mobile-container {
-        width: auto;
-    }
-
-    .menu-item-select {
-        top: 9px;
-        width: 64px;
-        height: 44px;
-    }
-
-    .menu-item-button {
-        width: 64px;
-        height: 40px;
-    }
-
-    .main-container {
-        width: auto;
-    }
+.seat-placement-bangku-wraper {
+    position: absolute; 
+    width: 18.2%;
+    height: 66.7%;
+    border: 2px solid black;
 }
 
-@media (max-width: 319px) {
-    header {
-        display: none;
-    }
+.seat-placement-divider-top-bottom {
+    position: absolute; 
+    left: 49.2%;
+    width: 3%; 
+    height: 100%; 
+    background-color: black;
+    z-index: 2;
+}
 
-    main {
-        display: none;
-    }
+.seat-placement-divider-left-right {
+    position: absolute; 
+    width: 100%; 
+    height: .4%; 
+    background-color: black; 
+    z-index: 2;
+}
 
-    footer {
-        display: none;
-    }
+.seat-placement-actual-seat {
+    position: absolute; 
+    display: flex;
+    width: 49.2%; 
+    height: 24.7%; 
+    justify-content: center;
+    align-items: center;
+    color: black;
+    font-size: 6.1cqw;
+    z-index: 1;
+}
 
-    #widthNotSupport {
-        display: flex;
+/* this is for something very specific, that's why i use specific value */
+@media (max-width: 550px) {
+    .seat-result-papan-gede, .seat-result-pintu {
+        border: 1px solid black;
+    }
+    .seat-result-meja-guru {
+        border: 2px solid black;
     }
 }

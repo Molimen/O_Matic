@@ -1,40 +1,4 @@
-/*
-TO-DO:
-none!
-*/
-
-/*
-dont forget do lang...
-*/
-
-import { theme, effect, isAuto } from './pages/settings/settings.js';
-import { getLang, currentLang } from './pages/modules/lang.js';
-
-async function updateMenuItemSelect(page,skip=false) {
-    const selector = document.getElementById('menu-item-select');
-    const btn = document.querySelector(`button[data-id='${page}']`);
-
-    if (btn === null) {
-        selector.style.left = '-130px';
-        await new Promise(resolve => setTimeout(resolve, 1));
-        selector.style.transition = skip === false ? "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)" : "none";
-        return;
-    }
-
-
-    if (btn.dataset.id === "home") {
-        selector.style.transition = skip === false ? "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)" : "none";
-        await new Promise(resolve => setTimeout(resolve, 1));
-        selector.style.left = `${Math.round(window.innerWidth > 768 ? btn.offsetLeft > 0 ? btn.offsetLeft : 30 : -100)}px`;
-        return;
-    }
-
-    selector.style.transition = skip === false ? "all .8s cubic-bezier(0.2, 1.3, 0.3, 1)" : "none";
-    await new Promise(resolve => setTimeout(resolve, 1));
-    selector.style.left = `${Math.round(window.innerWidth > 768 ? btn.offsetLeft-1 : btn.offsetLeft-2)}px`;
-}
-
-function loadHTML(page,updateHistory) {
+function loadHTML(page, updateHistory) {
     const main = document.querySelector('main');
 
     return new Promise((resolve, reject) => {
@@ -63,36 +27,16 @@ function loadHTML(page,updateHistory) {
                     if (item.name === "page-type") throw new Error("FALLBACK DETECTED!");
                 });
 
-                loadCSS("404");
                 main.innerHTML = html;
                 history.pushState({ page: "404" }, "", `#${"404"}`);
                 resolve(html);
             })
             .catch((err) => {
-                main.innerHTML = '<div id="main-container">500 Internal Error</div>';
+                main.innerHTML = '500 Internal Error';
                 if (updateHistory) history.pushState({ page: `${page}` }, '', `#${page}`);
                 reject(err);
             });
         });
-    });
-}
-
-function loadCSS(page) {
-    const href = `pages/${page}/${page}.css`;
-    return new Promise((resolve, reject) => {
-        if (document.querySelector(`link[href="${href}"]`)) {
-            resolve();
-            return;
-        }
-
-        const link = document.createElement("link");
-        link.rel = "stylesheet";
-        link.href = href;
-
-        link.onload = () => resolve(link);
-        link.onerror = () => reject(new Error("Failed to load " + href));
-
-        document.head.appendChild(link);
     });
 }
 
@@ -101,123 +45,60 @@ async function loadJS(page) {
     module.init();
 }
 
-let spamCheck = false;
-async function updateDOM(page, updateHistory=false, animMoveType="skip") {
-    if (spamCheck) {
-        detectDirection(location.hash.replace("#", ""));
-        return;
-    }
-
-    spamCheck = true;
-
-    if (localStorage.getItem("effect") !== null) {
-        if (localStorage.getItem("effect") === "disable") {
-            animMoveType = "skip";
-        }
-    }
-
-    lang = getLang(currentLang());
-
+async function updateDOM(page, updateHistory=false) {
     if (page === '') page = 'home';
-    const main = document.querySelector('main');
-
-    updateMenuItemSelect(page, animMoveType === "skip" ? true : false);
-
-    const body = document.querySelector('body');
-
-    if (page !== 'home') {
-        body.style.backgroundPosition = '0 6%';
-    } else {
-        body.style.backgroundPosition = '0 4%';
-    }
-
-    const animTime = 400;
-    if (animMoveType === "up") {
-        main.style.transition = `transform ${animTime}ms ease`;
-        main.style.transform = "translateY(-200%)";
-        await new Promise(resolve => setTimeout(resolve, animTime));
-    } else if (animMoveType === "left") {
-        main.style.transition = `transform ${animTime}ms ease`;
-        main.style.transform = "translateX(-200%)";
-        await new Promise(resolve => setTimeout(resolve, animTime));
-        main.style.transition = "none";
-        main.style.transform = "translateX(200%)";
-    } else if (animMoveType === "right") {
-        main.style.transition = `transform ${animTime}ms ease`;
-        main.style.transform = "translateX(200%)";
-        await new Promise(resolve => setTimeout(resolve, animTime));
-        main.style.transition = "none";
-        main.style.transform = "translateX(-200%)";
-    }
-
-    let isError = false;
-    try {
-        await loadCSS(page);
-    } catch {isError = true;}
+    
     await loadHTML(page,updateHistory);
-    if (!isError) loadJS(page);
+    loadJS(page);
+    
+    document.getElementById('nav-bar-top').querySelectorAll('a').forEach(item => {
+        // note:
+        // text that being highlighted is => "text-[26px] text-pink-500 font-bold"
+        // text that not being highlighted is => "text-[24px] text-slate-400"
+        item.classList.remove('text-[26px]');
+        item.classList.remove('text-pink-500');
+        item.classList.remove('font-bold');
 
-    if (localStorage.getItem("effect") !== null) effect(localStorage.getItem("effect"));
+        item.classList.add('text-[24px]');
+        item.classList.add('text-slate-400');
 
-    if (document.querySelector(".about-info-debug-menu")) {
-        document.querySelector(".about-info-debug-menu").addEventListener("click", () => {
-            eruda.init();
-            alert("mode debugnya sudah nyaalaa~"); //tbh, i search every encoder but i too lazy to implement it... :>
-        });
-    }
+        // highlight a text
+        if (item.getAttribute('href').replace('#', '') === page) {
+            item.classList.remove('text-[24px]');
+            item.classList.remove('text-slate-400');
 
-    if (animMoveType !== "skip") {
-        main.style.transition = `transform ${animTime}ms ease`;
-        main.style.transform = "translateX(0) translateY(0)";
-        await new Promise(resolve => setTimeout(resolve, animTime));
-        main.style.transition = "none";
-    }
-    spamCheck = false;
+            item.classList.add('text-[26px]');
+            item.classList.add('text-pink-500');
+            item.classList.add('font-bold');
+        }
+    });
+
+    document.getElementById('nav-bar-bottom').querySelectorAll('a').forEach(item => {
+        // note:
+        // icon that being highlighted is => "bg-pink-600 text-white rounded-full h-[3.2rem] aspect-square"
+        // icon that not being highlighted is => "text-slate-400 hover:text-pink-300"
+        item.classList.remove('bg-pink-600');
+        item.classList.remove('text-white');
+        item.classList.remove('rounded-full');
+        item.classList.remove('h-[3.2rem]');
+        item.classList.remove('aspect-square');
+
+        item.classList.add('text-slate-400');
+        item.classList.add('hover:text-pink-300');
+
+        // highlight a text
+        if (item.getAttribute('href').replace('#', '') === page) {
+            item.classList.remove('text-slate-400');
+            item.classList.remove('hover:text-pink-300');
+
+            item.classList.add('bg-pink-600');
+            item.classList.add('text-white');
+            item.classList.add('rounded-full');
+            item.classList.add('h-[3.2rem]');
+            item.classList.add('aspect-square');
+        }
+    });
 }
-
-let lastType = -1;
-function detectDirection(page) {
-    let currentType = 0;
-    switch (page) {
-        case "home":
-            currentType = 1;
-            break;
-        case "kel-o-matic":
-            currentType = 2;
-            break;
-        case "seat-o-matic":
-            currentType = 3;
-            break;
-        case "settings":
-            currentType = 4;
-            break;
-        case "about":
-            currentType = 5;
-            break;
-        default:
-            break;
-    }
-
-    if (lastType > currentType) {
-        lastType = currentType;
-        return "left";
-    } else if (lastType < currentType) {
-        lastType = currentType;
-        return "right";
-    } else if (lastType === currentType) {
-        lastType = currentType;
-        return "up";
-    }
-
-    return;
-}
-
-document.querySelector('header').addEventListener("click", (event) => {
-    const btn = event.target.closest("button");
-    if (!btn) return;
-
-    updateDOM(btn.dataset.id,true,detectDirection(btn.dataset.id));
-});
 
 window.addEventListener('popstate', (event) => {
     if (event.state === null) return;
@@ -226,22 +107,15 @@ window.addEventListener('popstate', (event) => {
 });
 
 window.addEventListener('hashchange', () => {
-    if (localStorage.getItem("transition") !== null && localStorage.getItem("transition") === "true") {
-        updateDOM(location.hash.replace("#", ""),false,detectDirection(location.hash.replace("#", "")));
-        localStorage.setItem("transition", false);
-    } else updateDOM(location.hash.replace("#", ""));
+    updateDOM(location.hash.replace("#", ""));
 });
 
-window.matchMedia("(max-width: 768px)").addEventListener("change", () => {
-    updateMenuItemSelect(location.hash.replace("#", ""),true);
+updateDOM(location.hash.replace("#", ""),true);
+
+if (localStorage.getItem("lang") !== null) {
+    localStorage.clear();
+}
+
+document.querySelector('.debug-menu').addEventListener('click', () => {
+    eruda.init();
 });
-
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-    if (isAuto) theme(e.matches ? 'dark' : 'light');
-});
-
-let lang = getLang(currentLang());
-
-//Start the UI
-detectDirection(location.hash.replace("#", ""));
-updateDOM(location.hash.replace("#", ""), true);
