@@ -72,11 +72,11 @@
 // }
 import { animate, spring, utils, waapi, stagger, splitText } from 'https://esm.sh/animejs@4.3.5';
 
-const { words, chars } = splitText('.hero-header', { words: true, chars: true });
+const { words, chars } = splitText('.hero-header', { words: true, chars: true, accessible: false });
 
 export function init() {
     waapi.animate(chars.slice(0,8).reverse(), {
-        translate: [`0 -120vw `, `0 0`],
+        translate: ['0 -120vw', '0 0'],
         delay: stagger(100),
         duration: 600,
         ease: spring({ bounce: .15, duration: 400 }),
@@ -92,6 +92,11 @@ export function init() {
         delay: stagger(100),
         duration: 600,
         ease: spring({ bounce: .15, duration: 400 }),
+    });
+
+    const SimplifySpan = document.querySelectorAll(".hero-header span:first-child span span");
+    SimplifySpan.forEach(el => {
+        el.classList.add("text-transparent" , "bg-clip-text", "bg-gradient-to-b" , "from-primary","from-30%" , "via-secondary" , "to-tertiary");
     });
 
 }
