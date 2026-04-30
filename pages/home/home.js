@@ -96,7 +96,7 @@ export function init() {
 
     const SimplifySpan = document.querySelectorAll(".hero-header span:first-child span span");
     SimplifySpan.forEach(el => {
-        el.classList.add("text-transparent" , "bg-clip-text", "bg-gradient-to-b" , "from-primary","from-30%" , "via-secondary" , "to-tertiary");
+        el.classList.add("text-transparent" , "bg-clip-text", "bg-gradient-to-t" , "from-primary","from-30%" , "via-secondary" , "to-tertiary");
     });
 
 }
