@@ -38,6 +38,54 @@ function hexToBrightness(hex) {
     return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 
+// START of 5-3 separator functions ---------------------------------------------
+
+function findFlatIndex(seatOrder, absen) {
+    for (let i = 0; i < seatOrder.length; i++) {
+      for (let j = 0; j < seatOrder[i].length; j++) {
+        if (seatOrder[i][j][0] === absen) return i * 2 + j;
+      }
+    }
+    return -1;
+}
+  
+function getPos(flatIndex) {
+    return {
+        col: Math.floor(flatIndex / 8) * 2 + (flatIndex % 2),
+        row: Math.floor((flatIndex % 8) / 2)
+    };
+}
+  
+function manhattan(a, b) {
+    return Math.abs(a.row - b.row) + Math.abs(a.col - b.col);
+}
+  
+function ensureFar(seatOrder, absenA, absenB, minDist = 3) {
+    const idxA = findFlatIndex(seatOrder, absenA);
+    const idxB = findFlatIndex(seatOrder, absenB);
+
+    if (manhattan(getPos(idxA), getPos(idxB)) >= minDist) return;
+
+    const genderB = seatOrder[Math.floor(idxB / 2)][idxB % 2][1];
+
+    for (let i = 0; i < seatOrder.length * 2; i++) {
+        if (i === idxA || i === idxB) continue;
+
+        const candidate = seatOrder[Math.floor(i / 2)][i % 2];
+
+        if (candidate[1] !== genderB) continue; 
+        if (manhattan(getPos(idxA), getPos(i)) < minDist) continue;
+
+        const bi = Math.floor(idxB / 2), bj = idxB % 2;
+        const ci = Math.floor(i / 2), cj = i % 2;
+
+        [seatOrder[bi][bj], seatOrder[ci][cj]] = [seatOrder[ci][cj], seatOrder[bi][bj]];
+        return;
+    }
+}
+  
+// END of 5-3 separator functions-----------------------------------------------
+
 function seatsMessageInfo(message, type = 'info') {
     document.querySelector('.message-item').textContent = message;
     if (type === 'error') {
@@ -66,7 +114,9 @@ function resetSeatsDisplay() {
     });
 }
 
-function showSeatDisplay(seatOrder) {
+function showSeatDisplay(seatOrder, classSelected) {
+    document.querySelector(".extra-student").style.display = classSelected === "2" ? "flex" : "none";
+
     const girlsColor = localStorage.getItem('girlsColor');
     const boysColor = localStorage.getItem('boysColor');
     let counter = 0;
@@ -83,7 +133,11 @@ function showSeatDisplay(seatOrder) {
             
             counter++;
         } else {
-            el.textContent = "XX";
+            if (classSelected === "2") {
+                el.textContent = seatOrder[counter][0][0];
+            } else {
+                el.textContent = "XX"
+            }          
         }
     };
 
@@ -216,7 +270,9 @@ async function generateSeats() {
     // this only and only FOR x6, because x6 is the only class that has a lot of students that hate each other :>
     // and i too lazy to make this work for other class, so yeah, this is only for x6 <3
     let isThereAnyChange = false;
-    if (classSelected === '6') {
+    if (classSelected === "5") {
+        ensureFar(seatOrder, 3, 5);
+    } else if (classSelected === '6') {
         for (let seat of seatOrder) {
             if (blacklistedPartner[seat[0][0]] !== undefined && blacklistedPartner[seat[0][0]] .includes(seat[1][0])) {
                 for (let swap of seatOrder) {
@@ -259,7 +315,7 @@ async function generateSeats() {
         resumeIndicator = 'none';
     }
 
-    showSeatDisplay(seatOrder);
+    showSeatDisplay(seatOrder, classSelected);
 
     generateSeatsImage();
 
@@ -306,6 +362,7 @@ function initInput() {
 function initDetectInput() {
     document.querySelector('.class-select').addEventListener('change', (e) => {
         localStorage.setItem('classSelected', e.target.value);
+        localStorage.setItem('prevClassSelected', e.target.value);
     });
 
     document.querySelector('.process-button').addEventListener('click', () => {
@@ -386,7 +443,6 @@ function initColorPicker() {
             const hexColor = color.toHEXA().toString();
             localStorage.setItem(idx === 0 ? 'girlsColor' : 'boysColor', hexColor);
             updateSeatsColor(idx, hexColor);
-            colorInputLabel[idx].style.backgroundColor = hexColor;
             pickr.hide();
         });
     });
@@ -401,12 +457,16 @@ function initColorPicker() {
 }
 
 export function init() {
+    if ( localStorage.getItem("prevClassSelected") === null ) {
+        localStorage.setItem("prevClassSelected", document.querySelector('.class-select').value);
+    };
+
     initInput();
     initDetectInput();
     initColorPicker();
     
     if (typeof resumeSeat !== 'undefined') {
-        showSeatDisplay(resumeSeat);
+        showSeatDisplay(resumeSeat, localStorage.getItem("prevClassSelected"));
         seatsMessageInfo('showing last seats result!');
     }
 
