@@ -1,6 +1,6 @@
 <!-- Ambient Background Decoration -->
 <div class="absolute top-[55%] left-[-10%] w-[40%] h-[40%] bg-primary-dim/10 rounded-full blur-[120px]"></div>
-<div class="absolute top-[20%] right-[-5%] w-[30%] h-[30%] bg-secondary-dim/10 rounded-full blur-[100px]"></div>
+<div class="absolute top-[-20%] right-[-5%] w-[30%] h-[30%] bg-secondary-dim/10 rounded-full blur-[100px]"></div>
 
 <div class="mx-auto w-screen relative text-center mt-12">
     <div class="w-[clamp(300px,90vw,60rem)] h-[clamp(10rem,35vw,20rem)] mt-2 mx-auto -mb-16 sm:-mb-[6rem] aspect-video">
@@ -58,24 +58,6 @@
             </div>
         </div>
 
-        <!-- <div class="md:col-span-4 glass-panel p-8 rounded-lg border border-outline-variant/10 flex flex-col items-center justify-center text-center">
-            <div class="h-20 w-20 rounded-full bg-secondary/10 flex items-center justify-center mb-6 ring-1 ring-secondary/20">
-                <span class="material-symbols-outlined text-4xl text-secondary" data-icon="alt_route">alt_route</span>
-            </div>
-
-            <h3 class="text-2xl font-bold mb-2">What is Lorem Ipsum?</h3>
-            <p class="text-on-surface-variant text-sm">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
-        </div>
-
-        <div class="md:col-span-4 glass-panel p-8 rounded-lg border border-outline-variant/10 flex flex-col items-center justify-center text-center">
-            <div class="h-20 w-20 rounded-full bg-secondary/10 flex items-center justify-center mb-6 ring-1 ring-secondary/20">
-                <span class="material-symbols-outlined text-4xl text-secondary" data-icon="alt_route">alt_route</span>
-            </div>
-
-            <h3 class="text-2xl font-bold mb-2">Why do we use it?</h3>
-            <p class="text-on-surface-variant text-sm">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
-        </div> -->
-
         <div class="glass-panel p-8 rounded-lg border border-outline-variant/10 flex flex-col justify-between min-h-[400px] group overflow-hidden max-w-2xl w-full">
             <div>
                 <h3 class="text-3xl font-bold mb-4 tracking-tight">Seat-O-Matic</h3>
@@ -90,12 +72,110 @@
         </div>
     </div>
 </section>
+
+<div id="progress-bar"></div>
+
 <section id="cool-animation-cards">
-    <!-- animejs stuff here -->
+    <!-- ── ANIMATION ── -->
+    <div class="scroll-space">
+        <div class="scroll-stage">
+            <div class="box"></div>
+            <div class="box"></div>
+            <div class="cover"></div>
+            <div class="cover">
+                <div class="anim-text">CHOOSE YOUR TOOL</div>
+            </div>
+            <div class="under-cover">Hi this is the content element</div>
+        </div>
+    </div>
 </section>
 
 <!-- tailwind cannot do most of these unfortunately -->
 <style>
+
+    .anim-text {
+    position: absolute;
+    color: var(--yellow);
+    opacity: 0;
+    font-size: 1.75rem;
+    text-wrap: balance;
+    width: 98%;
+    font-weight: bold;
+    text-align: center;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    }
+
+    /* ── PROGRESS BAR ── */
+    #progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0%;
+    background: #e8ff47;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s;
+    }
+
+    /* ── ANIMATION STAGE ── */
+    .scroll-space {
+        height: 300vh;
+        position: relative;
+        background-color: rgb(12, 14, 23);
+    }
+
+    .scroll-stage {
+    isolation: isolate;
+    position: absolute;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+    top: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #232324; */
+    overflow: hidden;
+    }
+
+    .scroll-stage * {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    }
+
+    .box {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    background: #8a992b;
+    border-radius: 3px;
+    transform: translateY(110vh);
+    z-index: 1;
+    }
+
+    .under-cover {
+    background-color: rgb(33, 68, 109);
+    color: white;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    width: 70%;
+    height: 275px;
+    z-index: -1;
+    }
+
+    .cover {
+    background-color: rgb(12, 14, 23);
+    position: absolute;
+    width: 90%;
+    height: 300px;
+    z-index: 0;
+    }
+    
     /* From Uiverse.io by musashi-13 */ 
     @keyframes autoRun3d {
         from {
