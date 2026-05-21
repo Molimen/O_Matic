@@ -121,7 +121,7 @@ export function init() {
     })
     .add('.box', {
         scale: 1,
-        width: '90vw',
+        width: 'clamp(300px, 90%, 768px)',
         height: '15px',
         duration: 1000,
     })
